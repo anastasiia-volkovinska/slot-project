@@ -115,7 +115,8 @@ module.exports = {
     output: {
         path: path.resolve(`${cwd}/dev/${staticFolderName}/js`),
         publicPath: `./${staticFolderName}/js/`,
-        filename: `${outputFileNameTemplate}.js`
+        filename: `${outputFileNameTemplate}.js`,
+        library: 'app'
     },
 
     devtool: generateSourceMaps ? sourceMapsType : null,

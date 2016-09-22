@@ -1,102 +1,126 @@
-/* eslint-disable no-undef */
+import { utils } from 'components/utils/utils';
+import { storage } from 'components/storage/storage';
+import { events } from 'components/events/events';
+
+import { balance } from 'components/balance/balance';
+import { roll } from 'components/roll/roll';
+
+// /* eslint-disable no-undef */
 /* eslint-disable eqeqeq */
 /* eslint-disable curly */
 /* eslint-disable no-use-before-define */
-let freeSpins = (function () {
+export let freeSpin = (function () {
+    const c = createjs;
+    let stage;
+    let pressureDiscs;
 
     let currentFreeSpins;
-    let currentMulti = 2;
-    let currentLevel = 0;
-    let currentCount = 15;
-    let currentWinCoins = 0;
-    let currentWinCents = 0;
-    let c = createjs;
+    // let config.currentMulti = 2;
+    // let config.currentLevel = 0;
+    // let config.currentCount = 15;
+    // let config.currentWinCoins = 0;
+    // let config.currentWinCents = 0;
     let fsWheels;
     let fsStartData;
     let fsTotalWin;
-    let stage;
-    let pressureDiscs;
     let fireTimer;
     let parTimer;
 
-    function drawFreeSpinsBG() {
-        /* eslint-disable no-undef */
-        pressureDiscs = [];
-        const loader = storage.read('loadResult');
-        stage = storage.read('stage');
+    let config;
+    const defaultConfig = {
+        currentMulti: 2,
+        currentLevel: 0,
+        currentCount: 15,
+        currentWinCoins: 0,
+        currentWinCents: 0
+    };
+
+    function start(configObj) {
+        config = configObj || defaultConfig;
+    }
+
+    function hideBalance() {
         const balanceContainer = stage.getChildByName('balanceContainer');
         const coinsSum = balanceContainer.getChildByName('coinsSum');
         const betSum = balanceContainer.getChildByName('betSum');
         const coinsSumText = balanceContainer.getChildByName('coinsSumText');
         const betSumText = balanceContainer.getChildByName('betSumText');
         betSum.visible = coinsSum.visible = betSumText.visible = coinsSumText.visible = false;
+    }
+
+    function showFsBalance() {
+        const balanceContainer = stage.getChildByName('balanceContainer');
 
         const totalWinText = new createjs.Text('Total Win:', '24px Helvetica', '#dddddd').set({
             name: 'totalWinText',
             y: 658,
             textAlign: 'center'
         });
-        const totalWinSum = new createjs.Text(currentWinCoins + '', '24px Helvetica', '#e8b075').set({
+        const totalWinSum = new createjs.Text(config.currentWinCoins + '', '24px Helvetica', '#e8b075').set({
             name: 'totalWinSum',
             y: 658,
             textAlign: 'center',
             shadow: new c.Shadow('#e8b075', 0, 0, 15)
         });
-        if (currentWinCents) {
-            storage.read('currentBalance').winCash = (currentWinCents / 100).toFixed(2);
+        if (config.currentWinCents) {
+            storage.read('currentBalance').winCash = (config.currentWinCents / 100).toFixed(2);
         }
         totalWinText.x = utils.width / 2 - 10 - totalWinText.getMeasuredWidth();
         totalWinSum.x = totalWinText.x + 20 + totalWinText.getMeasuredWidth() / 2 + totalWinSum.getMeasuredWidth() / 2;
         balanceContainer.addChild(totalWinText, totalWinSum);
         balanceContainer.updateCache();
+    }
 
-        const bgContainer = stage.getChildByName('bgContainer');
-        const gameBG = bgContainer.getChildByName('gameBG');
-        const fsMachineBG = new createjs.Bitmap(loader.getResult('fsMachineBG')).set({
-            name: 'fsMachineBG',
-            x: 255,
-            y: 85
-        });
-        const fsTableContainer = new createjs.Container().set({
-            name: 'fsTableContainer'
-        });
-        const fsTotalTable = new createjs.Bitmap(loader.getResult('fsTotalTable')).set({
-            name: 'fsTotalTable',
-            x: 985,
-            y: 30
-        });
-        const fsTotalCount = new createjs.BitmapText(currentCount + '', loader.getResult('fsText')).set({
-            name: 'fsTotalCount',
-            x: 1133,
-            y: 66,
-            scaleX: 0.4,
-            scaleY: 0.4
-        });
-        const countBounds = fsTotalCount.getBounds();
-        fsTotalCount.regX = countBounds.width / 2;
-        fsTotalCount.regY = countBounds.height / 2;
-        fsTableContainer.addChild(fsTotalTable, fsTotalCount);
-        stage.addChildAt(fsTableContainer, stage.getChildIndex(stage.getChildByName('fgContainer')) + 1);
-        bgContainer.addChildAt(fsMachineBG, bgContainer.getChildIndex(gameBG) + 1);
-        const fsBG = new createjs.Bitmap(loader.getResult('fsBG')).set({
-            name: 'fsBG'
-        });
+    function moveClock(clockContainer) {
+        const tl = new TimelineMax({repeat: -1});
+        tl.to(clockContainer, 1.5, { y: 5 })
+        .to(clockContainer, 1, { y: -8 })
+        .to(clockContainer, 1.5, { y: 7 })
+        .to(clockContainer, 1, { y: 0 });
+    }
+
+    function addClockParticles(clockContainer) {
+        const loader = storage.read('loadResult');
+        const clockParticle = new c.Bitmap(loader.getResult('newLight'));
+        utils.getCenterPoint(clockParticle);
+        let particleAmount = Math.round(Math.random() * 60) + 30;
+        let particleArray = [];
+        for (let i = 0; i < particleAmount; i++) {
+            const newParticle = clockParticle.clone();
+            newParticle.x = 80 + Math.round(Math.random() * 350 - 175);
+            newParticle.y = 450 + Math.round(Math.random() * 400 - 200);
+            newParticle.alpha = Math.random() - 0.2;
+            newParticle.scaleX = newParticle.scaleY = Math.random() + 0.4;
+            const time = 4 * Math.random() + 3;
+            TweenMax.to(newParticle, time, {
+                x: newParticle.x + Math.round(Math.random() * 190 - 50),
+                y: newParticle.y + Math.round(Math.random() * 190 - 50),
+                alpha: Math.random(),
+                repeat: -1,
+                yoyo: true
+            });
+            particleArray.push(newParticle);
+            clockContainer.addChild(newParticle);
+        }
+
+    }
+
+    function showPressureTube() {
+        const loader = storage.read('loadResult');
         const fgContainer = stage.getChildByName('fgContainer');
-        const fonar = fgContainer.getChildByName('fonar');
-        fonar.visible = false;
         const pressure = new createjs.Bitmap(loader.getResult('pressure')).set({
             name: 'pressure',
-            x: 210 - 150,
+            x: 60,
             y: 575
         });
         const pressureFire = new createjs.Sprite(loader.getResult('fireToPressure'), 'go').set({
             name: 'pressureFire',
-            x: 240 - 150,
+            x: 90,
             y: 605
         });
         const pressureDark = new createjs.Shape().set({
             name: 'pressureDark',
-            x: 250 - 150,
+            x: 100,
             y: 620
         });
         pressureDark.graphics.beginFill('#000').drawRect(0, 0, 810, 14);
@@ -125,12 +149,58 @@ let freeSpins = (function () {
         pressureDiscs[5].x = 904;
         const truba = new createjs.Bitmap(loader.getResult('truba')).set({
             name: 'truba',
-            x: 905 - 150,
+            x: 755,
             y: 40
         });
         fgContainer.addChildAt(truba, 0);
         fgContainer.addChild(pressureContainer);
+    }
+
+    function drawFreeSpinsBG() {
+        pressureDiscs = [];
+        stage = storage.read('stage');
+        const loader = storage.read('loadResult');
+
+        // Balance data invisible
+        hideBalance();
+        showFsBalance();
+
+        const bgContainer = stage.getChildByName('bgContainer');
+        const gameBG = bgContainer.getChildByName('gameBG');
+        const fsTableContainer = new createjs.Container().set({
+            name: 'fsTableContainer'
+        });
+        const fsMachineBG = new createjs.Bitmap(loader.getResult('fsMachineBG')).set({
+            name: 'fsMachineBG',
+            x: 255,
+            y: 85
+        });
+        const fsTotalTable = new createjs.Bitmap(loader.getResult('fsTotalTable')).set({
+            name: 'fsTotalTable',
+            x: 985,
+            y: 30
+        });
+        const fsTotalCount = new createjs.BitmapText(config.currentCount + '', loader.getResult('fsText')).set({
+            name: 'fsTotalCount',
+            x: 1133,
+            y: 66,
+            scaleX: 0.4,
+            scaleY: 0.4
+        });
+        utils.getCenterPoint(fsTotalCount);
+        fsTableContainer.addChild(fsTotalTable, fsTotalCount);
+        stage.addChildAt(fsTableContainer, stage.getChildIndex(stage.getChildByName('fgContainer')) + 1);
+        bgContainer.addChildAt(fsMachineBG, bgContainer.getChildIndex(gameBG) + 1);
+
+        showPressureTube();
+
+        const fgContainer = stage.getChildByName('fgContainer');
+        const fonar = fgContainer.getChildByName('fonar');
+        fonar.visible = false;
         fgContainer.uncache();
+        const fsBG = new createjs.Bitmap(loader.getResult('fsBG')).set({
+            name: 'fsBG'
+        });
         bgContainer.addChildAt(fsBG, 1);
         changeMultiplier(2);
         const clockContainer = new c.Container().set({
@@ -154,50 +224,17 @@ let freeSpins = (function () {
         });
         clockMinutes.paused = true;
         clockContainer.addChild(clock, clockHours, clockMinutes);
-        const clockParticle = new c.Bitmap(loader.getResult('newLight')).set({
-            regX: 24,
-            regY: 24
-        });
-        let particleAmount = Math.round(Math.random() * 60) + 30;
-        let particleArray = [];
-        for (let i = 0; i < particleAmount; i++) {
-            const newParticle = clockParticle.clone();
-            newParticle.x = 80 + Math.round(Math.random() * 350 - 175);
-            newParticle.y = 450 + Math.round(Math.random() * 400 - 200);
-            newParticle.alpha = Math.random() - 0.2;
-            newParticle.scaleX = newParticle.scaleY = Math.random() + 0.4;
-            const time = 4 * Math.random() + 3;
-            TweenMax.to(newParticle, time, {
-                x: newParticle.x + Math.round(Math.random() * 190 - 50),
-                y: newParticle.y + Math.round(Math.random() * 190 - 50),
-                alpha: Math.random(),
-                repeat: -1,
-                yoyo: true
-            });
-            particleArray.push(newParticle);
-            clockContainer.addChild(newParticle);
-        }
-        const tl = new TimelineMax({repeat: -1});
-        tl.to(clockContainer, 1.5, {
-            y: 5
-        })
-        .to(clockContainer, 1, {
-            y: -8
-        })
-        .to(clockContainer, 1.5, {
-            y: 7
-        })
-        .to(clockContainer, 1, {
-            y: 0
-        });
+        addClockParticles(clockContainer);
         stage.addChildAt(clockContainer, stage.getChildIndex(stage.getChildByName('winRectsContainer')) + 1);
+        moveClock(clockContainer);
 
-        if (currentLevel !== 0) {
-            changeLevel(currentLevel + 1);
+        if (config.currentLevel !== 0) {
+            changeLevel(config.currentLevel + 1);
         }
-        if (currentMulti !== 2) {
-            changeMultiplier(currentMulti);
+        if (config.currentMulti !== 2) {
+            changeMultiplier(config.currentMulti);
         }
+
     }
 
     function addPar(num) {
@@ -217,8 +254,8 @@ let freeSpins = (function () {
     }
 
     function changeLevel(num) {
-        if (num != currentLevel) {
-            currentLevel = num;
+        if (num != config.currentLevel) {
+            config.currentLevel = num;
             createjs.Sound.play('fsClockSound');
             const clockContainer = stage.getChildByName('clockContainer');
             const hours = clockContainer.getChildByName('clockHours');
@@ -348,7 +385,7 @@ let freeSpins = (function () {
             y: -8,
             alpha: 0
         });
-        TweenLite.to(fsLogoContainer, 0.3, {alpha: 1});
+        TweenMax.to(fsLogoContainer, 0.3, {alpha: 1});
         let tl = new TimelineMax({repeat: -1, yoyo: true});
         tl.to(logoFire, 0.8, {alpha: 0.7});
         fsLogoContainer.addChild(logoTop, logoFire);
@@ -409,6 +446,7 @@ let freeSpins = (function () {
             .to([par1, par2, par3, par4], 0.5, {alpha: 0})
             .call(function () {
                 parContainer.removeChild(par1, par2, par3, par4);
+                stage.removeChild(parContainer);
             });
         parContainer.addChild(par1, par2, par3, par4);
         const fgContainer = stage.getChildByName('fgContainer');
@@ -420,17 +458,7 @@ let freeSpins = (function () {
         buttonsContainer.visible = false;
         fsTotalWin = 0;
         drawFreeSpinsBG();
-        canvas.changeGamePosition('right');
-        // fsWheels = init.getInitData().freeWheels;
-        // console.warn('FS WHEELS IS:', fsWheels);
-        // let wheelsLength = fsWheels.length;
-        // let i, randomArray = [];
-        // for (i = 0; i < 5; i++) {
-        //     let randomNumber = Math.round(Math.random() * (wheelsLength - 1));
-        //     randomArray.push(randomNumber);
-        // }
-        // let firstScreen = spin._getScreenData(randomArray, fsWheels);
-        // spin.drawScreen(firstScreen);
+        events.trigger('menu:changeSide', 'right');
     }
 
     function transitionFreeSpins(data) {
@@ -438,11 +466,11 @@ let freeSpins = (function () {
         createjs.Sound.play('bonusPerehodSound', {loop: -1});
         fsStartData = data;
         if (data) {
-            currentLevel = data.level - 1;
-            currentMulti = data.multi;
-            currentCount = data.count;
-            currentWinCoins = data.currentWinCoins;
-            currentWinCents = data.currentWinCents;
+            config.currentLevel = data.level - 1;
+            config.currentMulti = data.multi;
+            config.currentCount = data.count;
+            config.currentWinCoins = data.currentWinCoins;
+            config.currentWinCents = data.currentWinCents;
         }
         const loader = storage.read('loadResult');
         stage = storage.read('stage');
@@ -468,7 +496,7 @@ let freeSpins = (function () {
             scaleX: 0.7,
             scaleY: 0.7
         });
-        let transitionWinText = new createjs.BitmapText(currentCount + '', loader.getResult('numbers')).set({
+        let transitionWinText = new createjs.BitmapText(config.currentCount + '', loader.getResult('numbers')).set({
             name: 'transitionWinText',
             scaleX: 0.1,
             scaleY: 0.1,
@@ -490,14 +518,6 @@ let freeSpins = (function () {
             y: 575
         });
 
-        // createjs.Tween.get(transitionContainer)
-        //     .to({alpha: 1}, 500)
-        //     .call(function () {
-        //         events.trigger('drawFreeSpins', fsStartData);
-        //     });
-        // transitionButton.on('mousedown', function () {
-        //     transitionButton.gotoAndStop('over');
-        // });
         transitionContainer.on('click', function () {
             createjs.Sound.stop('bonusPerehodSound');
             createjs.Sound.play('fsAmbientSound', {loop: -1});
@@ -533,13 +553,7 @@ let freeSpins = (function () {
     }
 
     function startFreeSpin() {
-        console.warn('I am free spin and I am called!');
-        // let count = storage.read('rollResponse').TotalFreeSpins;
-        // if (count > 0) {
         roll.startRoll();
-        // } else {
-        //     events.trigger('stopFreeSpins');
-        // }
     }
 
     function stopFreeSpins() {
@@ -576,11 +590,8 @@ let freeSpins = (function () {
         stage.removeChild(stage.getChildByName('fsTableContainer'));
         stage.removeChild(stage.getChildByName('clockContainer'));
         storage.changeState('side', 'left');
-        canvas.changeGamePosition('left');
-    }
-
-    function getWheels() {
-        return fsWheels;
+        events.trigger('menu:changeSide', 'left');
+        // canvas.changeGamePosition('left');
     }
 
     function countTotalWin(data) {
@@ -684,7 +695,9 @@ let freeSpins = (function () {
         stage.addChild(fsTableContainer);
         let tl = new TimelineMax();
         tl.from(fsTableContainer, 0.3, {y: -200, alpha: 0})
-            .to(fsTableContainer, 0.3, {y: -200, alpha: 0}, '+=1.5');
+            .to(fsTableContainer, 0.3, {y: -200, alpha: 0, onComplete: function () {
+                stage.removeChild(fsTableContainer);
+            }}, '+=1.5');
     }
 
     function addMultiBonus(data) {
@@ -770,13 +783,13 @@ let freeSpins = (function () {
         }
         if (state === 'roll' && storage.readState(state) === 'started') {
             if (storage.readState('mode') === 'fsBonus') {
-                (storage.read('rollResponse').TotalFreeSpins - 1);
+                countTotalWin(storage.read('rollResponse').TotalFreeSpins - 1);
             }
         }
         if (state === 'fsMulti') {
-            // if (currentMulti != storage.readState(state)) {
+            // if (config.currentMulti != storage.readState(state)) {
             changeMultiplier(storage.readState(state));
-                // currentMulti = storage.readState(state);
+                // config.currentMulti = storage.readState(state);
             // }
         }
         if (state === 'fsLevel') {
@@ -794,10 +807,10 @@ let freeSpins = (function () {
     events.on('multiplierBonus', addMultiBonus);
     events.on('changeState', checkState);
     return {
+        start,
         initFreeSpins,
         stopFreeSpins,
         startFreeSpin,
-        getWheels,
         drawFreeSpinsBG,
         changeMultiplier,
         getMultiLight,

@@ -11,7 +11,13 @@
     },
 
     "globals": {
-        "tars": true
+        "tars": true,
+        "createjs": true,
+        "TweenMax": true,
+        "TimelineMax": true,
+        "Back": true,
+        "Bounce": true,
+        "Power1": true
     },
 
     "extends": "eslint:recommended",
@@ -29,7 +35,7 @@
         "comma-spacing": [2, {"before": false, "after": true}],
         "comma-style": [2, "last"],
         "consistent-return": 0,
-        "curly": [2, "all"],
+        "curly": [0, "all"],
         "default-case": 2,
         "dot-notation": [2, { "allowKeywords": true }],
         "eol-last": 2,
@@ -48,7 +54,7 @@
         "no-fallthrough": 2,
         "no-floating-decimal": 2,
         "no-implied-eval": 2,
-        "no-invalid-this": 1,
+        "no-invalid-this": 0,
         "no-iterator": 2,
         "no-label-var": 2,
         "no-labels": 2,
@@ -79,7 +85,7 @@
         "no-undefined": 2,
         "no-unused-expressions": 2,
         "no-unused-vars": [0, {"vars": "all", "args": "after-used"}],
-        "no-use-before-define": 2,
+        "no-use-before-define": 0,
         "no-with": 2,
         "quotes": [2, "single"],
         "radix": 2,

@@ -5,6 +5,7 @@
         "height": 403,
         "count": 27
     },
+    "framerate": 12,
     "animations": {
         "start": [0, 12],
         "finish": [13, 22, "loop"],

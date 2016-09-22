@@ -1,122 +1,17 @@
+import { utils } from 'components/utils/utils';
+import { storage } from 'components/storage/storage';
+import { events } from 'components/events/events';
+import { parameters } from 'components/win/parameters';
+
+import { autoplay } from 'components/autoplay/autoplay';
+import { freeSpin } from 'components/freeSpin/freeSpin';
+
 /* eslint-disable no-undef */
 /* eslint-disable no-use-before-define */
-const win = (function () {
+export let win = (function () {
 
     const c = createjs;
-    const parameters = {
-        font: 'normal 15px Arial',
-        color: 'gold',
-        1: {
-            x: 95,
-            y: 336,
-            textBaseline: 'middle'
-        },
-        2: {
-            x: 1072,
-            y: 187,
-            textBaseline: 'middle'
-        },
-        3: {
-            x: 1072,
-            y: 516,
-            textBaseline: 'middle'
-        },
-        4: {
-            x: 95,
-            y: 118,
-            textBaseline: 'middle'
-        },
-        5: {
-            x: 95,
-            y: 585,
-            textBaseline: 'middle'
-        },
-        6: {
-            x: 95,
-            y: 152,
-            textBaseline: 'middle'
-        },
-        7: {
-            x: 95,
-            y: 550,
-            textBaseline: 'middle'
-        },
-        8: {
-            x: 1072,
-            y: 405,
-            textBaseline: 'middle'
-        },
-        9: {
-            x: 95,
-            y: 301,
-            textBaseline: 'middle'
-        },
-        10: {
-            x: 95,
-            y: 481,
-            textBaseline: 'middle'
-        },
-        11: {
-            x: 95,
-            y: 222,
-            textBaseline: 'middle'
-        },
-        12: {
-            x: 1072,
-            y: 585,
-            textBaseline: 'middle'
-        },
-        13: {
-            x: 1072,
-            y: 118,
-            textBaseline: 'middle'
-        },
-        14: {
-            x: 1072,
-            y: 551,
-            textBaseline: 'middle'
-        },
-        15: {
-            x: 1072,
-            y: 153,
-            textBaseline: 'middle'
-        },
-        16: {
-            x: 1072,
-            y: 481,
-            textBaseline: 'middle'
-        },
-        17: {
-            x: 1072,
-            y: 222,
-            textBaseline: 'middle'
-        },
-        18: {
-            x: 95,
-            y: 187,
-            textBaseline: 'middle'
-        },
-        19: {
-            x: 95,
-            y: 516,
-            textBaseline: 'middle'
-        },
-        20: {
-            x: 95,
-            y: 370,
-            textBaseline: 'middle'
-        },
-        21: {
-            x: 1072,
-            y: 370,
-            textBaseline: 'middle'
-        },
-        22: {
-            x: 1072,
-            y: 336,
-            textBaseline: 'middle'
-        }
-    };
+
     let winData = {};
     let stage;
     let winLinesContainer;
@@ -124,6 +19,15 @@ const win = (function () {
     let winElements;
     let lightLinesCounter = 0;
     let lightDoneCounter = 0;
+
+    let config;
+    const defaultConfig = {
+
+    };
+
+    function start(configObj) {
+        config = configObj || defaultConfig;
+    }
 
     function initWin() {
         stage = storage.read('stage');
@@ -141,7 +45,6 @@ const win = (function () {
         stage.addChildAt(winLinesContainer, 1);
         stage.addChild(winRectsContainer);
         winElements = findWinElements();
-        drawWinDiscs();
     }
 
     function findWinElements() {
@@ -163,10 +66,6 @@ const win = (function () {
             });
         });
         return result;
-    }
-
-    function drawWinDiscs() {
-
     }
 
     function drawLineShape(number) {
@@ -207,11 +106,10 @@ const win = (function () {
                 name: 'winLight',
                 x: linesCoords[number - 1][0].x,
                 y: linesCoords[number - 1][0].y,
-                regX: 24,
-                regY: 24,
                 scaleX: scale,
                 scaleY: scale
             });
+            utils.getCenterPoint(light);
             lightMas.push(light);
             winLinesContainer.addChild(light);
         }
@@ -222,6 +120,7 @@ const win = (function () {
                 winLinesContainer.removeChild(this.target);
             }}, 0.003, function () {
                 storage.changeState('lineLight', 'done');
+                events.trigger('win:lineLight', number);
             }
         );
     }
@@ -234,8 +133,8 @@ const win = (function () {
         const lineWin = data.lineWin;
         const winText = new c.Container().set({
             name: 'winText',
-            y: linesCoords[number - 1][amount - 1].y + 30,
-            x: linesCoords[number - 1][amount - 1].x + 32
+            y: linesCoords[number - 1][amount - 1].y + 30, // Magic Numbers
+            x: linesCoords[number - 1][amount - 1].x + 32 // Magic Numbers
         });
         const winLineRect = new c.Bitmap(loader.getResult('winLineRect')).set({
             name: 'winLineRect',
@@ -243,11 +142,11 @@ const win = (function () {
             scaleY: 1.8
         });
         const winLineText = new c.Text(lineWin, '35px Helvetica', '#f0e194').set({
-            x: 30,
-            y: 22,
+            name: 'winLineText',
+            x: 30, // Magic Numbers
+            y: 22, // Magic Numbers
             textAlign: 'center',
             textBaseline: 'middle',
-            name: 'winLineText',
             shadow: new c.Shadow('#C19433', 0, 0, 8)
         });
         if ((winLineText.text + '').length > 3) {
@@ -265,19 +164,18 @@ const win = (function () {
         const loader = storage.read('loadResult');
         const totalWin = new c.Container().set({
             name: 'totalWin',
-            x: (utils.gameWidth - 176) / 2 + 3,
-            y: (utils.gameHeight - 150) / 2
+            x: utils.gameWidth / 2 + 3, // Magic Numbers
+            y: utils.gameHeight / 2
         });
+        const totalWinRect = new c.Bitmap(loader.getResult('winTotalRect')).set({
+            name: 'totalWinRect'
+        });
+        utils.getCenterPoint(totalWinRect);
         const totalWinText = new c.Text(totalWinNumber, '75px Helvetica', '#f0e194').set({
-            x: 88,
-            y: 75,
             name: 'totalWinText',
             textAlign: 'center',
             textBaseline: 'middle',
             shadow: new c.Shadow('#C19433', 0, 0, 8)
-        });
-        const totalWinRect = new c.Bitmap(loader.getResult('winTotalRect')).set({
-            name: 'totalWinRect'
         });
         totalWin.addChild(totalWinRect, totalWinText);
         winRectsContainer.addChild(totalWin);
@@ -288,11 +186,11 @@ const win = (function () {
         const ss = loader.getResult('lineFire');
         const lineFire = new c.Sprite(ss, 'go').set({
             name: 'lineFire',
-            x: parameters[number].x - winRectsContainer.x - 3,
-            y: parameters[number].y - winRectsContainer.y + 5
+            x: parameters[number].x - winRectsContainer.x - 3, // Magic Numbers
+            y: parameters[number].y - winRectsContainer.y + 5 // Magic Numbers
         });
         if (storage.readState('side') === 'right') {
-            lineFire.x += 150;
+            lineFire.x += 150; // Magic Numbers
         }
         winRectsContainer.addChild(lineFire);
     }
@@ -304,7 +202,6 @@ const win = (function () {
             const elementIndex = animationName.substr(animationName.indexOf('-') - 1, 1);
             element.gotoAndPlay(`${elementIndex}-w`);
         }
-        // drawLineShape(number);
         drawLineLight(number);
         drawLineFire(number);
     }
@@ -324,6 +221,7 @@ const win = (function () {
             fireScatterWild();
         }
         storage.changeState('anotherLine', index);
+        events.trigger('win:anotherLine', index);
     }
 
     function fireAllScatters() {
@@ -333,14 +231,14 @@ const win = (function () {
                 const animationName = element.currentAnimation;
                 const elementIndex = animationName.substr(animationName.indexOf('-') - 2, 2);
                 if (+elementIndex === 10) {
-                    if (animationName == '10-n') {
+                    if (animationName === '10-n') {
                         element.gotoAndPlay(`${elementIndex}-w`);
                     }
                 }
                 if (+elementIndex === 14) {
                     element.gotoAndPlay(`${elementIndex}-w`);
                     let totalFreeSpins = storage.read('rollResponse').TotalFreeSpins;
-                    freeSpins.showTotalFreeSpins(totalFreeSpins);
+                    freeSpin.showTotalFreeSpins(totalFreeSpins);
                 }
             });
         });
@@ -373,8 +271,8 @@ const win = (function () {
         const gameContainer = stage.getChildByName('gameContainer');
         const lizaWin = new c.Sprite(loader.getResult('lizaWin'), 'win').set({
             name: 'lizaWin',
-            x: gameContainer.x + rowNumber * utils.elementWidth - 23,
-            y: gameContainer.y - 29
+            x: gameContainer.x + rowNumber * utils.elementWidth - 23, // Magic Numbers
+            y: gameContainer.y - 29 // Magic Numbers
         });
         lizaWin.on('animationend', function () {
             if (storage.read('rollResponse').BonusResults[0] === 'FreeSpinBonus') {
@@ -383,7 +281,7 @@ const win = (function () {
             }
         });
         lizaWin.on('change', function () {
-            if (Math.floor(lizaWin.currentAnimationFrame) === 12) {
+            if (Math.floor(lizaWin.currentAnimationFrame) === 12) { // Magic Numbers
                 fireCards(lizaWin.x, lizaWin.y);
             }
         });
@@ -434,8 +332,7 @@ const win = (function () {
             newCard.rotation = cardRotation;
             newCard.x = curX + utils.elementWidth / 2;
             newCard.y = curY + utils.elementHeight / 2;
-            newCard.regX = 39;
-            newCard.regY = 51;
+            utils.getCenterPoint(newCard);
             TweenMax.to(newCard, cardTime, {x: finalCoords.x, y: finalCoords.y, onComplete: function () {
                 cardsContainer.removeChild(this.target);
             }});
@@ -516,84 +413,87 @@ const win = (function () {
         lightDoneCounter = 0;
     }
 
-    function checkState(state) {
-        if (state === 'roll' && storage.readState(state) === 'ended') {
-            if (storage.read('rollResponse').BonusResults.length) {
-                storage.changeState('lockedMenu', true);
+    function startRoll() {
+        cleanWin();
+        if (storage.read('lineTimeout')) {
+            clearTimeout(storage.read('lineTimeout'));
+        }
+    }
+
+    function endRoll() {
+        showWin();
+        if (storage.read('rollResponse').BonusResults.length) {
+            storage.changeState('lockedMenu', true);
+        }
+        if (storage.readState('autoplay') === 'started') {
+            let time;
+            if (storage.read('rollResponse').LinesResult.length > 0) {
+                time = 1000;
+            } else {
+                time = 300;
             }
-            showWin();
-            if (storage.readState('autoplay') === 'started') {
+            const autoTimeout = setTimeout(function () {
+                autoplay.startAutoplay();
+            }, time);
+            storage.write('autoTimeout', autoTimeout);
+        }
+        if (storage.readState('mode') === 'fsBonus') {
+            let count = storage.read('rollResponse').TotalFreeSpins;
+            storage.changeState('fsMulti', storage.read('rollResponse').Multiplier.MultiplierValue);
+            storage.changeState('fsLevel', storage.read('rollResponse').Multiplier.MultiplierStep);
+            if (count > 0) {
+                console.log('I start free Spin', count);
                 let time;
                 if (storage.read('rollResponse').LinesResult.length > 0) {
                     time = 1000;
                 } else {
                     time = 300;
                 }
-                const autoTimeout = setTimeout(function () {
-                    autoplay.startAutoplay();
+                const fsTimeout = setTimeout(function () {
+                    freeSpin.startFreeSpin();
                 }, time);
-                storage.write('autoTimeout', autoTimeout);
-            }
-            if (storage.readState('mode') === 'fsBonus') {
-                let count = storage.read('rollResponse').TotalFreeSpins;
-                storage.changeState('fsMulti', storage.read('rollResponse').Multiplier.MultiplierValue);
-                storage.changeState('fsLevel', storage.read('rollResponse').Multiplier.MultiplierStep);
-                if (count > 0) {
-                    console.log('I start free Spin', count);
-                    let time;
-                    if (storage.read('rollResponse').LinesResult.length > 0) {
-                        time = 1000;
-                    } else {
-                        time = 300;
-                    }
-                    const fsTimeout = setTimeout(function () {
-                        freeSpins.startFreeSpin();
-                    }, time);
-                    storage.write('fsTimeout', fsTimeout);
-                } else {
-                    console.warn('I am stoping Free Spins!');
-                    events.trigger('finishFreeSpins');
-                }
-            }
-        }
-        if (state === 'roll' && storage.readState(state) === 'started') {
-            cleanWin();
-            if (storage.read('lineTimeout')) {
-                clearTimeout(storage.read('lineTimeout'));
-            }
-        }
-        if (state === 'firstScreen' && storage.readState(state) === 'done') {
-            initWin();
-        }
-        if (state === 'lineLight' && storage.readState(state) === 'done') {
-            lightDoneCounter++;
-            if (lightDoneCounter === lightLinesCounter && storage.readState('mode') === 'normal') {
-                if (storage.readState('autoplay') !== 'started') {
-                    if (storage.read('rollResponse').BonusResults.length === 0) {
-                        storage.changeState('lineByLine', 'started');
-                    }
-                }
-            }
-        }
-        if (state === 'lineByLine' && storage.readState(state) === 'started') {
-            drawAnotherLine(0);
-        }
-        if (state === 'anotherLine') {
-            let lineTimeout = setTimeout(function () {
-                drawAnotherLine(storage.readState('anotherLine') + 1);
-            }, 1500);
-            storage.write('lineTimeout', lineTimeout);
-        }
-        if (state === 'fsMultiplier' && storage.readState(state)) {
-            if (storage.readState('roll') === 'ended') {
-                events.trigger('multiplierBonus', storage.read('fsMultiplierResponse'));
+                storage.write('fsTimeout', fsTimeout);
+            } else {
+                console.warn('I am stoping Free Spins!');
+                events.trigger('finishFreeSpins');
             }
         }
     }
 
-    events.on('changeState', checkState);
+    function finishLineLight() {
+        lightDoneCounter++;
+        if (lightDoneCounter === lightLinesCounter && storage.readState('mode') === 'normal') {
+            if (storage.readState('autoplay') !== 'started') {
+                if (storage.read('rollResponse').BonusResults.length === 0) {
+                    storage.changeState('lineByLine', 'started');
+                    events.trigger('win:lineByLine', 0);
+                }
+            }
+        }
+    }
+
+    function showNextLine() {
+        let lineTimeout = setTimeout(function () {
+            drawAnotherLine(storage.readState('anotherLine') + 1);
+        }, 1500);
+        storage.write('lineTimeout', lineTimeout);
+    }
+
+    function showMulti() {
+        if (storage.readState('roll') === 'ended') {
+            events.trigger('multiplierBonus', storage.read('fsMultiplierResponse'));
+        }
+    }
 
     return {
-        cleanWin
+        start,
+        initWin,
+        cleanWin,
+        startRoll,
+        endRoll,
+        drawAnotherLine,
+        finishLineLight,
+        showNextLine,
+        showMulti
     };
 })();

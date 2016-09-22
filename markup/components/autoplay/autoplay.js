@@ -1,33 +1,45 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-use-before-define */
-const autoplay = (function () {
+import { utils } from 'components/utils/utils';
+import { storage } from 'components/storage/storage';
+import { events } from 'components/events/events';
+
+export let autoplay = (function () {
 
     let autoCount;
     let autoTimer;
     let autoEnd;
 
-    function initAutoplay() {
-        autoCount = storage.read('autoCount');
+    function start() {
+
+    }
+
+    function initAutoplay(amount) {
+        autoCount = amount;
         autoEnd = false;
         startAutoplay();
+        events.trigger('autoplay:started', autoCount);
     }
 
     function startAutoplay() {
         autoCount--;
         if (!autoEnd) {
-            if (balance.lowBalance()) {
+            if (utils.lowBalance()) {
                 autoEnd = true;
-                storage.changeState('autoplay', 'ended');
+                stopAutoplay();
                 utils.showPopup('Low balance!');
+                storage.changeState('autoplay', 'ended');
+                events.trigger('autoplay:ended');
             } else {
-                roll.startRoll();
+                events.trigger('autoplay:startRoll');
             }
         }
         if (autoCount > 0) {
             storage.write('autoCount', autoCount);
             storage.changeState('autoCount', autoCount);
+            events.trigger('autoplay:count', autoCount);
         } else {
+            stopAutoplay();
             storage.changeState('autoplay', 'ended');
+            events.trigger('autoplay:ended');
         }
     }
 
@@ -35,25 +47,16 @@ const autoplay = (function () {
         autoEnd = true;
         clearTimeout(storage.read('autoTimeout'));
         if (storage.readState('autoplay') !== 'ended') {
+            events.trigger('autoplay:ended');
             storage.changeState('autoplay', 'ended');
         }
     }
 
-    function checkState(state) {
-        if (state === 'autoplay' && storage.readState(state) === 'started') {
-            initAutoplay();
-        }
-        if (state === 'autoplay' && storage.readState(state) === 'ended') {
-            stopAutoplay();
-        }
-    }
-
-    events.on('changeState', checkState);
-    events.on('initBonusLevel', stopAutoplay);
-    events.on('initFreeSpins', stopAutoplay);
-
     return {
-        startAutoplay
+        start,
+        startAutoplay,
+        stopAutoplay,
+        initAutoplay
     };
 
 })();

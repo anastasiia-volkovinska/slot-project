@@ -1,11 +1,17 @@
-/* eslint-disable */
-let bonuses = (function () {
+import { utils } from 'components/utils/utils';
+import { storage } from 'components/storage/storage';
+import { events } from 'components/events/events';
+import { win } from 'components/win/win';
+import { balance } from 'components/balance/balance';
+
+// /* eslint-disable */
+export let bonuses = (function () {
 
     let currentLevel = 1;
     let bonusData;
     let firstCashWin;
     let totalCount;
-    let fristWin;
+    let firstWin;
     const c = createjs;
     const w = utils.width;
     const h = utils.height;

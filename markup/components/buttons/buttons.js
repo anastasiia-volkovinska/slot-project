@@ -1,156 +1,111 @@
-/* eslint-disable no-undef */
-const buttons = (function () {
+// import CreateJS
+// import TweenMax
+import { utils } from 'components/utils/utils';
+import { storage } from 'components/storage/storage';
+import { events } from 'components/events/events';
+import { handleSpinClick,
+        handleSoundClick,
+        handleMenuClick,
+        handleAutoClick,
+        handleBetClick } from 'components/buttons/handlers';
+
+/* eslint-disable curly */
+export let buttons = (function () {
+
+    let config;
+    const defaultConfig = {
+        buttonsX: 1080,
+        buttonsLeftX: 14,
+        buttonsWidth: 300
+    };
 
     const c = createjs;
+    let menuButton;
+    let autoButton;
+    let spinButton;
+    let betButton;
+    let soundButton;
 
     const buttonsContainer = new c.Container().set({
-        name: 'buttonsContainer',
-        x: 1080
+        name: 'buttonsContainer'
     });
     const buttonsCache = new c.Container().set({
         name: 'buttonsCache'
     });
 
-    function handleSpinClick() {
-        if (storage.readState('lockedMenu')) return;
-        if (balance.lowBalance()) {
-            utils.showPopup('Low balance!');
-            return;
-        }
-
-        const rollState = storage.readState('roll');
-        const fastRoll = storage.readState('fastRoll');
-        const lockedRoll = storage.readState('lockedRoll');
-        if (!lockedRoll) {
-            if (rollState !== 'started') {
-                roll.startRoll();
-                spinButton.gotoAndStop('spinOff');
-                TweenMax.to(spinButton, 0.5, {rotation: -45});
-            }
-            if (fastRoll) {
-                spinButton.gotoAndStop('spinOff');
-                storage.changeState('fastRoll', 'enabled');
-                TweenMax.to(spinButton, 0.5, {rotation: 0});
-            }
-        }
-    }
-
-    function handleSoundClick() {
-        if (storage.readState('lockedMenu')) return;
-
-        if (storage.readState('roll') !== 'started') {
-            const sound = storage.readState('sound');
-            if (sound) {
-                soundButton.gotoAndStop('soundOff');
-                storage.changeState('sound', false);
-                createjs.Sound.muted = true;
-            } else {
-                soundButton.gotoAndStop('soundOut');
-                storage.changeState('sound', true);
-                createjs.Sound.muted = false;
-            }
-            buttonsCache.updateCache();
-        }
-    }
-
-    function handleMenuClick() {
-        if (storage.readState('lockedMenu')) return;
-
-        if (storage.readState('roll') !== 'started') {
-            createjs.Sound.play('buttonClickSound');
-            storage.changeState('menu', 'settings');
-        }
-    }
-
-    function handleAutoClick() {
-        if (storage.readState('lockedMenu')) return;
-
-        if (storage.readState('roll') !== 'started' && autoButton.currentAnimation !== 'autoStop') {
-            createjs.Sound.play('buttonClickSound');
-            storage.changeState('menu', 'auto');
-        }
-        if (autoButton.currentAnimation === 'autoStop') {
-            createjs.Sound.play('buttonClickSound');
-            storage.changeState('autoplay', 'ended');
-        }
-    }
-
-    function handleBetClick() {
-        if (storage.readState('lockedMenu')) return;
-
-        if (storage.readState('roll') !== 'started') {
-            createjs.Sound.play('buttonClickSound');
-            storage.changeState('menu', 'bet');
-        }
+    function start(configObj) {
+        config = configObj || defaultConfig;
     }
 
     function drawButtons() {
         const stage = storage.read('stage');
         const loader = storage.read('loadResult');
         const ss = loader.getResult('buttons');
+
+        buttonsContainer.x = config.buttonsX;
+
         spinButton = new c.Sprite(ss, 'spinOut').set({
             name: 'spinButton',
-            x: 100,
-            y: 360,
-            regX: 87,
-            regY: 87
+            x: 100, // Magic Numbers
+            y: 360 // Magic Numbers
         });
+        utils.getCenterPoint(spinButton);
         spinButton.on('click', handleSpinClick);
+
         autoButton = new c.Sprite(ss, 'autoOut').set({
             name: 'autoButton',
-            x: 98,
-            y: 210,
-            regX: 50,
-            regY: 50
+            x: 98, // Magic Numbers
+            y: 210 // Magic Numbers
         });
+        utils.getCenterPoint(autoButton);
         autoButton.on('click', handleAutoClick);
+
         betButton = new c.Sprite(ss, 'betOut').set({
             name: 'betButton',
-            x: 98,
-            y: 510,
-            regX: 50,
-            regY: 50
+            x: 98, // Magic Numbers
+            y: 510 // Magic Numbers
         });
+        utils.getCenterPoint(betButton);
         betButton.on('click', handleBetClick);
+
         menuButton = new c.Sprite(ss, 'menuOut').set({
             name: 'menuButton',
-            x: 60,
-            y: 70
+            x: 98.5, // Magic Numbers
+            y: 108.5 // Magic Numbers
         });
+        utils.getCenterPoint(menuButton);
         menuButton.on('click', handleMenuClick);
+
         soundButton = new c.Sprite(ss, 'soundOut').set({
-            x: 60,
-            y: 570,
-            name: 'soundButton'
+            name: 'soundButton',
+            x: 98.5, // Magic Numbers
+            y: 608.5 // Magic Numbers
         });
+        utils.getCenterPoint(soundButton);
         soundButton.on('click', handleSoundClick);
 
         storage.changeState('sound', true);
+
         buttonsCache.addChild(autoButton, betButton, menuButton, soundButton);
+        buttonsCache.cache(0, 0, utils.width, utils.height);
         buttonsContainer.addChild(spinButton, buttonsCache);
         stage.addChildAt(buttonsContainer, 1);
-        buttonsCache.cache(0, 0, utils.width, utils.height);
     }
 
-    function changeButtonsPosition(side) {
+    function changeSide(side) {
         const tl = new TimelineMax();
         if (side === 'right') {
             tl
-                .to(buttonsContainer, 0.25, {x: 1280})
-                .to(buttonsContainer, 0, {x: -300})
-                .to(buttonsContainer, 0.25, {x: 14});
+                .to(buttonsContainer, 0.25, {x: utils.width})
+                .to(buttonsContainer, 0, {x: -config.buttonsWidth})
+                .to(buttonsContainer, 0.25, {x: config.buttonsLeftX});
         }
         if (side === 'left') {
             tl
-                .to(buttonsContainer, 0.25, {x: -300})
-                .to(buttonsContainer, 0, {x: 1280})
-                .to(buttonsContainer, 0.25, {x: 1080});
+                .to(buttonsContainer, 0.25, {x: -config.buttonsWidth})
+                .to(buttonsContainer, 0, {x: utils.width})
+                .to(buttonsContainer, 0.25, {x: config.buttonsX});
         }
-        // if (side === 'center' || side === 'right') {
-        //     const end = (buttonsContainer.x > 1000) ? 1300 : -300;
-        //     tl
-        //         .to(buttonsContainer, 0.25, {x: end});
-        // }
     }
 
     function writeAutoplay() {
@@ -168,6 +123,7 @@ const buttons = (function () {
         });
         buttonsContainer.addChild(autoText);
     }
+
     function removeAutoplay() {
         spinButton.gotoAndStop('spinOut');
         autoButton.gotoAndStop('autoOut');
@@ -175,6 +131,7 @@ const buttons = (function () {
         const autoText = buttonsContainer.getChildByName('autoText');
         buttonsContainer.removeChild(autoText);
     }
+
     function updateAutoplay() {
         const autoCount = storage.read('autoCount');
         if (buttonsContainer.getChildByName('autoText')) {
@@ -183,50 +140,44 @@ const buttons = (function () {
         }
     }
 
-    function checkState(state) {
-        if (state === 'bgDraw' && storage.readState('bgDraw') === 'main') {
-            drawButtons();
-        }
-        if (state === 'side') {
-            changeButtonsPosition(storage.readState(state));
-        }
-        if (state === 'fastRoll' && storage.readState(state) === true && storage.readState('autoplay') !== 'started') {
-            spinButton.gotoAndStop('spinOn');
-        }
-        if (state === 'roll' && storage.readState('autoplay') !== 'started') {
-            if (storage.readState(state) === 'ended') {
-                spinButton.gotoAndStop('spinOut');
-                menuButton.gotoAndStop('menuOut');
-                autoButton.gotoAndStop('autoOut');
-                betButton.gotoAndStop('betOut');
-                buttonsCache.updateCache();
-                TweenMax.to(spinButton, 0.2, {rotation: 0});
-            }
-            if (storage.readState(state) === 'started') {
-                menuButton.gotoAndStop('menuOff');
-                autoButton.gotoAndStop('autoOff');
-                betButton.gotoAndStop('betOff');
-                buttonsCache.updateCache();
-            }
-        }
-        if (state === 'autoplay') {
-            if (storage.readState(state) === 'started') {
-                writeAutoplay();
-            } else {
-                removeAutoplay();
-            }
-        }
-        if (state === 'autoCount') {
-            updateAutoplay();
-        }
-        if (state === 'mode') {
-            if (storage.readState(state) === 'fsBonus') {
-                buttonsContainer.visible = false;
-            } else {
-                buttonsContainer.visible = true;
-            }
-        }
+    function endRoll() {
+        if (storage.readState('autoplay') === 'started') return;
+        spinButton.gotoAndStop('spinOut');
+        menuButton.gotoAndStop('menuOut');
+        autoButton.gotoAndStop('autoOut');
+        betButton.gotoAndStop('betOut');
+        buttonsCache.updateCache();
+        TweenMax.to(spinButton, 0.2, {rotation: 0});
     }
 
-    events.on('changeState', checkState);
+    function fastRoll() {
+        if (storage.readState('autoplay') === 'started') return;
+        spinButton.gotoAndStop('spinOn');
+    }
+
+    function startRoll() {
+        if (storage.readState('autoplay') === 'started') return;
+        menuButton.gotoAndStop('menuOff');
+        autoButton.gotoAndStop('autoOff');
+        betButton.gotoAndStop('betOff');
+        buttonsCache.updateCache();
+    }
+
+    function changeVisibility() {
+        buttonsContainer.visible = !buttonsContainer.visible;
+    }
+
+    return {
+        start,
+        drawButtons,
+        changeVisibility,
+        changeSide,
+        writeAutoplay,
+        updateAutoplay,
+        removeAutoplay,
+        startRoll,
+        fastRoll,
+        endRoll
+    };
+
 })();
