@@ -139,3 +139,4 @@ freeSpin.start();
 
 export { storage };
 export { events };
+export { win };

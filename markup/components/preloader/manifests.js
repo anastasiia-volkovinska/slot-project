@@ -5,9 +5,11 @@ export const preloaderManifest = [
 
 export const mainManifest = [
     // bg module
-    {id: 'newBGLight', src: 'static/img/content/bg/newBGLight.png'},
-    {id: 'bg', src: 'static/img/content/bg/bg.json', type: 'spritesheet'},
-    {id: 'newGameMachine', src: 'static/img/content/new/gameMachine.png'},
+    {id: 'mainBG', src: 'static/img/content/bg/mainBG.png'},
+    {id: 'gameBG', src: 'static/img/content/bg/gameBG.png'},
+    {id: 'mainBGSky', src: 'static/img/content/bg/mainBGSky.png'},
+    // {id: 'bg', src: 'static/img/content/bg/bg.json', type: 'spritesheet'},
+    {id: 'gameMachine', src: 'static/img/content/bg/gameMachine.png'},
     {id: 'rules', src: 'static/img/content/bg/firstRules.png'},
     {id: 'fonar', src: 'static/img/content/bg/fonar.png'},
     {id: 'home', src: 'static/img/content/new/home.png'},
@@ -16,8 +18,7 @@ export const mainManifest = [
     {id: 'buttons', src: 'static/img/content/buttons/buttons.json', type: 'spritesheet'},
 
     // roll module
-    {id: 'new_elements', src: 'static/img/content/new/elements_new3.json', type: 'spritesheet'},
-    // {id: 'new_elements', src: 'static/img/content/elements/Bonuses.json', type: 'spritesheet'},
+    {id: 'new_elements', src: 'static/img/content/elements/elements.json', type: 'spritesheet'},
     {id: 'gameShadow', src: 'static/img/content/bg/gameShadow.png'},
 
     // win module
@@ -27,6 +28,7 @@ export const mainManifest = [
     {id: 'lineFire', src: 'static/img/content/new/newLight.json', type: 'spritesheet'},
     {id: 'lizaWin', src: 'static/img/content/fs/lizaWin.json', type: 'spritesheet'},
     {id: 'cardsForLizaWin', src: 'static/img/content/fs/cardsForLizaWin.json', type: 'spritesheet'},
+    {id: 'addedElements', src: 'static/img/content/new/addedElements.json', type: 'spritesheet'},
 
     // menu module
     {id: 'menu', src: 'static/img/content/menu/menu.json', type: 'spritesheet'},

@@ -183,16 +183,26 @@ export let win = (function () {
 
     function drawLineFire(number) {
         const loader = storage.read('loadResult');
-        const ss = loader.getResult('lineFire');
-        const lineFire = new c.Sprite(ss, 'go').set({
+        const ss = loader.getResult('addedElements');
+        const lineFire = new c.Sprite(ss, 'splash').set({
             name: 'lineFire',
             x: parameters[number].x - winRectsContainer.x - 3, // Magic Numbers
             y: parameters[number].y - winRectsContainer.y + 5 // Magic Numbers
         });
+        const lineFire2 = new c.Sprite(ss, 'splash').set({
+            name: 'lineFire2',
+            x: parameters[number].x + 980 - winRectsContainer.x - 3, // Magic Numbers
+            y: parameters[number].y - winRectsContainer.y + 5 // Magic Numbers
+        });
         if (storage.readState('side') === 'right') {
             lineFire.x += 150; // Magic Numbers
+            lineFire2.x += 150; // Magic Numbers
         }
-        winRectsContainer.addChild(lineFire);
+        lineFire.on('animationend', () => { lineFire.stop(); });
+        lineFire2.on('animationend', () => { lineFire2.stop(); });
+        utils.getCenterPoint(lineFire);
+        utils.getCenterPoint(lineFire2);
+        winRectsContainer.addChild(lineFire, lineFire2);
     }
 
     function fireWinLine(number, amount) {
@@ -200,7 +210,10 @@ export let win = (function () {
             const element = winElements[number - 1][i];
             const animationName = element.currentAnimation;
             const elementIndex = animationName.substr(animationName.indexOf('-') - 1, 1);
-            element.gotoAndPlay(`${elementIndex}-w`);
+            let timer = Math.random() * 100 + 30;
+            setTimeout(function () {
+                element.gotoAndPlay(`${elementIndex}-w`);
+            }, timer);
         }
         drawLineLight(number);
         drawLineFire(number);
@@ -250,6 +263,7 @@ export let win = (function () {
     }
 
     function fireScatterWild() {
+        console.log('I am entering FS!');
         let currentRow;
         storage.changeState('autoplay', 'ended');
         winElements.forEach((winLine) => {
@@ -263,30 +277,31 @@ export let win = (function () {
                 }
             });
         });
-        fireLizaAndCards(currentRow);
+        events.trigger('initFreeSpins');
+        // fireLizaAndCards(currentRow);
     }
 
-    function fireLizaAndCards(rowNumber) {
-        const loader = storage.read('loadResult');
-        const gameContainer = stage.getChildByName('gameContainer');
-        const lizaWin = new c.Sprite(loader.getResult('lizaWin'), 'win').set({
-            name: 'lizaWin',
-            x: gameContainer.x + rowNumber * utils.elementWidth - 23, // Magic Numbers
-            y: gameContainer.y - 29 // Magic Numbers
-        });
-        lizaWin.on('animationend', function () {
-            if (storage.read('rollResponse').BonusResults[0] === 'FreeSpinBonus') {
-                events.trigger('initFreeSpins');
-                stage.removeChild(lizaWin);
-            }
-        });
-        lizaWin.on('change', function () {
-            if (Math.floor(lizaWin.currentAnimationFrame) === 12) { // Magic Numbers
-                fireCards(lizaWin.x, lizaWin.y);
-            }
-        });
-        stage.addChild(lizaWin);
-    }
+    // function fireLizaAndCards(rowNumber) {
+    //     const loader = storage.read('loadResult');
+    //     const gameContainer = stage.getChildByName('gameContainer');
+    //     const lizaWin = new c.Sprite(loader.getResult('lizaWin'), 'win').set({
+    //         name: 'lizaWin',
+    //         x: gameContainer.x + rowNumber * utils.elementWidth - 23, // Magic Numbers
+    //         y: gameContainer.y - 29 // Magic Numbers
+    //     });
+    //     lizaWin.on('animationend', function () {
+    //         if (storage.read('rollResponse').BonusResults[0] === 'FreeSpinBonus') {
+    //             events.trigger('initFreeSpins');
+    //             stage.removeChild(lizaWin);
+    //         }
+    //     });
+    //     lizaWin.on('change', function () {
+    //         if (Math.floor(lizaWin.currentAnimationFrame) === 12) { // Magic Numbers
+    //             fireCards(lizaWin.x, lizaWin.y);
+    //         }
+    //     });
+    //     stage.addChild(lizaWin);
+    // }
 
     function calcCardCoords(rot, x0, y0) {
         let xFinal, yFinal;
@@ -349,7 +364,7 @@ export let win = (function () {
             if (+lineNumber !== -1) {
                 fireWinLine(lineNumber, lineAmount);
                 lightLinesCounter++;
-            } else if (+lineWin !== 0 && storage.readState('mode') !== 'fsBonus') {
+            } else if (+lineAmount < 3 && storage.readState('mode') !== 'fsBonus') {
                 fireAllScatters();
             } else if (+lineWin === 0 && storage.readState('mode') === 'fsBonus') {
                 fireAllScatters();
@@ -402,7 +417,10 @@ export let win = (function () {
                 } else {
                     elementIndex = animationName.substr(animationName.indexOf('-') - 1, 1);
                 }
-                element.gotoAndStop(`${elementIndex}-n`);
+                if (element.currentAnimation.indexOf('w') !== -1) {
+                    element.gotoAndPlay(`${elementIndex}-n`);
+                } else {
+                }
                 element.set({
                     scaleX: 1,
                     scaleY: 1
@@ -492,6 +510,7 @@ export let win = (function () {
         startRoll,
         endRoll,
         drawAnotherLine,
+        drawLineFire,
         finishLineLight,
         showNextLine,
         showMulti

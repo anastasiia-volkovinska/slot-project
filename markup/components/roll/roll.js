@@ -19,8 +19,8 @@ export let roll = (function () {
         longRowsNumber: 30,
         gameX: 100,
         gameY: 89,
-        elementHalfWidth: 168,
-        elementHalfHeight: 145
+        elementHalfWidth: 182,
+        elementHalfHeight: 175
     };
 
     // Container
@@ -35,6 +35,7 @@ export let roll = (function () {
 
     const rollData = {};
     let columns;
+    let resultColumns = [];
     let shadows;
     let rollAnimation;
 
@@ -88,13 +89,15 @@ export let roll = (function () {
     function createElement(elementNumber, ss, mode, i, column) {
         const element = new c.Sprite(ss, `${elementNumber}-${mode}`).set({
             name: 'gameElement' + i,
-            x: elementWidth / 2,
-            y: elementHeight * i + elementHeight / 2,
+            x: elementWidth / 2 + 5,
+            y: elementHeight * i + elementHeight / 2 + 10,
             regX: config.elementHalfWidth,
             regY: config.elementHalfHeight
         });
         element.snapToPixel = true;
+        element.framerate = 12;
         column.addChild(element);
+        return element;
     }
 
     function createColumn(startArray, endArray) {
@@ -104,18 +107,19 @@ export let roll = (function () {
         for (let i = 0; i < longRowsNumber; i++) {
             if (i < rowsNumber) {
                 const elementNumber = endArray[i];
-                createElement(elementNumber, ss, 'n', i, column);
+                const element = createElement(elementNumber, ss, 'n', i, column);
             } else if (i >= longRowsNumber - rowsNumber) {
                 const elementNumber = startArray[i - longRowsNumber + rowsNumber];
-                createElement(elementNumber, ss, 'n', i, column);
+                const element = createElement(elementNumber, ss, 'n', i, column);
             } else {
                 const elementNumber = Math.ceil(Math.random() * 10);
-                createElement(elementNumber, ss, 'b', i, column);
+                const element = createElement(elementNumber, ss, 'b', i, column);
             }
             column.set({
                 y: -elementHeight * (longRowsNumber - config.rowsNumber + 1)
             });
         }
+        resultColumns.push(column.children.slice(1, 4));
         return column;
     }
 
@@ -136,10 +140,10 @@ export let roll = (function () {
                 const element = column.getChildByName(`gameElement${i}`);
                 element.gotoAndStop(`${elementNumber}-b`);
             }
-            column.set({
-                y: -elementHeight * (longRowsNumber - config.rowsNumber + 1)
-            });
         }
+        column.set({
+            y: -elementHeight * (longRowsNumber - config.rowsNumber + 1)
+        });
     }
 
     function drawScreen(currentScreenData, nextScreenData) {
@@ -231,6 +235,15 @@ export let roll = (function () {
             });
     }
 
+    function playIdleState() {
+        console.log('result', resultColumns);
+        resultColumns.forEach((column) => {
+            column.forEach((element) => {
+                element.play();
+            });
+        });
+    }
+
     function fastRoll() {
         if (storage.readState('fastRoll')) {
             rollAnimation.timeScale(2.5);
@@ -245,6 +258,7 @@ export let roll = (function () {
                 storage.changeState('roll', 'ended');
                 storage.changeState('fastRoll', false);
                 storage.changeState('lockedRoll', false);
+                playIdleState();
             });
     }
 
