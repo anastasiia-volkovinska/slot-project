@@ -197,6 +197,9 @@ export let win = (function () {
         if (storage.readState('side') === 'right') {
             lineFire.x += 150; // Magic Numbers
             lineFire2.x += 150; // Magic Numbers
+        } else if (storage.readState('side') === 'center') {
+            lineFire.x += 80; // Magic Numbers
+            lineFire2.x += 80; // Magic Numbers
         }
         lineFire.on('animationend', () => { lineFire.stop(); });
         lineFire2.on('animationend', () => { lineFire2.stop(); });
