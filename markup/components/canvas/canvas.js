@@ -73,6 +73,7 @@ export let canvas = (function () {
         const winRectsContainer = stage.getChildByName('winRectsContainer');
         const gameMask = game.mask;
         const balance = stage.getChildByName('balanceContainer');
+        const gameTopContainer = stage.getChildByName('gameTopContainer');
 
         let delta;
         switch (side) {
@@ -97,7 +98,7 @@ export let canvas = (function () {
                 return;
         }
 
-        TweenMax.to([fg, game, gameMask, gameBG, balance, winRectsContainer, winLinesContainer], config.timeToSlide, {x: delta});
+        TweenMax.to([fg, game, gameMask, gameBG, balance, winRectsContainer, winLinesContainer, gameTopContainer], config.timeToSlide, {x: delta});
     }
 
     return {
