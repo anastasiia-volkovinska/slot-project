@@ -213,6 +213,8 @@ export let win = (function () {
             let timer = Math.random() * 100 + 30;
             setTimeout(function () {
                 element.gotoAndPlay(`${elementIndex}-w`);
+                let tl = new TimelineMax();
+                tl.fromTo(element, 0.6, {scaleX: 0.8, scaleY: 0.8}, { scaleX: 1.1, scaleY: 1.1, ease: Bounce.easeOut });
             }, timer);
         }
         drawLineLight(number);
