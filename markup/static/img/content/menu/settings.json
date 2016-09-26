@@ -1,0 +1,54 @@
+{
+
+"images": [
+    "static/img/content/menu/settings.png"
+],
+
+"frames": [
+    [1, 1, 90, 14, 0, 0, 0],
+    [93, 1, 97, 14, 0, 0, 0],
+    [192, 1, 69, 14, 0, 0, 0],
+    [263, 1, 52, 14, 0, 0, 0],
+    [317, 1, 52, 14, 0, 0, 0],
+    [371, 1, 69, 14, 0, 0, 0],
+    [1, 17, 109, 109, 0, 0, 0],
+    [112, 17, 109, 109, 0, 0, 0],
+    [223, 17, 109, 109, 0, 0, 0],
+    [334, 17, 109, 109, 0, 0, 0],
+    [1, 128, 109, 109, 0, 0, 0],
+    [112, 128, 109, 109, 0, 0, 0],
+    [223, 128, 109, 109, 0, 0, 0],
+    [334, 128, 109, 109, 0, 0, 0],
+    [1, 239, 109, 109, 0, 0, 0],
+    [112, 239, 109, 109, 0, 0, 0],
+    [223, 239, 109, 109, 0, 0, 0],
+    [334, 239, 109, 109, 0, 0, 0]
+],
+
+"animations": {
+    "fastSpin": { "frames": [0] },
+    "handMode": { "frames": [1] },
+    "history": { "frames": [2] },
+    "info": { "frames": [3] },
+    "music": { "frames": [4] },
+    "sound": { "frames": [5] },
+    "fastSpin_off": { "frames": [6] },
+    "fastSpin_on": { "frames": [7] },
+    "handMode_off": { "frames": [8] },
+    "handMode_on": { "frames": [9] },
+    "history_off": { "frames": [10] },
+    "history_on": { "frames": [11] },
+    "info_off": { "frames": [12] },
+    "info_on": { "frames": [13] },
+    "music_off": { "frames": [14] },
+    "music_on": { "frames": [15] },
+    "sound_off": { "frames": [16] },
+    "sound_on": { "frames": [17] }
+},
+
+"texturepacker": [
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:2151c8994fd5e07b351eb482b7b0973e:dc3fbbe42cea413007c229d30bf35b37:11bb4e235cf88122be61d52604f9152e$",
+        "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
+]
+
+}

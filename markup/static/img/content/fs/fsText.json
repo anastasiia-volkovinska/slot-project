@@ -1,0 +1,38 @@
+{
+
+"images": [
+    "static/img/content/fs/fsText.png"
+],
+
+"frames": [
+    [1, 1, 84, 105, 0, 0, 0],
+    [87, 1, 84, 105, 0, 0, 0],
+    [173, 1, 84, 105, 0, 0, 0],
+    [259, 1, 84, 105, 0, 0, 0],
+    [345, 1, 84, 105, 0, 0, 0],
+    [431, 1, 84, 105, 0, 0, 0],
+    [517, 1, 84, 105, 0, 0, 0],
+    [603, 1, 84, 105, 0, 0, 0],
+    [689, 1, 84, 105, 0, 0, 0],
+    [775, 1, 84, 105, 0, 0, 0]
+],
+
+"animations": {
+    "0": { "frames": [0] },
+    "1": { "frames": [1] },
+    "2": { "frames": [2] },
+    "3": { "frames": [3] },
+    "4": { "frames": [4] },
+    "5": { "frames": [5] },
+    "6": { "frames": [6] },
+    "7": { "frames": [7] },
+    "8": { "frames": [8] },
+    "9": { "frames": [9] }
+},
+
+"texturepacker": [
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:49e0efa2aef8279fc34aa086d240a6f6:712d1290b98a64a174fc4dbd5993f395:509af02fd26254cc67cefa23814f2554$",
+        "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
+]
+
+}

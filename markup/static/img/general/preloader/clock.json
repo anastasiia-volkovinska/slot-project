@@ -1,0 +1,12 @@
+{
+    "images": ["static/img/general/preloader/clock.png"],
+    "frames": {
+        "width": 613,
+        "height": 403,
+        "count": 9
+    },
+    "animations": {
+        "start": [0],
+        "finish": [1, 8]
+    }
+}

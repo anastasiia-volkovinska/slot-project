@@ -1,0 +1,12 @@
+{
+    "images": ["static/img/general/preloader/sprite.png"],
+    "frames": {
+        "width": 310,
+        "height": 314,
+        "count": 16
+    },
+    "animations": {
+        "start": [0, 11],
+        "finish": [12, 15]
+    }
+}

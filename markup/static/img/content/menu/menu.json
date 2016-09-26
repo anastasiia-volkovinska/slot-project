@@ -1,0 +1,54 @@
+{
+
+"images": [
+    "static/img/content/menu/menu.png"
+],
+
+"frames": [
+    [1, 1, 243, 154, 0, 0, 0],
+    [1, 157, 243, 154, 0, 0, 0],
+    [1, 313, 238, 34, 0, 0, 0],
+    [1, 349, 219, 34, 0, 0, 0],
+    [1, 385, 185, 34, 0, 0, 0],
+    [188, 385, 56, 57, 0, 0, 0],
+    [1, 421, 139, 18, 0, 0, 0],
+    [1, 441, 135, 135, 0, 0, 0],
+    [138, 444, 105, 106, 0, 0, 0],
+    [138, 441, 47, 1, 0, 0, 0],
+    [138, 552, 56, 57, 0, 0, 0],
+    [1, 578, 135, 135, 0, 0, 0],
+    [1, 715, 135, 135, 0, 0, 0],
+    [1, 852, 121, 18, 0, 0, 0],
+    [138, 611, 56, 57, 0, 0, 0],
+    [138, 670, 56, 57, 0, 0, 0],
+    [138, 729, 56, 57, 0, 0, 0],
+    [138, 788, 56, 57, 0, 0, 0]
+],
+
+"animations": {
+    "betInCash": { "frames": [0] },
+    "betInCoins": { "frames": [1] },
+    "autoplay": { "frames": [2] },
+    "settings": { "frames": [3] },
+    "setBet": { "frames": [4] },
+    "minusOff": { "frames": [5] },
+    "coinValue": { "frames": [6] },
+    "maxbetOff": { "frames": [7] },
+    "button": { "frames": [8] },
+    "divider": { "frames": [9] },
+    "minusOn": { "frames": [10] },
+    "maxbetOn": { "frames": [11] },
+    "maxbetOut": { "frames": [12] },
+    "betLevel": { "frames": [13] },
+    "minusOut": { "frames": [14] },
+    "plusOff": { "frames": [15] },
+    "plusOn": { "frames": [16] },
+    "plusOut": { "frames": [17] }
+},
+
+"texturepacker": [
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:b801d437afb791a3bafd211bc49f0c15:b557e8a77d5e9168487740e6583e26ea:e1b68abd82547da08a80c89591506971$",
+        "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
+]
+
+}

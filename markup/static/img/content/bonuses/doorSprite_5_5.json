@@ -1,0 +1,12 @@
+{
+    "images": ["static/img/content/bonuses/doorSprite_5_5.png"],
+    "frames": {
+        "width": 147,
+        "height": 147,
+        "count": 5
+    },
+    "framerate": 12,
+    "animations": {
+        "open": [0, 4]
+    }
+}

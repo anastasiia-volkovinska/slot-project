@@ -1,0 +1,39 @@
+mixin head(data)
+    meta(charset="utf-8")
+    meta(http-equiv="x-ua-compatible", content="ie=edge")
+
+    //- Meta info
+    title #{data.title}
+    meta(name="description" content="#{data.description}")
+    meta(name="keywords" content="#{data.keywords}")
+    meta(name='google' value='notranslate')
+
+    //- For mobiles
+    meta(name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1")
+    meta(name="format-detection" content="telephone=no")
+    meta(name="format-detection" content="address=no")
+    meta(name="apple-mobile-web-app-capable" content="yes")
+    meta(name="apple-mobile-web-app-status-bar-style" content="default")
+    meta(http-equiv="imagetoolbar" content="no")
+    meta(name="HandheldFriendly" content="true")
+
+    //- For social media
+    if data.og
+        meta(property="og:title" content="#{data.og.title}")
+        meta(property="og:url" content="#{data.og.url}")
+        meta(property="og:description" content="#{data.og.description}")
+        meta(property="og:image" content="#{data.og.image.url}")
+        meta(property="og:image:type" content="#{data.og.image.type}")
+        meta(property="og:image:width" content="#{data.og.image.width}")
+        meta(property="og:image:height" content="#{data.og.image.height}")
+        link(rel="image_src" href="#{data.og.image.url}")
+
+    //- For favicons
+    link(rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon")
+    link(rel="apple-touch-icon" href="img/favicon/apple-touch-icon.png")
+    link(rel="apple-touch-icon" sizes="72x72" href="img/favicon/apple-touch-icon-72x72.png")
+    link(rel="apple-touch-icon" sizes="114x114" href="img/favicon/apple-touch-icon-114x114.png")
+
+    block styles
+        link(rel="stylesheet" href="%=static=%css/main%=hash=%%=min=%.css")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/device.js/0.2.7/device.min.js")

@@ -1,0 +1,30 @@
+doctype html
+html(lang="en")
+
+    //- Includes
+    block includes
+        include ../components/head/head
+        include ../components/canvas/canvas
+
+    //- Head
+    head
+        block head
+            +head(head.defaults)
+
+    //- Body
+    body
+
+        block canvas
+            +canvas(canvas.defaults)
+            
+        block page
+
+        block scripts
+            script(src='%=static=%js/separate-js/svg4everybody.min.js')
+            script svg4everybody();
+            script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+            script(src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js")
+            script(src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TimelineMax.min.js")
+            script(src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/plugins/ModifiersPlugin.min.js")
+            script(src="https://code.createjs.com/createjs-2015.11.26.min.js")
+            script(src='%=static=%js/main%=hash=%%=min=%.js')
