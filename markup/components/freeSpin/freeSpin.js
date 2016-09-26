@@ -152,7 +152,7 @@ export let freeSpin = (function () {
     // }
 
     function drawFreeSpinsBG() {
-        pressureDiscs = [];
+        // pressureDiscs = [];
         stage = storage.read('stage');
         const loader = storage.read('loadResult');
 
@@ -162,23 +162,25 @@ export let freeSpin = (function () {
 
         const bgContainer = stage.getChildByName('bgContainer');
         const gameBG = bgContainer.getChildByName('gameBG');
+        const mainBG = bgContainer.getChildByName('mainBG');
+        mainBG.alpha = 0;
         const fsTableContainer = new createjs.Container().set({
             name: 'fsTableContainer'
         });
         const fsMachineBG = new createjs.Bitmap(loader.getResult('fsMachineBG')).set({
             name: 'fsMachineBG',
-            x: 255,
-            y: 85
+            x: 140,
+            y: 5
         });
         const fsTotalTable = new createjs.Bitmap(loader.getResult('fsTotalTable')).set({
             name: 'fsTotalTable',
-            x: 985,
-            y: 30
+            x: 20,
+            y: 680
         });
         const fsTotalCount = new createjs.BitmapText(config.currentCount + '', loader.getResult('fsText')).set({
             name: 'fsTotalCount',
-            x: 1133,
-            y: 66,
+            x: 30,
+            y: 690,
             scaleX: 0.4,
             scaleY: 0.4
         });
@@ -196,7 +198,7 @@ export let freeSpin = (function () {
         const fsBG = new createjs.Bitmap(loader.getResult('fsBG')).set({
             name: 'fsBG'
         });
-        bgContainer.addChildAt(fsBG, 2);
+        bgContainer.addChildAt(fsBG, bgContainer.getChildIndex(mainBG) + 1);
         console.log('bgContainer', bgContainer);
         changeMultiplier(2);
         // const clockContainer = new c.Container().set({
@@ -205,7 +207,7 @@ export let freeSpin = (function () {
         // const clock = new c.Bitmap(loader.getResult('chasyFS')).set({
         //     name: 'clock',
         //     x: -160,
-        //     y: 350
+            // y: 350
         // });
         // const clockHours = new c.Sprite(loader.getResult('chasy')).set({
         //     name: 'clockHours',
@@ -454,7 +456,7 @@ export let freeSpin = (function () {
         buttonsContainer.visible = false;
         fsTotalWin = 0;
         drawFreeSpinsBG();
-        events.trigger('menu:changeSide', 'right');
+        events.trigger('menu:changeSide', 'center');
     }
 
     function transitionFreeSpins(data) {
@@ -478,21 +480,24 @@ export let freeSpin = (function () {
             name: 'transitionBG',
             alpha: 0
         });
-        let transitionYouWin = new createjs.Bitmap(loader.getResult('youWin')).set({
-            name: 'transitionYouWin',
-            x: (1280 - 1277 * 0.7) / 2,
-            y: 20,
-            scaleX: 0.7,
-            scaleY: 0.7
+        let transitionBGSky = new createjs.Bitmap(loader.getResult('mainBGSky')).set({
+            name: 'transitionBGSky'
         });
+        // let transitionYouWin = new createjs.Bitmap(loader.getResult('youWin')).set({
+        //     name: 'transitionYouWin',
+        //     x: (1280 - 1277 * 0.7) / 2,
+        //     y: 20,
+        //     scaleX: 0.7,
+        //     scaleY: 0.7
+        // });
         let transitionFSText = new createjs.Bitmap(loader.getResult('freeSpins')).set({
             name: 'transitionFSText',
             x: (1280 - 825 * 0.7) / 2,
-            y: 420,
+            y: 50,
             scaleX: 0.7,
             scaleY: 0.7
         });
-        let transitionWinText = new createjs.BitmapText(config.currentCount + '', loader.getResult('numbers')).set({
+        let transitionWinText = new createjs.BitmapText(config.currentCount + '', loader.getResult('addedElements')).set({
             name: 'transitionWinText',
             scaleX: 0.1,
             scaleY: 0.1,
@@ -501,19 +506,21 @@ export let freeSpin = (function () {
         let bounds = transitionWinText.getBounds();
         transitionWinText.x = 1280 - bounds.width * 0.7 >> 1;
         transitionWinText.y = (720 - bounds.height * 0.7 >> 1) - 50;
-        let transitionPerson = new createjs.Bitmap(loader.getResult('liza')).set({
-            name: 'transitionPerson',
-            x: (1280 - 566 * 0.65) / 2 + 380,
-            y: 215,
-            scaleX: 0.65,
-            scaleY: 0.65
-        });
-        let transitionButton = new createjs.Bitmap(loader.getResult('But')).set({
+        // let transitionPerson = new createjs.Bitmap(loader.getResult('liza')).set({
+        //     name: 'transitionPerson',
+        //     x: (1280 - 566 * 0.65) / 2 + 380,
+        //     y: 215,
+        //     scaleX: 0.65,
+        //     scaleY: 0.65
+        // });
+        let transitionButton = new createjs.Bitmap(loader.getResult('play')).set({
             name: 'transitionButton',
-            x: (1280 - 396) / 2,
-            y: 575
+            y: 575,
+            scaleX: 0.7,
+            scaleY: 0.7
         });
-
+        utils.getCenterPoint(transitionButton);
+        utils.setInCenterOf(transitionButton, utils.width);
         transitionContainer.on('click', function () {
             createjs.Sound.stop('bonusPerehodSound');
             createjs.Sound.play('fsAmbientSound', {loop: -1});
@@ -524,17 +531,17 @@ export let freeSpin = (function () {
                 .to({alpha: 0}, 500);
         }, transitionContainer, true);
 
-        transitionContainer.addChild(transitionBG, transitionYouWin, transitionWinText, transitionPerson, transitionFSText, transitionButton);
+        transitionContainer.addChild(transitionBGSky, transitionBG, transitionWinText, transitionFSText, transitionButton);
         stage.addChild(transitionContainer);
         let tl = new TimelineMax();
         tl.to(transitionBG, 0.4, {alpha: 1})
             .call(function () {
                 events.trigger('drawFreeSpins', fsStartData);
             })
-            .from(transitionYouWin, 0.4, {y: -400, alpha: 0}, '-=0.2')
+            // .from(transitionYouWin, 0.4, {y: -400, alpha: 0}, '-=0.2')
             .from(transitionFSText, 0.4, {y: 900, alpha: 0}, '-=0.2')
             .to(transitionWinText, 0.4, {scaleX: 0.7, scaleY: 0.7, alpha: 1}, '-=0.2')
-            .from(transitionPerson, 0.4, {x: 1400, alpha: 0}, '-=0.2')
+            // .from(transitionPerson, 0.4, {x: 1400, alpha: 0}, '-=0.2')
             .from(transitionButton, 0.4, {alpha: 0}, '-=0.2');
     }
 
@@ -560,12 +567,12 @@ export let freeSpin = (function () {
         const fgContainer = stage.getChildByName('fgContainer');
         const buttonsContainer = stage.getChildByName('buttonsContainer');
         buttonsContainer.visible = true;
-        const truba = fgContainer.getChildByName('truba');
-        const pressureContainer = fgContainer.getChildByName('pressureContainer');
+        // const truba = fgContainer.getChildByName('truba');
+        // const pressureContainer = fgContainer.getChildByName('pressureContainer');
         const fsMachineBG = bgContainer.getChildByName('fsMachineBG');
         const fsBG = bgContainer.getChildByName('fsBG');
-        const fonar = fgContainer.getChildByName('fonar');
-        fonar.visible = true;
+        // const fonar = fgContainer.getChildByName('fonar');
+        // fonar.visible = true;
 
         const balanceContainer = stage.getChildByName('balanceContainer');
         const coinsSum = balanceContainer.getChildByName('coinsSum');
@@ -577,17 +584,17 @@ export let freeSpin = (function () {
         betSum.visible = coinsSum.visible = betSumText.visible = coinsSumText.visible = true;
         balanceContainer.removeChild(totalWinText, totalWinSum);
         balanceContainer.updateCache();
+        stage.removeChild(stage.getChildByName('fsTableContainer'));
 
         bgContainer.removeChild(fsMachineBG, fsBG);
         bgContainer.uncache();
         // fgContainer.removeChild(truba, pressureContainer);
         fgContainer.uncache();
-        stage.removeChild(stage.getChildByName('fsLogoContainer'));
-        stage.removeChild(stage.getChildByName('fsTableContainer'));
-        stage.removeChild(stage.getChildByName('clockContainer'));
+        // stage.removeChild(stage.getChildByName('fsLogoContainer'));
+        // stage.removeChild(stage.getChildByName('clockContainer'));
         storage.changeState('side', 'left');
         events.trigger('menu:changeSide', 'left');
-        // canvas.changeGamePosition('left');
+        canvas.changeGamePosition('left');
     }
 
     function countTotalWin(data) {
@@ -616,8 +623,11 @@ export let freeSpin = (function () {
             name: 'finishContainer',
             alpha: 0
         });
-        let finishBG = new createjs.Bitmap(loader.getResult('bonusWinBG')).set({
+        let finishBG = new createjs.Bitmap(loader.getResult('mainBG')).set({
             name: 'finishBG'
+        });
+        let finishBGSky = new createjs.Bitmap(loader.getResult('mainBGSky')).set({
+            name: 'transitionBGSky'
         });
         let finishText = new createjs.Bitmap(loader.getResult('totalWin')).set({
             name: 'finishText',
@@ -626,13 +636,13 @@ export let freeSpin = (function () {
             scaleX: 0.7,
             scaleY: 0.7
         });
-        let finishPerson = new createjs.Bitmap(loader.getResult('lizaBonusWin')).set({
-            name: 'lizaBonusWin',
-            x: 920,
-            y: 210,
-            scaleX: 0.7,
-            scaleY: 0.7
-        });
+        // let finishPerson = new createjs.Bitmap(loader.getResult('lizaBonusWin')).set({
+        //     name: 'lizaBonusWin',
+        //     x: 920,
+        //     y: 210,
+        //     scaleX: 0.7,
+        //     scaleY: 0.7
+        // });
         let finishWinText = new createjs.BitmapText(fsTotalWin + '', loader.getResult('numbers')).set({
             x: 1280 / 2,
             y: 720 / 2,
@@ -642,12 +652,15 @@ export let freeSpin = (function () {
         let bounds = finishWinText.getBounds();
         finishWinText.regX = bounds.width / 2;
         finishWinText.regY = bounds.height / 2;
-        let finishButton = new createjs.Bitmap(loader.getResult('But')).set({
+        let finishButton = new createjs.Bitmap(loader.getResult('continue')).set({
             name: 'finishButton',
-            x: (1280 - 396) / 2,
-            y: 560
+            y: 560,
+            scaleX: 0.7,
+            scaleY: 0.7
         });
-        finishContainer.addChild(finishBG, finishText, finishPerson, finishWinText, finishButton);
+        utils.getCenterPoint(finishButton);
+        utils.setInCenterOf(finishButton, utils.width);
+        finishContainer.addChild(finishBGSky, finishBG, finishText, finishWinText, finishButton);
         createjs.Tween.get(finishContainer)
             .to({alpha: 1}, 500)
             .call(function () {
@@ -660,6 +673,11 @@ export let freeSpin = (function () {
                 .to({alpha: 0}, 500)
                 .call(function () {
                     stage.removeChild(finishContainer);
+                    const bgContainer = stage.getChildByName('bgContainer');
+                    const mainBG = bgContainer.getChildByName('mainBG');
+                    mainBG.alpha = 1;
+                    const fsBG = bgContainer.getChildByName('fsBG');
+                    stage.removeChild(fsBG);
                 });
         });
         stage.addChild(finishContainer);
@@ -756,8 +774,8 @@ export let freeSpin = (function () {
 
     function crashGame() {
         const time = Math.random() * 3000 + 1000;
-        getSomePar();
-        movePipe();
+        // getSomePar();
+        // movePipe();
         parTimer = setTimeout(crashGame, time);
     }
 
