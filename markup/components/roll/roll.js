@@ -25,6 +25,7 @@ export let roll = (function () {
 
     // Container
     const gameContainer = new c.Container();
+    const gameTopContainer = new c.Container();
 
     function start(configObj) {
         config = configObj || defaultConfig;
@@ -63,6 +64,17 @@ export let roll = (function () {
         stage.addChildAt(gameContainer, stage.getChildIndex(fg));
     }
 
+    function initTopGameContainer() {
+        gameTopContainer.set({
+            name: 'gameTopContainer',
+            x: config.gameX,
+            y: config.gameY
+        });
+        const stage = storage.read('stage');
+        const fg = stage.getChildByName('fgContainer');
+        stage.addChildAt(gameTopContainer, stage.getChildIndex(fg) + 1);
+    }
+
     function getScreenData(inds, wls) {
         let i, j, screen = [];
         let wheelsLength = +wls[0].length; // Если колеса будут разной длинны поломается
@@ -91,10 +103,11 @@ export let roll = (function () {
             x: elementWidth / 2,
             y: elementHeight * i + elementHeight / 2,
             regX: config.elementHalfWidth,
-            regY: config.elementHalfHeight
+            regY: config.elementHalfHeight,
+            posY: i - 1
         });
         element.snapToPixel = true;
-        column.addChild(element);
+        return element;
     }
 
     function createColumn(startArray, endArray) {
@@ -102,20 +115,22 @@ export let roll = (function () {
         const ss = loader.getResult('new_elements');
         const column = new createjs.Container();
         for (let i = 0; i < longRowsNumber; i++) {
+            let element;
             if (i < rowsNumber) {
                 const elementNumber = endArray[i];
-                createElement(elementNumber, ss, 'n', i, column);
+                element = createElement(elementNumber, ss, 'n', i, column);
             } else if (i >= longRowsNumber - rowsNumber) {
                 const elementNumber = startArray[i - longRowsNumber + rowsNumber];
-                createElement(elementNumber, ss, 'n', i, column);
+                element = createElement(elementNumber, ss, 'n', i, column);
             } else {
                 const elementNumber = Math.ceil(Math.random() * 10);
-                createElement(elementNumber, ss, 'b', i, column);
+                element = createElement(elementNumber, ss, 'b', i, column);
             }
-            column.set({
-                y: -elementHeight * (longRowsNumber - config.rowsNumber + 1)
-            });
+            column.addChild(element);
         }
+        column.set({
+            y: -elementHeight * (longRowsNumber - config.rowsNumber + 1)
+        });
         return column;
     }
 
@@ -163,6 +178,23 @@ export let roll = (function () {
             }
             storage.changeState('firstScreen', 'done');
             events.trigger('roll:firstScreen');
+            // TODO: createTopGameController
+            initTopGameContainer();
+            let topContainer = [];
+            const ss = loader.getResult('new_elements');
+            for (let indColumn = 0; indColumn < columnsNumber; indColumn++) {
+                topContainer[indColumn] = [];
+                for (let indRow = 0; indRow < 3; indRow++) {
+                    let _element = topContainer[indColumn][indRow] = createElement(1, ss, 'n', indRow, gameTopContainer);
+                    _element.set({
+                        x: _element.x + elementWidth * indColumn
+                    });
+                    _element.visible = false;
+                    gameTopContainer.addChild(_element);
+                }
+            }
+            storage.write('gameTopContainer', gameTopContainer);
+            storage.write('gameTopElements', topContainer);
         } else { // Отображение новых экранов
             columns.forEach((column, i) => {
                 updateColumn(currentScreenData[i], nextScreenData[i], column);
