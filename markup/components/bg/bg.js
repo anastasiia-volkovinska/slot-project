@@ -26,24 +26,29 @@ export let bg = (function () {
 
         const bgContainer = new c.Container().set({name: 'bgContainer'});
         const fgContainer = new c.Container().set({name: 'fgContainer'});
-        const mainBG = new c.Bitmap(loader.getResult('newBGLight')).set({name: 'mainBG'});
-        const gameBG = new c.Sprite(loader.getResult('bg'), 'gameBG').set({name: 'gameBG'});
-        const gameMachine = new c.Bitmap(loader.getResult('newGameMachine')).set({
+        const mainBG = new c.Bitmap(loader.getResult('mainBG')).set({name: 'mainBG'});
+        const mainBGSky = new c.Bitmap(loader.getResult('mainBGSky')).set({name: 'mainBGSky'});
+        const gameBG = new c.Bitmap(loader.getResult('gameBG')).set({
+            name: 'gameBG',
+            x: 60, // Magic Numbers
+            y: 5 // Magic Numbers
+        });
+        const gameMachine = new c.Bitmap(loader.getResult('gameMachine')).set({
             name: 'gameMachine',
-            x: 80, // Magic Numbers
+            x: 60, // Magic Numbers
             y: 5 // Magic Numbers
         });
 
-        const fonar = new c.Bitmap(loader.getResult('fonar')).set({
-            name: 'fonar',
-            x: 71, // Magic Numbers
-            y: 23, // Magic Numbers
-            regX: 267 // Magic Numbers
-        });
-        const fonarTL = new TimelineMax({repeat: -1, yoyo: true});
-        fonarTL.to(fonar, 2, {
-            ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 0.1, points: 10, taper: 'none', randomize: true, clamp: false}), alpha: 0.7
-        });
+        // const fonar = new c.Bitmap(loader.getResult('fonar')).set({
+        //     name: 'fonar',
+        //     x: 71, // Magic Numbers
+        //     y: 23, // Magic Numbers
+        //     regX: 267 // Magic Numbers
+        // });
+        // const fonarTL = new TimelineMax({repeat: -1, yoyo: true});
+        // fonarTL.to(fonar, 2, {
+        //     ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 0.1, points: 10, taper: 'none', randomize: true, clamp: false}), alpha: 0.7
+        // });
 
         // Это нужно перенести в модуль баланса или оставить здесь
         const footerBgDown = new c.Shape().set({name: 'footerBgDown'});
@@ -66,8 +71,8 @@ export let bg = (function () {
         });
 
 
-        bgContainer.addChild(mainBG, gameBG, footerBgUp, footerBgDown, home);
-        fgContainer.addChild(gameMachine, fonar);
+        bgContainer.addChild(mainBGSky, mainBG, gameBG, footerBgUp, footerBgDown, home);
+        fgContainer.addChild(gameMachine);
         stage.addChildAt(bgContainer, fgContainer, 0);
 
         // TODO: Разобраться с кешированием бекграундов
@@ -82,12 +87,12 @@ export let bg = (function () {
     function changeSide(side) {
         const stage = storage.read('stage');
         const fg = stage.getChildByName('fgContainer');
-        const fonar = fg.getChildByName('fonar');
-        if (side === 'left') {
-            fonar.x = 71; // Magic Numbers
-        } else if (side === 'right') {
-            fonar.x = 71 - 150; // Magic Numbers
-        }
+        // const fonar = fg.getChildByName('fonar');
+        // if (side === 'left') {
+        //     fonar.x = 71; // Magic Numbers
+        // } else if (side === 'right') {
+        //     fonar.x = 71 - 150; // Magic Numbers
+        // }
     }
 
     return {

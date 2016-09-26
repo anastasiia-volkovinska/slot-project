@@ -2,15 +2,17 @@ import { utils } from 'components/utils/utils';
 
 export let parsers = (function () {
 
-    const names = ['j', 'iJ', 'q', 'iQ', 'k', 'iK', 'a', 'iA', 'wild', 'scatter', 'sw1', 'sw2', 'sw3', 'card'];
+    const names = ['j', 'iJ', 'q', 'iQ', 'k', 'iK', 'a', 'iA', 'wild', 'scatter', 'fsScatter'];
 
     function parseWheels(string) {
+        // console.log('wheel string:', string);
         const wheelsMas = string.split('|').map((column) => {
             return column.split('@');
         });
         wheelsMas.map((column, columnIndex) => {
             return column.map((element, rowIndex) => {
                 if (names.indexOf(element) < 0) {
+                    console.log('element', element);
                     console.error('Unknown symbol!');
                 }
                 element = names.indexOf(element) + 1;

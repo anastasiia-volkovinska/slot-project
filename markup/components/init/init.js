@@ -15,7 +15,7 @@ export let init = (function () {
 
     // qo2 - двери, qo5 - фри-спины, qos - стандартный режим
     const mode = {
-        normal: 'qos',
+        normal: 'sn2',
         fsBonus: 'qo5',
         bonus: 'qo2'
     };

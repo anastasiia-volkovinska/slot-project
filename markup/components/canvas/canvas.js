@@ -11,6 +11,7 @@ export let canvas = (function () {
         canvas: '#game',
         mouseOver: 10,
         leftToRight: 150,
+        center: 85,
         timeToSlide: 0.5
     };
     const c = createjs;
@@ -80,8 +81,17 @@ export let canvas = (function () {
                 storage.changeState('side', 'right');
                 break;
             case 'left':
-                delta = `-=${config.leftToRight}`;
-                storage.changeState('side', 'left');
+                if (storage.readState('side') === 'right'){
+                    delta = `-=${config.leftToRight}`;
+                    storage.changeState('side', 'left');
+                } else {
+                    delta = `-=${config.center}`;
+                    storage.changeState('side', 'left');
+                }
+                break;
+            case 'center':
+                delta = `+=${config.center}`;
+                storage.changeState('side', 'center');
                 break;
             default:
                 return;

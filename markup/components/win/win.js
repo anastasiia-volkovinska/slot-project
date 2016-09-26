@@ -133,18 +133,18 @@ export let win = (function () {
         const lineWin = data.lineWin;
         const winText = new c.Container().set({
             name: 'winText',
-            y: linesCoords[number - 1][amount - 1].y + 30, // Magic Numbers
-            x: linesCoords[number - 1][amount - 1].x + 32 // Magic Numbers
+            x: linesCoords[number - 1][amount - 1].x + 15, // Magic Numbers
+            y: linesCoords[number - 1][amount - 1].y + 10 // Magic Numbers
         });
         const winLineRect = new c.Bitmap(loader.getResult('winLineRect')).set({
             name: 'winLineRect',
-            scaleX: 1.8,
-            scaleY: 1.8
+            scaleX: 1.2,
+            scaleY: 1.2
         });
-        const winLineText = new c.Text(lineWin, '35px Helvetica', '#f0e194').set({
+        const winLineText = new c.Text(lineWin, '32px Helvetica', '#f0e194').set({
             name: 'winLineText',
-            x: 30, // Magic Numbers
-            y: 22, // Magic Numbers
+            x: 48, // Magic Numbers
+            y: 50, // Magic Numbers
             textAlign: 'center',
             textBaseline: 'middle',
             shadow: new c.Shadow('#C19433', 0, 0, 8)
@@ -183,16 +183,29 @@ export let win = (function () {
 
     function drawLineFire(number) {
         const loader = storage.read('loadResult');
-        const ss = loader.getResult('lineFire');
-        const lineFire = new c.Sprite(ss, 'go').set({
+        const ss = loader.getResult('addedElements');
+        const lineFire = new c.Sprite(ss, 'splash').set({
             name: 'lineFire',
             x: parameters[number].x - winRectsContainer.x - 3, // Magic Numbers
             y: parameters[number].y - winRectsContainer.y + 5 // Magic Numbers
         });
+        const lineFire2 = new c.Sprite(ss, 'splash').set({
+            name: 'lineFire2',
+            x: parameters[number].x + 980 - winRectsContainer.x - 3, // Magic Numbers
+            y: parameters[number].y - winRectsContainer.y + 5 // Magic Numbers
+        });
         if (storage.readState('side') === 'right') {
             lineFire.x += 150; // Magic Numbers
+            lineFire2.x += 150; // Magic Numbers
+        } else if (storage.readState('side') === 'center') {
+            lineFire.x += 80; // Magic Numbers
+            lineFire2.x += 80; // Magic Numbers
         }
-        winRectsContainer.addChild(lineFire);
+        lineFire.on('animationend', () => { lineFire.stop(); });
+        lineFire2.on('animationend', () => { lineFire2.stop(); });
+        utils.getCenterPoint(lineFire);
+        utils.getCenterPoint(lineFire2);
+        winRectsContainer.addChild(lineFire, lineFire2);
     }
 
     function fireWinLine(number, amount) {
@@ -200,7 +213,12 @@ export let win = (function () {
             const element = winElements[number - 1][i];
             const animationName = element.currentAnimation;
             const elementIndex = animationName.substr(animationName.indexOf('-') - 1, 1);
-            element.gotoAndPlay(`${elementIndex}-w`);
+            let timer = Math.random() * 100 + 30;
+            setTimeout(function () {
+                element.gotoAndPlay(`${elementIndex}-w`);
+                let tl = new TimelineMax();
+                tl.fromTo(element, 0.6, {scaleX: 0.8, scaleY: 0.8}, { scaleX: 1.1, scaleY: 1.1, ease: Bounce.easeOut });
+            }, timer);
         }
         drawLineLight(number);
         drawLineFire(number);
@@ -250,6 +268,7 @@ export let win = (function () {
     }
 
     function fireScatterWild() {
+        console.log('I am entering FS!');
         let currentRow;
         storage.changeState('autoplay', 'ended');
         winElements.forEach((winLine) => {
@@ -263,30 +282,33 @@ export let win = (function () {
                 }
             });
         });
-        fireLizaAndCards(currentRow);
+        if (storage.read('rollResponse').BonusResults[0] === 'FreeSpinBonus') {
+            events.trigger('initFreeSpins');
+        }
+        // fireLizaAndCards(currentRow);
     }
 
-    function fireLizaAndCards(rowNumber) {
-        const loader = storage.read('loadResult');
-        const gameContainer = stage.getChildByName('gameContainer');
-        const lizaWin = new c.Sprite(loader.getResult('lizaWin'), 'win').set({
-            name: 'lizaWin',
-            x: gameContainer.x + rowNumber * utils.elementWidth - 23, // Magic Numbers
-            y: gameContainer.y - 29 // Magic Numbers
-        });
-        lizaWin.on('animationend', function () {
-            if (storage.read('rollResponse').BonusResults[0] === 'FreeSpinBonus') {
-                events.trigger('initFreeSpins');
-                stage.removeChild(lizaWin);
-            }
-        });
-        lizaWin.on('change', function () {
-            if (Math.floor(lizaWin.currentAnimationFrame) === 12) { // Magic Numbers
-                fireCards(lizaWin.x, lizaWin.y);
-            }
-        });
-        stage.addChild(lizaWin);
-    }
+    // function fireLizaAndCards(rowNumber) {
+    //     const loader = storage.read('loadResult');
+    //     const gameContainer = stage.getChildByName('gameContainer');
+    //     const lizaWin = new c.Sprite(loader.getResult('lizaWin'), 'win').set({
+    //         name: 'lizaWin',
+    //         x: gameContainer.x + rowNumber * utils.elementWidth - 23, // Magic Numbers
+    //         y: gameContainer.y - 29 // Magic Numbers
+    //     });
+    //     lizaWin.on('animationend', function () {
+    //         if (storage.read('rollResponse').BonusResults[0] === 'FreeSpinBonus') {
+    //             events.trigger('initFreeSpins');
+    //             stage.removeChild(lizaWin);
+    //         }
+    //     });
+    //     lizaWin.on('change', function () {
+    //         if (Math.floor(lizaWin.currentAnimationFrame) === 12) { // Magic Numbers
+    //             fireCards(lizaWin.x, lizaWin.y);
+    //         }
+    //     });
+    //     stage.addChild(lizaWin);
+    // }
 
     function calcCardCoords(rot, x0, y0) {
         let xFinal, yFinal;
@@ -349,7 +371,7 @@ export let win = (function () {
             if (+lineNumber !== -1) {
                 fireWinLine(lineNumber, lineAmount);
                 lightLinesCounter++;
-            } else if (+lineWin !== 0 && storage.readState('mode') !== 'fsBonus') {
+            } else if (+lineAmount < 3 && storage.readState('mode') !== 'fsBonus') {
                 fireAllScatters();
             } else if (+lineWin === 0 && storage.readState('mode') === 'fsBonus') {
                 fireAllScatters();
@@ -402,7 +424,10 @@ export let win = (function () {
                 } else {
                     elementIndex = animationName.substr(animationName.indexOf('-') - 1, 1);
                 }
-                element.gotoAndStop(`${elementIndex}-n`);
+                if (element.currentAnimation.indexOf('w') !== -1) {
+                    element.gotoAndPlay(`${elementIndex}-n`);
+                } else {
+                }
                 element.set({
                     scaleX: 1,
                     scaleY: 1
@@ -492,6 +517,7 @@ export let win = (function () {
         startRoll,
         endRoll,
         drawAnotherLine,
+        drawLineFire,
         finishLineLight,
         showNextLine,
         showMulti

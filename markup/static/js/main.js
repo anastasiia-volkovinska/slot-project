@@ -34,6 +34,7 @@ canvas.start({
     canvas: '#game',
     mouseOver: 0,
     leftToRight: 150,
+    center: 80,
     timeToSlide: 0.5
 });
 events.on('init:inited', canvas.initStage);
@@ -139,3 +140,4 @@ freeSpin.start();
 
 export { storage };
 export { events };
+export { win };
