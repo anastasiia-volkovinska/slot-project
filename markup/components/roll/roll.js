@@ -19,8 +19,8 @@ export let roll = (function () {
         longRowsNumber: 30,
         gameX: 100,
         gameY: 89,
-        elementHalfWidth: 182,
-        elementHalfHeight: 175
+        elementHalfWidth: 174,
+        elementHalfHeight: 161
     };
 
     // Container
@@ -89,9 +89,9 @@ export let roll = (function () {
     function createElement(elementNumber, ss, mode, i, column) {
         const element = new c.Sprite(ss, `${elementNumber}-${mode}`).set({
             name: 'gameElement' + i,
-            x: elementWidth / 2 + 5,
-            y: elementHeight * i + elementHeight / 2 + 10,
-            regX: config.elementHalfWidth,
+            x: elementWidth / 2,
+            y: elementHeight * i + elementHeight / 2,
+            regX: config.elementHalfWidth - 10,
             regY: config.elementHalfHeight
         });
         element.snapToPixel = true;
