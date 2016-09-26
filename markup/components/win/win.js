@@ -277,7 +277,9 @@ export let win = (function () {
                 }
             });
         });
-        events.trigger('initFreeSpins');
+        if (storage.read('rollResponse').BonusResults[0] === 'FreeSpinBonus') {
+            events.trigger('initFreeSpins');
+        }
         // fireLizaAndCards(currentRow);
     }
 
