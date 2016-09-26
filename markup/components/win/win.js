@@ -133,18 +133,18 @@ export let win = (function () {
         const lineWin = data.lineWin;
         const winText = new c.Container().set({
             name: 'winText',
-            y: linesCoords[number - 1][amount - 1].y + 30, // Magic Numbers
-            x: linesCoords[number - 1][amount - 1].x + 32 // Magic Numbers
+            x: linesCoords[number - 1][amount - 1].x + 15, // Magic Numbers
+            y: linesCoords[number - 1][amount - 1].y + 10 // Magic Numbers
         });
         const winLineRect = new c.Bitmap(loader.getResult('winLineRect')).set({
             name: 'winLineRect',
-            scaleX: 1.8,
-            scaleY: 1.8
+            scaleX: 1.2,
+            scaleY: 1.2
         });
-        const winLineText = new c.Text(lineWin, '35px Helvetica', '#f0e194').set({
+        const winLineText = new c.Text(lineWin, '32px Helvetica', '#f0e194').set({
             name: 'winLineText',
-            x: 30, // Magic Numbers
-            y: 22, // Magic Numbers
+            x: 48, // Magic Numbers
+            y: 50, // Magic Numbers
             textAlign: 'center',
             textBaseline: 'middle',
             shadow: new c.Shadow('#C19433', 0, 0, 8)
