@@ -90,36 +90,57 @@ export let win = (function () {
         const amount = Math.round(Math.random() * 80) + 20;
         const linesCoords = storage.read('linesCoords');
         const loader = storage.read('loadResult');
-        // const ss = loader.getResult('linesSprite');
-        for (let i = 0; i < amount; i++) {
-            const timeout = (Math.random() * 700) / 1000;
-            let scale;
-            let endsAmount = Math.round(amount / 4);
-            let scalePart = 0.7 / endsAmount;
-            if (i < endsAmount) {
-                scale = i * scalePart;
-            } else if (i > (amount - endsAmount)) {
-                scale = scalePart * (amount - i);
-            } else {
-                scale = 0.7;
+        const ss = loader.getResult('bulletpath');
+        const bullet = new c.Sprite(ss).set({
+            x: linesCoords[number - 1][0].x,
+            y: linesCoords[number - 1][0].y,
+            scaleX: 0.2,
+            scaleY: 0.2
+        });
+        bullet.gotoAndStop(0);
+        lightMas.push(bullet);
+        winLinesContainer.addChild(bullet);
+        utils.getCenterPoint(bullet);
+        for (let i = 1; i < 6; i++) {
+            for (let j = 1; j < 5; j++) {
+                const trace = bullet.clone();
+                trace.gotoAndStop(i);
+                lightMas.push(trace);
+                winLinesContainer.addChild(trace);
+                utils.getCenterPoint(trace);
+                trace.alpha = 1 / i;
             }
-            const light = new c.Bitmap(loader.getResult('newLight')).set({
-                name: 'winLight',
-                x: linesCoords[number - 1][0].x,
-                y: linesCoords[number - 1][0].y,
-                scaleX: scale,
-                scaleY: scale
-            });
-            utils.getCenterPoint(light);
-            lightMas.push(light);
-            winLinesContainer.addChild(light);
         }
-        TweenMax.staggerTo(lightMas, 0.75,
+        // for (let i = 0; i < amount; i++) {
+        //     const timeout = (Math.random() * 700) / 1000;
+        //     let scale;
+        //     let endsAmount = Math.round(amount / 4);
+        //     let scalePart = 0.7 / endsAmount;
+        //     if (i < endsAmount) {
+        //         scale = i * scalePart;
+        //     } else if (i > (amount - endsAmount)) {
+        //         scale = scalePart * (amount - i);
+        //     } else {
+        //         scale = 0.7;
+        //     }
+        //     const light = new c.Bitmap(loader.getResult('newLight')).set({
+        //         name: 'winLight',
+        //         x: linesCoords[number - 1][0].x,
+        //         y: linesCoords[number - 1][0].y,
+        //         scaleX: scale,
+        //         scaleY: scale
+        //     });
+        //     utils.getCenterPoint(light);
+        //     lightMas.push(light);
+        //     winLinesContainer.addChild(light);
+        // }
+        // animation
+        TweenMax.staggerTo(lightMas, 0.7,
             {bezier: {type: 'soft', values: linesCoords[number - 1], autoRotate: true},
             ease: Power1.easeOut,
             onComplete: function () {
                 winLinesContainer.removeChild(this.target);
-            }}, 0.003, function () {
+            }}, 0.025, function () {
                 storage.changeState('lineLight', 'done');
                 events.trigger('win:lineLight', number);
             }
@@ -134,28 +155,28 @@ export let win = (function () {
         const lineWin = data.lineWin;
         const winText = new c.Container().set({
             name: 'winText',
-            x: linesCoords[number - 1][amount - 1].x + 15, // Magic Numbers
-            y: linesCoords[number - 1][amount - 1].y + 10 // Magic Numbers
+            x: linesCoords[number - 1][amount - 1].x + 25, // Magic Numbers
+            y: linesCoords[number - 1][amount - 1].y + 20 // Magic Numbers
         });
         const winLineRect = new c.Bitmap(loader.getResult('winLineRect')).set({
             name: 'winLineRect',
-            scaleX: 1.2,
-            scaleY: 1.2
+            scaleX: 0.9,
+            scaleY: 0.9
         });
-        const winLineText = new c.Text(lineWin, '32px Helvetica', '#f0e194').set({
+        const winLineText = new c.Text(lineWin, '20px Helvetica', '#f0e194').set({
             name: 'winLineText',
-            x: 48, // Magic Numbers
-            y: 50, // Magic Numbers
+            x: 35, // Magic Numbers
+            y: 37, // Magic Numbers
             textAlign: 'center',
             textBaseline: 'middle',
             shadow: new c.Shadow('#C19433', 0, 0, 8)
         });
         if ((winLineText.text + '').length > 3) {
-            winLineText.font = '20px Helvetica';
+            winLineText.font = '14px Helvetica';
         } else if ((winLineText.text + '').length > 2) {
-            winLineText.font = '25px Helvetica';
+            winLineText.font = '16px Helvetica';
         } else if ((winLineText.text + '').length > 1) {
-            winLineText.font = '30px Helvetica';
+            winLineText.font = '18px Helvetica';
         }
         winText.addChild(winLineRect, winLineText);
         winRectsContainer.addChild(winText);
@@ -229,6 +250,8 @@ export let win = (function () {
                 topElement.visible = true;
 
                 topElement.gotoAndPlay(`${elementIndex}-w`);
+                let tl = new TimelineMax();
+                tl.fromTo(topElement, 0.6, {scaleX: 0.8, scaleY: 0.8}, { scaleX: 1.1, scaleY: 1.1, ease: Bounce.easeOut });
             }
         } else {
             for (let i = 0; i < amount; i++) {
@@ -236,9 +259,9 @@ export let win = (function () {
                 const animationName = element.currentAnimation;
                 const elementIndex = animationName.substr(animationName.indexOf('-') - 1, 1);
                 element.gotoAndPlay(`${elementIndex}-w`);
-            }
-                tl.fromTo(element, 0.6, {scaleX: 0.8, scaleY: 0.8}, { scaleX: 1.1, scaleY: 1.1, ease: Bounce.easeOut });
                 let tl = new TimelineMax();
+                tl.fromTo(element, 0.6, {scaleX: 0.8, scaleY: 0.8}, { scaleX: 1.1, scaleY: 1.1, ease: Bounce.easeOut });
+            }
         }
 
         drawLineLight(number);
@@ -264,6 +287,7 @@ export let win = (function () {
     }
 
     function fireAllScatters() {
+        console.log('we entered fireAllScatters');
         const gameContainer = stage.getChildByName('gameContainer');
         const gameTopElements = storage.read('gameTopElements');
         winElements.forEach((winLine) => {
@@ -287,40 +311,42 @@ export let win = (function () {
                         });
                     }
                 }
-                if (+elementIndex === 14) {
+                if (+elementIndex === 11) {
                     element.gotoAndPlay(`${elementIndex}-w`);
                     let totalFreeSpins = storage.read('rollResponse').TotalFreeSpins;
                     freeSpin.showTotalFreeSpins(totalFreeSpins);
                 }
             });
         });
-        if (storage.read('rollResponse').BonusResults[0] === 'StagesSlotBonus') {
+        if (storage.read('rollResponse').BonusResults[0] === 'FreeSpinBonus') {
             setTimeout(function () {
-                events.trigger('initBonusLevel');
-            }, 1000);
+                events.trigger('initFreeSpins');
+            }, 1500);
         }
     }
 
-    function fireScatterWild() {
-        console.log('I am entering FS!');
-        let currentRow;
-        storage.changeState('autoplay', 'ended');
-        winElements.forEach((winLine) => {
-            winLine.forEach((element, index) => {
-                const animationName = element.currentAnimation;
-                const elementIndex = animationName.substr(animationName.indexOf('-') - 2, 2);
-                if (+elementIndex === 11 || +elementIndex === 12 || +elementIndex === 13) {
-                    if (!currentRow) {
-                        currentRow = index;
-                    }
-                }
-            });
-        });
-        if (storage.read('rollResponse').BonusResults[0] === 'FreeSpinBonus') {
-            events.trigger('initFreeSpins');
-        }
-        // fireLizaAndCards(currentRow);
-    }
+    // function fireScatterWild() {
+    //     console.log('I am entering FS!');
+    //     let currentRow;
+    //     storage.changeState('autoplay', 'ended');
+    //     winElements.forEach((winLine) => {
+    //         winLine.forEach((element, index) => {
+    //             const animationName = element.currentAnimation;
+    //             const elementIndex = animationName.substr(animationName.indexOf('-') - 2, 2);
+    //             if (+elementIndex === 11 || +elementIndex === 12 || +elementIndex === 13) {
+    //                 if (!currentRow) {
+    //                     currentRow = index;
+    //                 }
+    //             }
+    //         });
+    //     });
+    //     if (storage.read('rollResponse').BonusResults[0] === 'FreeSpinBonus') {
+    //         setTimeout(function () {
+    //             events.trigger('initFreeSpins');
+    //         }, 2000);
+    //     }
+    //     // fireLizaAndCards(currentRow);
+    // }
 
     // function fireLizaAndCards(rowNumber) {
     //     const loader = storage.read('loadResult');
@@ -405,13 +431,13 @@ export let win = (function () {
             if (+lineNumber !== -1) {
                 fireWinLine(lineNumber, lineAmount);
                 lightLinesCounter++;
-            } else if (+lineAmount < 3 && storage.readState('mode') !== 'fsBonus') {
-                fireAllScatters();
-            } else if (+lineWin === 0 && storage.readState('mode') === 'fsBonus') {
-                fireAllScatters();
             } else {
-                fireScatterWild();
-            }
+                fireAllScatters();
+            } // else if (+lineWin === 0 && storage.readState('mode') === 'fsBonus') {
+            //     fireAllScatters();
+            // } else {
+            //     fireScatterWild();
+            // }
         });
         const totalWin = storage.read('rollResponse').TotalWinCoins;
         if (totalWin > 0) {
