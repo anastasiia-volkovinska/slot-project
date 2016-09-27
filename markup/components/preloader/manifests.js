@@ -14,6 +14,9 @@ export const mainManifest = [
     // {id: 'fonar', src: 'static/img/content/bg/fonar.png'},
     {id: 'home', src: 'static/img/content/new/home.png'},
 
+    // preloader module
+    {id: 'logo', src: 'static/img/content/preloader/logo.png'},
+
     // buttons module
     {id: 'buttons', src: 'static/img/content/buttons/buttons.json', type: 'spritesheet'},
 
@@ -26,6 +29,7 @@ export const mainManifest = [
     {id: 'newLight', src: 'static/img/content/new/newLight_yellow.png'},
     {id: 'winLineRect', src: 'static/img/content/lines/winLineRect.png'},
     {id: 'winTotalRect', src: 'static/img/content/lines/winTotalRect.png'},
+    {id: 'bulletpath', src: 'static/img/content/lines/bulletpath.json', type: 'spritesheet'},
     // {id: 'lineFire', src: 'static/img/content/new/newLight.json', type: 'spritesheet'},
     // {id: 'lizaWin', src: 'static/img/content/fs/lizaWin.json', type: 'spritesheet'},
     // {id: 'cardsForLizaWin', src: 'static/img/content/fs/cardsForLizaWin.json', type: 'spritesheet'},
@@ -97,6 +101,8 @@ export const mainManifest = [
     {id: 'fsTotalTable', src: 'static/img/content/fs/fsTotalTable.png'},
     {id: 'fsText', src: 'static/img/content/fs/fsText.json', type: 'spritesheet'},
     {id: 'fsBG', src: 'static/img/content/fs/fsBG.png'},
+    {id: 'fsDrumBG', src: 'static/img/content/fs/fsDrumBG.png'},
+    {id: 'bullet', src: 'static/img/content/fs/bullet.png'},
     // {id: 'pressure', src: 'static/img/content/fs/pressure.png'},
     // {id: 'fireToPressure', src: 'static/img/content/fs/fireToPressure.json', type: 'spritesheet'},
     // {id: 'pressureDisc', src: 'static/img/content/fs/pressureDisc.png'},
@@ -122,7 +128,10 @@ export const mainManifest = [
     {id: 'multiBG', src: 'static/img/content/bg/mainBG.png'},
     {id: 'multiTitle', src: 'static/img/content/bg/multiTitle.png'},
     {id: 'multiCoins', src: 'static/img/content/bg/multiCoins.png'},
-    {id: 'x7', src: 'static/img/content/fs/x7.png'},
+    // {id: 'x7', src: 'static/img/content/fs/x7.png'},
+    {id: 'x4', src: 'static/img/content/fs/x4.png'},
+    {id: 'x6', src: 'static/img/content/fs/x6.png'},
+    {id: 'x8', src: 'static/img/content/fs/x8.png'},
     {id: 'popup', src: 'static/img/content/new/popup.png'},
     {id: 'numbers', src: 'static/img/content/bonuses/numbers.json', type: 'spritesheet'}
 
