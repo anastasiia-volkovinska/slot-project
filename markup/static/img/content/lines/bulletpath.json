@@ -1,0 +1,33 @@
+{
+
+"images": [
+    "static/img/content/lines/bulletpath.png"
+],
+
+"frames": [
+    [1, 1, 618, 262, 0, 0, 0],
+    [621, 1, 359, 210, 0, 0, 0],
+    [1, 265, 361, 191, 0, 0, 0],
+    [364, 265, 359, 144, 0, 0, 0],
+    [1, 458, 361, 111, 0, 0, 0],
+    [364, 458, 337, 67, 0, 0, 0],
+    [1, 571, 360, 169, 0, 0, 0]
+],
+
+"animations": {
+    "0": { "frames": [0] },
+    "1": { "frames": [1] },
+    "2": { "frames": [2] },
+    "3": { "frames": [3] },
+    "4": { "frames": [4] },
+    "5": { "frames": [5] },
+    "6": { "frames": [6] },
+    "7": { "frames": [7] }
+},
+
+"texturepacker": [
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:4b742d6ae62279135265b6f28d146987:8c37cef96cfe50dd914f57eb29eaa546:9adb699ddc59a2c38af88b24176a42f6$",
+        "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
+]
+
+}
