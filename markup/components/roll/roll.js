@@ -209,7 +209,7 @@ export let roll = (function () {
         const currentBalance = storage.read('currentBalance');
         const sessionID = storage.read('sessionID');
         const betValue = currentBalance.betValue;
-        const coinsValue = currentBalance.coinsValue * 100;
+        const coinsValue = currentBalance.coinsValue * 100; // Magic Numbers
         utils.request('_Roll/', `${sessionID}/${betValue}/${coinsValue}`)
             .then((response) => {
                 if (response.ErrorMessage) {
@@ -225,7 +225,7 @@ export let roll = (function () {
                     rollData.nextScreen = getScreenData(response.Indexes, storage.read('wheels'));
                     drawScreen(rollData.currentScreen, rollData.nextScreen);
                     rollAnimation = new TimelineMax();
-                    rollAnimation.staggerTo(columns, 2, {y: -utils.elementHeight, ease: Back.easeInOut.config(0.75)}, 0.1, '+=0', endRoll)
+                    rollAnimation.staggerTo(columns, 2, {y: -utils.elementHeight, ease: Back.easeInOut.config(0.75)}, 0.1, null, endRoll)
                         .staggerTo(shadows, 1, {alpha: 1, ease: Power1.easeOut}, 0.1, 0)
                         .staggerTo(shadows, 1, {alpha: 0, ease: Power1.easeIn}, 0.1, '-=1');
                     if (storage.readState('fastSpinSetting')) {
