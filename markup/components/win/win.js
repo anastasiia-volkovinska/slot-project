@@ -208,13 +208,17 @@ export let win = (function () {
         const ss = loader.getResult('addedElements');
         const lineFire = new c.Sprite(ss, 'splash').set({
             name: 'lineFire',
-            x: parameters[number].x - winRectsContainer.x - 3, // Magic Numbers
-            y: parameters[number].y - winRectsContainer.y + 5 // Magic Numbers
+            x: parameters[number].x - winRectsContainer.x, // Magic Numbers
+            y: parameters[number].y - winRectsContainer.y + 3,
+            scaleX: 1.1,
+            scaleY: 1.1
         });
         const lineFire2 = new c.Sprite(ss, 'splash').set({
             name: 'lineFire2',
             x: parameters[number].x + 980 - winRectsContainer.x - 3, // Magic Numbers
-            y: parameters[number].y - winRectsContainer.y + 5 // Magic Numbers
+            y: parameters[number].y - winRectsContainer.y + 5,
+            scaleX: 1.1,
+            scaleY: 1.1
         });
         if (storage.readState('side') === 'right') {
             lineFire.x += 150; // Magic Numbers
@@ -312,9 +316,26 @@ export let win = (function () {
                     }
                 }
                 if (+elementIndex === 11) {
-                    element.gotoAndPlay(`${elementIndex}-w`);
-                    let totalFreeSpins = storage.read('rollResponse').TotalFreeSpins;
-                    freeSpin.showTotalFreeSpins(totalFreeSpins);
+                    if (animationName === '11-n') {
+                        if (defaultConfig.topScreen) {
+                            let topElement = gameTopElements[colInd][+element.posY];
+                            element.visible = false;
+                            topElement.visible = true;
+                            topElement.gotoAndPlay(`${elementIndex}-w`);
+                            let totalFreeSpins = storage.read('rollResponse').TotalFreeSpins;
+                            freeSpin.showTotalFreeSpins(totalFreeSpins);
+                            bulletFSToGun(topElement);
+                        } else {
+                            element.gotoAndPlay(`${elementIndex}-w`);
+                            let totalFreeSpins = storage.read('rollResponse').TotalFreeSpins;
+                            freeSpin.showTotalFreeSpins(totalFreeSpins);
+                        }
+
+                        currWinScatters.push({
+                            el: element,
+                            colInd: colInd
+                        });
+                    }
                 }
             });
         });
@@ -323,6 +344,24 @@ export let win = (function () {
                 events.trigger('initFreeSpins');
             }, 1500);
         }
+    }
+
+    function bulletFSToGun(element) {
+        let x0 = element.x;
+        let y0 = element.y;
+        TweenMax.to(element, 1, {scaleX: 0.3, scaleY: 0.3,
+            bezier: {type: 'soft', values: [ {x: x0, y: y0}, {x: 300, y: 100}, {x: 85 - 150, y: 215 - 89} ], autoRotate: false},
+            ease: Power1.easeOut,
+            onComplete: function () {
+                element.visible = false;
+                element.x = x0;
+                element.y = y0;
+                element.scaleX = 1;
+                element.scaleY = 1;
+                element.rotation = 0;
+                events.trigger('fs:rotateFSGun');
+            }
+        });
     }
 
     // function fireScatterWild() {
