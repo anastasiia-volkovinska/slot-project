@@ -28,6 +28,8 @@ export let bg = (function () {
         const fgContainer = new c.Container().set({name: 'fgContainer'});
         const mainBG = new c.Bitmap(loader.getResult('mainBG')).set({name: 'mainBG'});
         const mainBGSky = new c.Bitmap(loader.getResult('mainBGSky')).set({name: 'mainBGSky'});
+        const greyBGGradient = new c.Shape();
+        greyBGGradient.graphics.beginLinearGradientFill(['#000', '#FFF'], [0, 1], 0, 0, utils.width, utils.height).drawRect(0, 0, utils.width, utils.height);
         const gameBG = new c.Bitmap(loader.getResult('gameBG')).set({
             name: 'gameBG',
             x: 60, // Magic Numbers
@@ -71,7 +73,7 @@ export let bg = (function () {
         });
 
 
-        bgContainer.addChild(mainBGSky, mainBG, gameBG, footerBgUp, footerBgDown, home);
+        bgContainer.addChild(mainBGSky, greyBGGradient, mainBG, gameBG, footerBgUp, footerBgDown, home);
         fgContainer.addChild(gameMachine);
         stage.addChildAt(bgContainer, fgContainer, 0);
 
