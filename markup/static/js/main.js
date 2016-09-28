@@ -24,7 +24,7 @@ import { freeSpin } from 'components/freeSpin/freeSpin';
 init.start({
     userID: 1,
     casinoID: 1,
-    mode: 'normal'
+    mode: 'fsBonus'
 });
 
 init.login();
@@ -136,8 +136,10 @@ events.on('roll:fsMultiplier', win.showMulti);
 
 // Free Spins Module
 freeSpin.start();
+events.on('fs:rotateFSGun', freeSpin.rotateFSGun);
 
 
 export { storage };
 export { events };
 export { win };
+export { freeSpin };
