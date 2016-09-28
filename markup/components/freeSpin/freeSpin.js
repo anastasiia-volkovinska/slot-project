@@ -20,6 +20,7 @@ export let freeSpin = (function () {
     let fsTotalWin;
     let fireTimer;
     let parTimer;
+    let counter = 0;
 
     let config;
     const defaultConfig = {
@@ -264,13 +265,16 @@ export let freeSpin = (function () {
             textBaseline: 'middle',
             shadow: new c.Shadow('#444', 0, 0, 8)
         });
-        const bullet = new c.Bitmap(loader.getResult('bullet')).set({
+        const bullet = new c.Sprite(loader.getResult('new_elements')).set({
             name: 'bullet',
-            x: 85,
-            y: 215
+            x: 10,
+            y: 170,
+            scaleX: 0.55,
+            scaleY: 0.55
         });
         utils.getCenterPoint(fsBulletsBG);
         utils.getCenterPoint(bullet);
+        bullet.gotoAndStop(199);
         fsTableContainer.addChild(fsTotalText, fsTotalCountBG, fsTotalCountText, fsBulletsBG, fsBulletsText, bullet);
         stage.addChildAt(fsTableContainer, stage.getChildIndex(stage.getChildByName('fgContainer')) + 1);
     }
@@ -295,21 +299,21 @@ export let freeSpin = (function () {
         const fsMulti4 = new c.Bitmap(loader.getResult('x4')).set({
             name: 'fsMulti4',
             x: 1220,
-            y: 550,
+            y: 520,
             visible: false
         });
 
         const fsMulti6 = new c.Bitmap(loader.getResult('x6')).set({
             name: 'fsMulti6',
             x: 1220,
-            y: 390,
+            y: 360,
             visible: false
         });
 
         const fsMulti8 = new c.Bitmap(loader.getResult('x8')).set({
             name: 'fsMulti8',
             x: 1220,
-            y: 240,
+            y: 210,
             visible: false
         });
         utils.getCenterPoint(fsMulti4);
@@ -355,6 +359,48 @@ export let freeSpin = (function () {
         }
     }
 
+    function changeMultiplier(multi) {
+        const fsMultiContainer = stage.getChildByName('fsMultiContainer');
+        const fsMulti4 = fsMultiContainer.getChildByName('fsMulti4');
+        const fsMulti6 = fsMultiContainer.getChildByName('fsMulti6');
+        const fsMulti8 = fsMultiContainer.getChildByName('fsMulti8');
+        const bottle4 = fsMultiContainer.getChildByName('bottle4');
+        const bottle6 = fsMultiContainer.getChildByName('bottle6');
+        const bottle8 = fsMultiContainer.getChildByName('bottle8');
+        console.log('multi', multi);
+        if (multi == 4) {
+            bottle4.gotoAndPlay('bottle');
+            bottle4.on('animationend', function () {
+                fsMulti4.visible = true;
+                bottle4.gotoAndStop(12);
+            });
+        } else if (multi == 6) {
+            bottle6.gotoAndPlay('bottle');
+            bottle6.on('animationend', function () {
+                fsMulti6.visible = true;
+                bottle6.gotoAndStop(12);
+            });
+        } else if (multi == 8) {
+            bottle8.gotoAndPlay('bottle');
+            bottle8.on('animationend', function () {
+                fsMulti8.visible = true;
+                bottle8.gotoAndStop(12);
+            });
+        }
+    }
+
+    function rotateFSGun() {
+        console.log('i am in rotateFSGun');
+        counter++;
+        console.warn('counter', counter);
+        const fsTableContainer = stage.getChildByName('fsTableContainer');
+        const bullet = fsTableContainer.getChildByName('bullet');
+        bullet.gotoAndPlay('11-w');
+        bullet.on('animationend', function () {
+            bullet.gotoAndStop(199);
+        });
+    }
+
     // function addPar(num) {
     //     const loader = storage.read('loadResult');
     //     const fgContainer = stage.getChildByName('fgContainer');
@@ -371,7 +417,7 @@ export let freeSpin = (function () {
     //     });
     // }
 
-    function changeLevel(num) {
+    // function changeLevel(num) {
         // if (num != config.currentLevel) {
         //     config.currentLevel = num;
         //     createjs.Sound.play('fsClockSound');
@@ -390,17 +436,8 @@ export let freeSpin = (function () {
             //     }
             // });
         // }
-    }
+    // }
 
-    function changeMultiplier(multi) {
-        const fsMultiContainer = stage.getChildByName('fsMultiContainer');
-        // if (multi == 4) {
-        //
-        // } else if (multi == 6) {
-        //
-        // } else if (multi == 8) {
-        //
-        // }
         // if (pressureDiscs[multi - 2].alpha === 0) return;
         // createjs.Sound.play('pressureSound');
         // const fgContainer = stage.getChildByName('fgContainer');
@@ -452,7 +489,7 @@ export let freeSpin = (function () {
         //     }});
         // }
         // pressureFire.mask = newMask;
-    }
+    // }
 
     function getFirework() {
         // if (stage.getChildByName('fsLogoContainer')) {
@@ -604,7 +641,7 @@ export let freeSpin = (function () {
         let transitionContainer = new createjs.Container().set({
             name: 'transitionContainer'
         });
-        let transitionBG = new createjs.Bitmap(loader.getResult('transitionBG')).set({
+        let transitionBG = new createjs.Bitmap(loader.getResult('preloaderBG')).set({
             name: 'transitionBG',
             alpha: 0
         });
@@ -696,6 +733,9 @@ export let freeSpin = (function () {
         const fgContainer = stage.getChildByName('fgContainer');
         const buttonsContainer = stage.getChildByName('buttonsContainer');
         buttonsContainer.visible = true;
+        config.currentMulti = defaultConfig.currentMulti;
+        config.currentCount = defaultConfig.currentCount;
+        counter = 0;
         // const truba = fgContainer.getChildByName('truba');
         // const pressureContainer = fgContainer.getChildByName('pressureContainer');
         const fsMachineBG = bgContainer.getChildByName('fsMachineBG');
@@ -753,12 +793,15 @@ export let freeSpin = (function () {
             name: 'finishContainer',
             alpha: 0
         });
-        let finishBG = new createjs.Bitmap(loader.getResult('mainBG')).set({
+        let finishBG = new createjs.Bitmap(loader.getResult('preloaderBG')).set({
             name: 'finishBG'
         });
         let finishBGSky = new createjs.Bitmap(loader.getResult('mainBGSky')).set({
             name: 'transitionBGSky'
         });
+        const darkness = new c.Shape();
+        darkness.graphics.beginFill('rgba(0, 0, 0, 0.3)').drawRect(0, 0, utils.width, utils.height);
+
         let finishText = new createjs.Bitmap(loader.getResult('totalWin')).set({
             name: 'finishText',
             y: 120,
@@ -776,7 +819,7 @@ export let freeSpin = (function () {
         // });
         let finishWinText = new createjs.BitmapText(fsTotalWin + '', loader.getResult('addedElements')).set({
             x: 1280 / 2,
-            y: 720 / 2 - 70, // magic numbers
+            y: 720 / 2 - 20, // magic numbers
             scaleX: 0.7,
             scaleY: 0.7
         });
@@ -791,7 +834,7 @@ export let freeSpin = (function () {
         });
         utils.getCenterPoint(finishButton);
         utils.setInCenterOf(finishButton, utils.width);
-        finishContainer.addChild(finishBGSky, finishBG, finishText, finishWinText, finishButton);
+        finishContainer.addChild(finishBGSky, finishBG, darkness, finishText, finishWinText, finishButton);
         createjs.Tween.get(finishContainer)
             .to({alpha: 1}, 500)
             .call(function () {
@@ -932,14 +975,15 @@ export let freeSpin = (function () {
             }
         }
         if (state === 'fsMulti') {
-            // if (config.currentMulti != storage.readState(state)) {
-            changeMultiplier(storage.readState(state));
-                // config.currentMulti = storage.readState(state);
-            // }
+            console.warn('storage multi', storage.readState(state));
+            if (config.currentMulti != storage.readState(state)) {
+                changeMultiplier(storage.readState(state));
+                config.currentMulti = storage.readState(state);
+            }
         }
-        if (state === 'fsLevel') {
-            changeLevel(storage.readState(state));
-        }
+        // if (state === 'fsLevel') {
+        //     changeLevel(storage.readState(state));
+        // }
     }
 
     events.on('initFreeSpins', transitionFreeSpins);
@@ -959,9 +1003,10 @@ export let freeSpin = (function () {
         drawFreeSpinsBG,
         changeMultiplier,
         getMultiLight,
-        changeLevel,
         showTotalFreeSpins,
-        crashGame,
-        getSomePar
+        rotateFSGun
+        // changeLevel,
+        // crashGame,
+        // getSomePar
     };
 })();
