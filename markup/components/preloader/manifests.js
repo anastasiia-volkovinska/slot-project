@@ -4,21 +4,23 @@ export const preloaderManifest = [
 ];
 
 export const mainManifest = [
-    // preloader module
-    {id: 'preloader', src: 'static/img/content/preloader/preloader.json', type: 'spritesheet'},
-    {id: 'preloaderSprite', src: 'static/img/content/preloader/sprite.json', type: 'spritesheet'},
+
     // bg module
     {id: 'mainBG', src: 'static/img/content/bg/mainBG.png'},
     {id: 'gameBG', src: 'static/img/content/bg/gameBG.png'},
     {id: 'mainBGSky', src: 'static/img/content/bg/mainBGSky.png'},
+    {id: 'luchi', src: 'static/img/content/bg/luchi.png'},
     // {id: 'bg', src: 'static/img/content/bg/bg.json', type: 'spritesheet'},
     {id: 'gameMachine', src: 'static/img/content/bg/gameMachine.png'},
     {id: 'rules', src: 'static/img/content/bg/firstRules.png'},
     // {id: 'fonar', src: 'static/img/content/bg/fonar.png'},
     {id: 'home', src: 'static/img/content/new/home.png'},
+    {id: 'fonLine', src: 'static/img/content/bg/fonLine.png'},
 
     // preloader module
+    {id: 'preloaderBG', src: 'static/img/content/preloader/preloaderBG.png'},
     {id: 'logo', src: 'static/img/content/preloader/logo.png'},
+    {id: 'baraban', src: 'static/img/content/preloader/baraban.json', type: 'spritesheet'},
 
     // buttons module
     {id: 'buttons', src: 'static/img/content/buttons/buttons.json', type: 'spritesheet'},
