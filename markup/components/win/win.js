@@ -210,15 +210,15 @@ export let win = (function () {
             name: 'lineFire',
             x: parameters[number].x - winRectsContainer.x, // Magic Numbers
             y: parameters[number].y - winRectsContainer.y + 3,
-            scaleX: 1.1,
-            scaleY: 1.1
+            scaleX: 1.2,
+            scaleY: 1.2
         });
         const lineFire2 = new c.Sprite(ss, 'splash').set({
             name: 'lineFire2',
             x: parameters[number].x + 980 - winRectsContainer.x - 3, // Magic Numbers
             y: parameters[number].y - winRectsContainer.y + 5,
-            scaleX: 1.1,
-            scaleY: 1.1
+            scaleX: 1.2,
+            scaleY: 1.2
         });
         if (storage.readState('side') === 'right') {
             lineFire.x += 150; // Magic Numbers
