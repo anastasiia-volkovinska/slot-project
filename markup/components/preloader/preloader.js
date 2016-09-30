@@ -41,9 +41,9 @@ export let preloader = (function () {
         const coin = new c.Sprite(coinSS, 'coin').set({
             name: 'preloaderCoin',
             y: 200,
-            scaleX: 0.5,
-            scaleY: 0.5,
-            framerate: 15
+            scaleX: 0.9,
+            scaleY: 0.9,
+            framerate: 24
         });
         utils.getCenterPoint(line);
         utils.setInCenterOf(line, utils.width);
@@ -79,22 +79,38 @@ export let preloader = (function () {
         });
         utils.getCenterPoint(preloaderLuchi);
 
-
-        const preloaderBaraban = new c.Sprite(loader.getResult('baraban'));
+        const preloaderBaraban = new c.Sprite(loader.getResult('addedElements'), 'baraban');
         preloaderBaraban.set({
             name: 'preloaderBaraban',
             x: w / 2,
-            y: h / 2 + 110,
-            framerate: 2
+            y: h / 2 + 140,
+            framerate: 4,
+            scaleX: 0.55,
+            scaleY: 0.55
         });
         utils.getCenterPoint(preloaderBaraban);
+
+        const preloaderBarabanBG = new c.Sprite(loader.getResult('addedElements'));
+        preloaderBarabanBG.set({
+            name: 'preloaderBarabanBG',
+            x: w / 2,
+            y: h / 2 + 241,
+            framerate: 4,
+            scaleX: 0.55,
+            scaleY: 0.55
+        });
+        utils.getCenterPoint(preloaderBarabanBG);
+        preloaderBarabanBG.gotoAndStop(8);
+
         preloaderBaraban.play();
         preloaderBaraban.on('animationend', function () {
             preloaderPlay.visible = true;
-            preloaderBaraban.gotoAndStop(6);
+            preloaderBaraban.gotoAndStop(7);
             preloaderBaraban.stop();
-            const tl = new TimelineMax({repeat: -1, yoyo: true});
-            tl.to(preloaderLuchi, 12, {rotation: 360, alpha: 0.1, ease: Power1.easeInOut});
+            const tl = new TimelineMax({repeat: -1});
+            tl.to(preloaderLuchi, 30, {rotation: 360, alpha: 0.1, ease: Power1.easeInOut, yoyo: true});
+            const tl2 = new TimelineMax({repeat: -1});
+            tl2.to(preloaderBaraban, 3, {rotation: 360, ease: Power0.easeNone});
         });
 
         const preloaderLogo = new c.Bitmap(loader.getResult('logo'));
@@ -118,22 +134,51 @@ export let preloader = (function () {
         });
         utils.getCenterPoint(preloaderPlay);
 
+        let lines = [];
         const line = new c.Bitmap(loader.getResult('fonLine')).set({
             name: 'line',
             x: 350
         });
-        setTimeout( function () {
-            line.x = Math.round(Math.random() * 350);
-            TweenMax.to(line, 2, {x: line.x + 30});
-        }, 2000);
+        let amount = Math.random() * 5 + 2;
+        for (let i = 0; i < amount; i++) {
+            let newLine = line.clone();
+            newLine.x = Math.random() * 1280;
+            newLine.alpha = Math.random();
+            lines.push(newLine);
+        }
+        moveLine(lines);
 
-        preloaderCache.addChild(preloaderBGSky, preloaderLuchi, preloaderBG, line, preloaderBaraban, preloaderLogo);
+        const line2 = new c.Bitmap(loader.getResult('fonLine')).set({
+            name: 'line2',
+            x: 0,
+            alpha: 0.6
+        });
+        TweenMax.to(line2, 30, {x: 1280, repeat: -1});
+
+        preloaderCache.addChild(preloaderBGSky, preloaderLuchi, preloaderBG, preloaderBarabanBG, preloaderBaraban, preloaderLogo, line2);
+        lines.forEach((line) => {
+            preloaderCache.addChild(line);
+        });
         // preloaderCache.cache(0, 0, w, h);
         preloaderContainer.addChild(preloaderCache, preloaderPlay);
         preloaderContainer.on('click', function (e) {
             e.stopPropagation();
         });
         stage.addChildAt(preloaderContainer, stage.getChildIndex(stage.getChildByName('newPreloaderContainer')));
+    }
+
+    function moveLine(lines) {
+        TweenMax.staggerTo(lines, 0.05, {x: '+= 3', repeat: 6, yoyo: true,
+            ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 1, points: 20, taper: "none", randomize: true, clamp: false}),
+
+            onComplete: function () {
+                lines.forEach((line) => {
+                    line.x = Math.round(Math.random() * 1280);
+                    line.alpha = Math.random();
+                });
+                moveLine(lines);
+            }
+        });
     }
 
     function mainPreload(container) {
