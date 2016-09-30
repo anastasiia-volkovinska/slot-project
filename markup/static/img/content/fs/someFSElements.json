@@ -1,0 +1,62 @@
+{
+
+"images": [
+    "static/img/content/fs/someFSelements.png"
+],
+
+"framerate": 12,
+
+"frames": [
+    [1, 1, 257, 200, 0, 0, 0],
+    [260, 1, 257, 200, 0, 0, 0],
+    [519, 1, 257, 200, 0, 0, 0],
+    [778, 1, 257, 200, 0, 0, 0],
+    [1037, 1, 257, 200, 0, 0, 0],
+    [1296, 1, 257, 200, 0, 0, 0],
+    [1555, 1, 257, 200, 0, 0, 0],
+    [1, 203, 257, 200, 0, 0, 0],
+    [260, 203, 257, 200, 0, 0, 0],
+    [519, 203, 257, 200, 0, 0, 0],
+    [778, 203, 257, 200, 0, 0, 0],
+    [1037, 203, 257, 200, 0, 0, 0],
+    [1296, 203, 257, 200, 0, 0, 0],
+    [1555, 203, 257, 200, 0, 0, 0],
+    [1, 405, 257, 200, 0, 0, 0],
+    [260, 405, 617, 602, 0, 0, 0],
+    [879, 405, 617, 602, 0, 0, 0],
+    [1, 1009, 617, 602, 0, 0, 0],
+    [620, 1009, 617, 602, 0, 0, 0],
+    [1239, 1009, 617, 602, 0, 0, 0]
+],
+
+"animations": {
+    "Bottlebang-Bang0": { "frames": [0] },
+    "Bottlebang-Bang1": { "frames": [1] },
+    "Bottlebang-Bang2": { "frames": [2] },
+    "Bottlebang-Bang3": { "frames": [3] },
+    "Bottlebang-Bang4": { "frames": [4] },
+    "Bottlebang-Bang5": { "frames": [5] },
+    "Bottlebang-Bang6": { "frames": [6] },
+    "Bottlebang-Bang7": { "frames": [7] },
+    "Bottlebang-Bang8": { "frames": [8] },
+    "Bottlebang-Bang9": { "frames": [9] },
+    "Bottlebang-Bang10": { "frames": [10] },
+    "Bottlebang-Bang11": { "frames": [11] },
+    "Bottlebang-Bang12": { "frames": [12] },
+    "Bottlebang-Bang13": { "frames": [13] },
+    "Bottlebang-Bang14": { "frames": [14] },
+    "fsTotalTable-Bang0": { "frames": [15] },
+    "fsTotalTable-Bang1": { "frames": [16] },
+    "fsTotalTable-Bang2": { "frames": [17] },
+    "fsTotalTable-Bang3": { "frames": [18] },
+    "fsTotalTable-Bang4": { "frames": [19] },
+    "bang": { "frames": [15, 16, 17, 18, 19] },
+    "bottle": { "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] }
+},
+
+"texturepacker": [
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:2f0fe32e1c1790e1a34aa2b2a7f1e196:0fb2e3e0e40e9a3d21790d216d9ceff6:074c02a10058b2cb01e1122e75a1cde7$",
+        "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
+]
+
+}

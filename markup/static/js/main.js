@@ -34,7 +34,7 @@ canvas.start({
     canvas: '#game',
     mouseOver: 0,
     leftToRight: 150,
-    center: 80,
+    center: 75,
     timeToSlide: 0.5
 });
 events.on('init:inited', canvas.initStage);
