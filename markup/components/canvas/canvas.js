@@ -11,7 +11,7 @@ export let canvas = (function () {
         canvas: '#game',
         mouseOver: 10,
         leftToRight: 150,
-        center: 85,
+        center: 75,
         timeToSlide: 0.5
     };
     const c = createjs;
