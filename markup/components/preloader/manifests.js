@@ -10,6 +10,7 @@ export const mainManifest = [
     {id: 'gameBG', src: 'static/img/content/bg/gameBG.png'},
     {id: 'mainBGSky', src: 'static/img/content/bg/mainBGSky.png'},
     {id: 'luchi', src: 'static/img/content/bg/luchi.png'},
+    {id: 'cloud', src: 'static/img/content/bg/cloud.png'},
     // {id: 'bg', src: 'static/img/content/bg/bg.json', type: 'spritesheet'},
     {id: 'gameMachine', src: 'static/img/content/bg/gameMachine.png'},
     {id: 'rules', src: 'static/img/content/bg/firstRules.png'},
@@ -104,10 +105,13 @@ export const mainManifest = [
     // fs module
     {id: 'fsMachineBG', src: 'static/img/content/fs/fsMachineBG.png'},
     {id: 'fsTotalTable', src: 'static/img/content/fs/fsTotalTable.png'},
-    {id: 'fsText', src: 'static/img/content/fs/fsText.json', type: 'spritesheet'},
+    // {id: 'fsText', src: 'static/img/content/fs/fsText.json', type: 'spritesheet'},
     {id: 'fsBG', src: 'static/img/content/fs/fsBG.png'},
     {id: 'fsDrumBG', src: 'static/img/content/fs/fsDrumBG.png'},
     {id: 'bullet', src: 'static/img/content/fs/bullet.png'},
+    {id: 'shkaf', src: 'static/img/content/fs/shkaf.png'},
+    {id: 'pritsel', src: 'static/img/content/fs/pritsel.png'},
+    {id: 'someFSelements', src: 'static/img/content/fs/someFSelements.json', type: 'spritesheet'},
     // {id: 'pressure', src: 'static/img/content/fs/pressure.png'},
     // {id: 'fireToPressure', src: 'static/img/content/fs/fireToPressure.json', type: 'spritesheet'},
     // {id: 'pressureDisc', src: 'static/img/content/fs/pressureDisc.png'},
@@ -128,7 +132,7 @@ export const mainManifest = [
     {id: 'play', src: 'static/img/content/fs/play.png'},
     {id: 'continue', src: 'static/img/content/fs/continue.png'},
     // {id: 'liza', src: 'static/img/content/bg/liza.png'},
-    {id: 'fsTable', src: 'static/img/content/fs/fsTable.png'},
+    // {id: 'fsTable', src: 'static/img/content/fs/fsTable.png'},
     {id: 'plus3', src: 'static/img/content/fs/plus3.png'},
     {id: 'multiBG', src: 'static/img/content/bg/mainBG.png'},
     {id: 'multiTitle', src: 'static/img/content/bg/multiTitle.png'},
@@ -137,7 +141,7 @@ export const mainManifest = [
     {id: 'x4', src: 'static/img/content/fs/x4.png'},
     {id: 'x6', src: 'static/img/content/fs/x6.png'},
     {id: 'x8', src: 'static/img/content/fs/x8.png'},
-    {id: 'popup', src: 'static/img/content/new/popup.png'},
-    {id: 'numbers', src: 'static/img/content/bonuses/numbers.json', type: 'spritesheet'}
+    {id: 'popup', src: 'static/img/content/new/popup.png'}
+    // {id: 'numbers', src: 'static/img/content/bonuses/numbers.json', type: 'spritesheet'}
 
 ];
