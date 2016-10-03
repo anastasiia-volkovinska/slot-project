@@ -82,7 +82,7 @@ export let canvas = (function () {
                 storage.changeState('side', 'right');
                 break;
             case 'left':
-                if (storage.readState('side') === 'right'){
+                if (storage.readState('side') === 'right') {
                     delta = `-=${config.leftToRight}`;
                     storage.changeState('side', 'left');
                 } else {

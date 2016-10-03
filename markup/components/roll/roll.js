@@ -241,6 +241,7 @@ export let roll = (function () {
                 } else if (response.Mode === 'fsBonus') { // Режим Фри-Спинов
                     if (storage.readState('mode') !== 'fsBonus') {
                         storage.changeState('mode', 'fsBonus');
+                        rollAnimation.timeScale(2);
                     }
                     rollData.nextScreen = getScreenData(response.Indexes, storage.read('fsWheels'));
                     drawScreen(rollData.currentScreen, rollData.nextScreen);

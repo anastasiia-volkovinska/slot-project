@@ -3,7 +3,6 @@
 import { utils } from 'components/utils/utils';
 import { storage } from 'components/storage/storage';
 import { events } from 'components/events/events';
-
 import { parameters } from 'components/balance/parameters';
 
 // /* eslint-disable no-undef */

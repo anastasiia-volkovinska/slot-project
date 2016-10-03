@@ -56,7 +56,6 @@ export let preloader = (function () {
         newPreloaderContainer.addChild(darkBG, line, coin);
 
         stage.addChild(newPreloaderContainer);
-
         mainPreload(newPreloaderContainer);
     }
 
@@ -64,7 +63,6 @@ export let preloader = (function () {
         const loader = storage.read('loadResult');
         const ss = loader.getResult('new_elements');
         const clock = loader.getResult('preloaderSprite');
-
         const preloaderContainer = new c.Container().set({ name: 'preloaderContainer' });
         const preloaderCache = new c.Container().set({ name: 'preloaderCache' });
         const preloaderBG = new c.Bitmap(loader.getResult('preloaderBG')).set({ name: 'preloaderBG' });
@@ -194,7 +192,6 @@ export let preloader = (function () {
         loader.on('complete', handleLoadComplete, loader, true, {
             container
         });
-
     }
 
     function handleLoadProgress(event, data) {
@@ -209,31 +206,23 @@ export let preloader = (function () {
     }
 
     function handleLoadComplete(event, data) {
-
         storage.write('loadResult', event.target);
-
         drawInitScreen();
-
         setTimeout(clearPreloader, 100);
-
     }
 
     function clearPreloader() {
-
         let preloaderContainer = stage.getChildByName('preloaderContainer');
-        // let preloaderSprite = preloaderContainer.getChildByName('preloaderSprite');
         let play = preloaderContainer.getChildByName('preloaderPlay');
         play.on('click', handlePlayClick, play, true);
 
         let newPreloaderContainer = stage.getChildByName('newPreloaderContainer');
         newPreloaderContainer.cache(0, 0, utils.width, utils.height);
         TweenMax.to(newPreloaderContainer, 0.5, {alpha: 0, onComplete: function () {
-            // preloaderSprite.play();
             storage.changeState('loaded', true);
             events.trigger('preloader:loaded');
             stage.removeChild(newPreloaderContainer);
         }});
-
     }
 
     function handlePlayClick(event, data) {
@@ -255,7 +244,6 @@ export let preloader = (function () {
             storage.changeState('preloader', 'done');
             events.trigger('preloader:done');
         }});
-
     }
 
     return {

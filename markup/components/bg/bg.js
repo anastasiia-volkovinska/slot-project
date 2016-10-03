@@ -33,8 +33,8 @@ export let bg = (function () {
             alpha: 0
         });
         greyBGGradient.graphics.beginLinearGradientFill(['#000', '#FFF'], [0, 1], 0, 0, 0, utils.height).drawRect(0, 0, utils.width, utils.height);
-
         TweenMax.to(greyBGGradient, 45, {alpha: 0.8, repeat: -1, yoyo: true, ease: Power4.easeInOut});
+
         const gameBG = new c.Bitmap(loader.getResult('gameBG')).set({
             name: 'gameBG',
             x: 60, // Magic Numbers
@@ -45,17 +45,6 @@ export let bg = (function () {
             x: 60, // Magic Numbers
             y: 5 // Magic Numbers
         });
-
-        // const fonar = new c.Bitmap(loader.getResult('fonar')).set({
-        //     name: 'fonar',
-        //     x: 71, // Magic Numbers
-        //     y: 23, // Magic Numbers
-        //     regX: 267 // Magic Numbers
-        // });
-        // const fonarTL = new TimelineMax({repeat: -1, yoyo: true});
-        // fonarTL.to(fonar, 2, {
-        //     ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 0.1, points: 10, taper: 'none', randomize: true, clamp: false}), alpha: 0.7
-        // });
 
         // Это нужно перенести в модуль баланса или оставить здесь
         const footerBgDown = new c.Shape().set({name: 'footerBgDown'});
@@ -76,7 +65,6 @@ export let bg = (function () {
             });
             window.history.back();
         });
-
 
         bgContainer.addChild(mainBGSky, greyBGGradient, mainBG, gameBG, footerBgUp, footerBgDown, home);
         fgContainer.addChild(gameMachine);
@@ -104,7 +92,6 @@ export let bg = (function () {
         utils.getCenterPoint(newCloud);
 
         let side = Math.round(Math.random()) ? 'left' : 'right';
-
         const time = 30 + Math.random() * 15 - 7.5;
         let delta;
         newCloud.y = newCloud.y + Math.random() * 100 - 50;
@@ -134,12 +121,7 @@ export let bg = (function () {
     function changeSide(side) {
         const stage = storage.read('stage');
         const fg = stage.getChildByName('fgContainer');
-        // const fonar = fg.getChildByName('fonar');
-        // if (side === 'left') {
-        //     fonar.x = 71; // Magic Numbers
-        // } else if (side === 'right') {
-        //     fonar.x = 71 - 150; // Magic Numbers
-        // }
+
     }
 
     return {

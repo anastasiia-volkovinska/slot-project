@@ -137,7 +137,7 @@ events.on('roll:fsMultiplier', win.showMulti);
 // Free Spins Module
 freeSpin.start();
 events.on('fs:rotateFSGun', freeSpin.rotateFSGun);
-
+events.on('fs:changeMultiplier', freeSpin.changeMultiplier);
 
 export { storage };
 export { events };
