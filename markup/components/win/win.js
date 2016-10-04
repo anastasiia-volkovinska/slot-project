@@ -32,7 +32,9 @@ export let win = (function () {
 
     function initWin() {
         stage = storage.read('stage');
-        const gameContainer = stage.getChildByName('gameContainer');
+        const mainContainer = stage.getChildByName('mainContainer');
+        const gameContainer = mainContainer.getChildByName('gameContainer');
+        const gameBG = mainContainer.getChildByName('gameBG');
         winLinesContainer = new c.Container().set({
             name: 'winLinesContainer',
             x: gameContainer.x,
@@ -43,8 +45,8 @@ export let win = (function () {
             x: gameContainer.x,
             y: gameContainer.y
         });
-        stage.addChildAt(winLinesContainer, 1);
-        stage.addChild(winRectsContainer);
+        mainContainer.addChildAt(winLinesContainer, mainContainer.getChildIndex(gameBG) + 1);
+        mainContainer.addChild(winRectsContainer);
         winElements = findWinElements();
     }
 
@@ -52,7 +54,8 @@ export let win = (function () {
         const result = [];
         const columns = [];
         const winLines = storage.read('lines');
-        const gameContainer = stage.getChildByName('gameContainer');
+        const mainContainer = stage.getChildByName('mainContainer');
+        const gameContainer = mainContainer.getChildByName('gameContainer');
         for (let i = 0; i < 5; i++) {
             const column = gameContainer.getChildByName(`gameColumn${i}`);
             columns.push(column);
@@ -198,13 +201,13 @@ export let win = (function () {
             scaleX: 1.2,
             scaleY: 1.2
         });
-        if (storage.readState('side') === 'right') {
-            lineFire.x += 150; // Magic Numbers
-            lineFire2.x += 150; // Magic Numbers
-        } else if (storage.readState('side') === 'center') {
-            lineFire.x += 80; // Magic Numbers
-            lineFire2.x += 80; // Magic Numbers
-        }
+        // if (storage.readState('side') === 'right') {
+        //     lineFire.x += 150; // Magic Numbers
+        //     lineFire2.x += 150; // Magic Numbers
+        // } else if (storage.readState('side') === 'center') {
+        //     lineFire.x += 80; // Magic Numbers
+        //     lineFire2.x += 80; // Magic Numbers
+        // }
         lineFire.on('animationend', () => { lineFire.stop(); });
         lineFire2.on('animationend', () => { lineFire2.stop(); });
         utils.getCenterPoint(lineFire);
@@ -270,7 +273,8 @@ export let win = (function () {
 
     function fireAllScatters() {
         console.log('we entered fireAllScatters');
-        const gameContainer = stage.getChildByName('gameContainer');
+        const mainContainer = stage.getChildByName('mainContainer');
+        const gameContainer = mainContainer.getChildByName('gameContainer');
         const gameTopElements = storage.read('gameTopElements');
         winElements.forEach((winLine) => {
             winLine.forEach((element, colInd) => {
@@ -342,58 +346,58 @@ export let win = (function () {
         });
     }
 
-    function calcCardCoords(rot, x0, y0) {
-        let xFinal, yFinal;
-        if (rot < 90) {
-            xFinal = x0 + Math.tan(rot) * utils.height * 1 / 3;
-            yFinal = y0 - utils.height * 1 / 3;
-        } else if (rot < 180) {
-            xFinal = x0 + Math.tan(rot - 90) * utils.height;
-            yFinal = y0 + utils.height;
-        } else if (rot < 270) {
-            xFinal = x0 - Math.tan(rot - 180) * utils.height;
-            yFinal = y0 + utils.height;
-        } else if (rot < 360) {
-            xFinal = x0 - Math.tan(rot - 270) * utils.height * 1 / 3;
-            yFinal = y0 - utils.height * 1 / 3;
-        }
-        return {
-            x: xFinal,
-            y: yFinal
-        };
-    }
-
-    function fireCards(curX, curY) {
-        console.log('I am called with', curX, curY);
-        const loader = storage.read('loadResult');
-        const cardsContainer = new c.Container().set({
-            name: 'cardsContainer'
-        });
-        const cards = [];
-        cards.push(
-            new c.Sprite(loader.getResult('cardsForLizaWin'), '01card'),
-            new c.Sprite(loader.getResult('cardsForLizaWin'), '02card'),
-            new c.Sprite(loader.getResult('cardsForLizaWin'), '03card'),
-            new c.Sprite(loader.getResult('cardsForLizaWin'), '04card')
-        );
-        const amount = Math.round(Math.random() * 50 + 50);
-        for (let i = 0; i < amount; i++) {
-            const cardIndex = Math.floor(Math.random() * 4);
-            const cardRotation = Math.round(Math.random() * 360);
-            const cardTime = Math.random() * 2 + 0.7;
-            const finalCoords = calcCardCoords(cardRotation, curX + utils.elementWidth / 2, curY + utils.elementHeight / 2);
-            const newCard = cards[cardIndex].clone(true);
-            newCard.rotation = cardRotation;
-            newCard.x = curX + utils.elementWidth / 2;
-            newCard.y = curY + utils.elementHeight / 2;
-            utils.getCenterPoint(newCard);
-            TweenMax.to(newCard, cardTime, {x: finalCoords.x, y: finalCoords.y, onComplete: function () {
-                cardsContainer.removeChild(this.target);
-            }});
-            cardsContainer.addChild(newCard);
-        }
-        stage.addChild(cardsContainer);
-    }
+    // function calcCardCoords(rot, x0, y0) {
+    //     let xFinal, yFinal;
+    //     if (rot < 90) {
+    //         xFinal = x0 + Math.tan(rot) * utils.height * 1 / 3;
+    //         yFinal = y0 - utils.height * 1 / 3;
+    //     } else if (rot < 180) {
+    //         xFinal = x0 + Math.tan(rot - 90) * utils.height;
+    //         yFinal = y0 + utils.height;
+    //     } else if (rot < 270) {
+    //         xFinal = x0 - Math.tan(rot - 180) * utils.height;
+    //         yFinal = y0 + utils.height;
+    //     } else if (rot < 360) {
+    //         xFinal = x0 - Math.tan(rot - 270) * utils.height * 1 / 3;
+    //         yFinal = y0 - utils.height * 1 / 3;
+    //     }
+    //     return {
+    //         x: xFinal,
+    //         y: yFinal
+    //     };
+    // }
+    //
+    // function fireCards(curX, curY) {
+    //     console.log('I am called with', curX, curY);
+    //     const loader = storage.read('loadResult');
+    //     const cardsContainer = new c.Container().set({
+    //         name: 'cardsContainer'
+    //     });
+    //     const cards = [];
+    //     cards.push(
+    //         new c.Sprite(loader.getResult('cardsForLizaWin'), '01card'),
+    //         new c.Sprite(loader.getResult('cardsForLizaWin'), '02card'),
+    //         new c.Sprite(loader.getResult('cardsForLizaWin'), '03card'),
+    //         new c.Sprite(loader.getResult('cardsForLizaWin'), '04card')
+    //     );
+    //     const amount = Math.round(Math.random() * 50 + 50);
+    //     for (let i = 0; i < amount; i++) {
+    //         const cardIndex = Math.floor(Math.random() * 4);
+    //         const cardRotation = Math.round(Math.random() * 360);
+    //         const cardTime = Math.random() * 2 + 0.7;
+    //         const finalCoords = calcCardCoords(cardRotation, curX + utils.elementWidth / 2, curY + utils.elementHeight / 2);
+    //         const newCard = cards[cardIndex].clone(true);
+    //         newCard.rotation = cardRotation;
+    //         newCard.x = curX + utils.elementWidth / 2;
+    //         newCard.y = curY + utils.elementHeight / 2;
+    //         utils.getCenterPoint(newCard);
+    //         TweenMax.to(newCard, cardTime, {x: finalCoords.x, y: finalCoords.y, onComplete: function () {
+    //             cardsContainer.removeChild(this.target);
+    //         }});
+    //         cardsContainer.addChild(newCard);
+    //     }
+    //     stage.addChild(cardsContainer);
+    // }
 
     function drawTotalWin(lines) {
         lines.forEach((line) => {

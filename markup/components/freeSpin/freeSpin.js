@@ -150,6 +150,7 @@ export let freeSpin = (function () {
         fsTotalWin = 0;
         events.trigger('menu:changeSide', 'center');
         drawFreeSpinsBG();
+
     }
 
     function transitionFreeSpins(data) {
@@ -277,32 +278,34 @@ export let freeSpin = (function () {
     function stopFreeSpins() {
         storage.changeState('lockedMenu', false);
         const bgContainer = stage.getChildByName('bgContainer');
-        const fgContainer = stage.getChildByName('fgContainer');
+        const mainContainer = stage.getChildByName('mainContainer');
         const buttonsContainer = stage.getChildByName('buttonsContainer');
         buttonsContainer.visible = true;
         config.currentMulti = defaultConfig.currentMulti;
         config.currentCount = defaultConfig.currentCount;
         counter = 0;
 
-        const fsMachineBG = bgContainer.getChildByName('fsMachineBG');
+        const fsMachineBG = mainContainer.getChildByName('fsMachineBG');
         const fsBG = bgContainer.getChildByName('fsBG');
 
         const balanceContainer = stage.getChildByName('balanceContainer');
-        const coinsSum = balanceContainer.getChildByName('coinsSum');
-        const betSum = balanceContainer.getChildByName('betSum');
-        const coinsSumText = balanceContainer.getChildByName('coinsSumText');
-        const betSumText = balanceContainer.getChildByName('betSumText');
-        const totalWinText = balanceContainer.getChildByName('totalWinText');
-        const totalWinSum = balanceContainer.getChildByName('totalWinSum');
+        const balanceTextContainer = balanceContainer.getChildByName('balanceTextContainer');
+        const coinsSum = balanceTextContainer.getChildByName('coinsSum');
+        const betSum = balanceTextContainer.getChildByName('betSum');
+        const coinsSumText = balanceTextContainer.getChildByName('coinsSumText');
+        const betSumText = balanceTextContainer.getChildByName('betSumText');
+        const totalWinText = balanceTextContainer.getChildByName('totalWinText');
+        const totalWinSum = balanceTextContainer.getChildByName('totalWinSum');
         betSum.visible = coinsSum.visible = betSumText.visible = coinsSumText.visible = true;
-        balanceContainer.removeChild(totalWinText, totalWinSum);
+        balanceTextContainer.removeChild(totalWinText, totalWinSum);
         balanceContainer.updateCache();
         stage.removeChild(stage.getChildByName('fsTableContainer'));
         stage.removeChild(stage.getChildByName('fsMultiContainer'));
 
-        bgContainer.removeChild(fsMachineBG, fsBG);
+        bgContainer.removeChild(fsBG);
+        mainContainer.removeChild(fsMachineBG);
         bgContainer.uncache();
-        fgContainer.uncache();
+        mainContainer.uncache();
         storage.changeState('side', 'left');
         events.trigger('menu:changeSide', 'left');
 
@@ -311,8 +314,9 @@ export let freeSpin = (function () {
     function countTotalWin(data) {
         if (data.Mode === 'fsBonus') {
             const balanceContainer = stage.getChildByName('balanceContainer');
-            const totalWinSum = balanceContainer.getChildByName('totalWinSum');
-            const totalWinText = balanceContainer.getChildByName('totalWinText');
+            const balanceTextContainer = balanceContainer.getChildByName('balanceTextContainer');
+            const totalWinSum = balanceTextContainer.getChildByName('totalWinSum');
+            const totalWinText = balanceTextContainer.getChildByName('totalWinText');
             totalWinSum.text = +totalWinSum.text + data.TotalWinCoins;
             fsTotalWin = totalWinSum.text;
             totalWinSum.x = totalWinText.x + 20 + totalWinText.getMeasuredWidth() / 2 + totalWinSum.getMeasuredWidth() / 2;
@@ -476,7 +480,7 @@ export let freeSpin = (function () {
 
     function moveLine(lines) {
         TweenMax.staggerTo(lines, 0.05, {x: '+= 3', repeat: 6, yoyo: true,
-            ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 1, points: 20, taper: "none", randomize: true, clamp: false}),
+            ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 1, points: 20, taper: 'none', randomize: true, clamp: false}),
 
             onComplete: function () {
                 lines.forEach((line) => {

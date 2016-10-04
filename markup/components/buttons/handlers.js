@@ -19,14 +19,18 @@ export function handleSpinClick() {
     if (!lockedRoll) {
         if (rollState !== 'started') {
             events.trigger('buttons:startRoll');
-            that.gotoAndStop('spinOff');
-            TweenMax.to(that, 0.5, {rotation: -45});
+            if (storage.read('device') === 'mobile') {
+                that.gotoAndStop('spinOff');
+                TweenMax.to(that, 0.5, {rotation: -45});
+            }
         }
         if (fastRoll) {
             that.gotoAndStop('spinOff');
             storage.changeState('fastRoll', 'enabled');
             events.trigger('buttons:fastRoll', 'enabled');
-            TweenMax.to(that, 0.5, {rotation: 0});
+            if (storage.read('device') === 'mobile') {
+                TweenMax.to(that, 0.5, {rotation: 0});
+            }
         }
     }
 }

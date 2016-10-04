@@ -16,21 +16,20 @@ export function drawFreeSpinsBG() {
     showFsBalance();
 
     const bgContainer = stage.getChildByName('bgContainer');
-    const gameBG = bgContainer.getChildByName('gameBG');
+    const mainContainer = stage.getChildByName('mainContainer');
+    const gameBG = mainContainer.getChildByName('gameBG');
     const mainBG = bgContainer.getChildByName('mainBG');
     mainBG.alpha = 0;
 
     const fsMachineBG = new c.Bitmap(loader.getResult('fsMachineBG')).set({
         name: 'fsMachineBG',
-        x: 140,
+        x: 62,
         y: 5
     });
 
-    bgContainer.addChildAt(fsMachineBG, bgContainer.getChildIndex(gameBG) + 1);
+    mainContainer.uncache();
+    mainContainer.addChildAt(fsMachineBG, mainContainer.getChildIndex(gameBG) + 1);
 
-    const fgContainer = stage.getChildByName('fgContainer');
-
-    fgContainer.uncache();
     const fsBG = new c.Bitmap(loader.getResult('fsBG')).set({
         name: 'fsBG'
     });
@@ -111,7 +110,7 @@ function drawTableContainer() {
     baraban.gotoAndStop(1);
 
     fsTableContainer.addChild(fsTotalCountBG, fsTotalText, fsTotalCountText, fsBulletsBG, fsBulletsText, bullet, baraban);
-    stage.addChildAt(fsTableContainer, stage.getChildIndex(stage.getChildByName('fgContainer')) + 1);
+    stage.addChildAt(fsTableContainer, stage.getChildIndex(stage.getChildByName('bgContainer')) + 1);
 }
 
 function drawMultiContainer() {
@@ -185,7 +184,7 @@ function drawMultiContainer() {
     bottle8.gotoAndStop(0);
 
     fsMultiContainer.addChild(shkaf, fsMultiText, fsMulti8, fsMulti6, fsMulti4, bottle4, bottle6, bottle8);
-    stage.addChildAt(fsMultiContainer, stage.getChildIndex(stage.getChildByName('fgContainer')) + 2);
+    stage.addChildAt(fsMultiContainer, stage.getChildIndex(stage.getChildByName('bgContainer')) + 2);
 
     events.trigger('changeMultiplier', 2);
     if (config.currentMulti !== 2) {
@@ -195,15 +194,18 @@ function drawMultiContainer() {
 
 function hideBalance() {
     const balanceContainer = stage.getChildByName('balanceContainer');
-    const coinsSum = balanceContainer.getChildByName('coinsSum');
-    const betSum = balanceContainer.getChildByName('betSum');
-    const coinsSumText = balanceContainer.getChildByName('coinsSumText');
-    const betSumText = balanceContainer.getChildByName('betSumText');
+    const balanceTextContainer = balanceContainer.getChildByName('balanceTextContainer');
+    const coinsSum = balanceTextContainer.getChildByName('coinsSum');
+    const betSum = balanceTextContainer.getChildByName('betSum');
+    const coinsSumText = balanceTextContainer.getChildByName('coinsSumText');
+    const betSumText = balanceTextContainer.getChildByName('betSumText');
     betSum.visible = coinsSum.visible = betSumText.visible = coinsSumText.visible = false;
 }
 
 function showFsBalance() {
+    console.log('config', config);
     const balanceContainer = stage.getChildByName('balanceContainer');
+    const balanceTextContainer = balanceContainer.getChildByName('balanceTextContainer');
 
     const totalWinText = new c.Text('Total Win:', '24px Helvetica', '#dddddd').set({
         name: 'totalWinText',
@@ -221,6 +223,6 @@ function showFsBalance() {
     }
     totalWinText.x = utils.width / 2 - 10 - totalWinText.getMeasuredWidth();
     totalWinSum.x = totalWinText.x + 20 + totalWinText.getMeasuredWidth() / 2 + totalWinSum.getMeasuredWidth() / 2;
-    balanceContainer.addChild(totalWinText, totalWinSum);
-    balanceContainer.updateCache();
+    balanceTextContainer.addChild(totalWinText, totalWinSum);
+
 }

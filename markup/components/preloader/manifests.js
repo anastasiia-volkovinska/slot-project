@@ -24,6 +24,11 @@ export const mainManifest = [
     // buttons module
     {id: 'buttons', src: 'static/img/content/buttons/buttons.json', type: 'spritesheet'},
 
+    // controls module
+    {id: 'controlsBG', src: 'static/img/content/controls/controlsBG.png'},
+    {id: 'autoSelect', src: 'static/img/content/controls/autoSelect.png'},
+    {id: 'controlButtons', src: 'static/img/content/controls/controlButtons.json', type: 'spritesheet'},
+
     // roll module
     {id: 'new_elements', src: 'static/img/content/elements/elements.json', type: 'spritesheet'},
     {id: 'gameShadow', src: 'static/img/content/bg/gameShadow.png'},

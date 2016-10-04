@@ -25,7 +25,13 @@ export let bg = (function () {
         const loader = storage.read('loadResult');
 
         const bgContainer = new c.Container().set({name: 'bgContainer'});
-        const fgContainer = new c.Container().set({name: 'fgContainer'});
+        const mainContainer = new c.Container().set({
+            name: 'mainContainer'
+        });
+        if (storage.read('device') === 'desktop') {
+            mainContainer.scaleX = mainContainer.scaleY = 0.86;
+            mainContainer.x = mainContainer.x + 130;
+        }
         const mainBG = new c.Bitmap(loader.getResult('mainBG')).set({name: 'mainBG'});
         const mainBGSky = new c.Bitmap(loader.getResult('mainBGSky')).set({name: 'mainBGSky'});
         const greyBGGradient = new c.Shape().set({
@@ -46,29 +52,9 @@ export let bg = (function () {
             y: 5 // Magic Numbers
         });
 
-        // Это нужно перенести в модуль баланса или оставить здесь
-        const footerBgDown = new c.Shape().set({name: 'footerBgDown'});
-        const footerBgUp = new c.Shape().set({name: 'footerBgUp'});
-        footerBgDown.graphics.beginFill('rgba(0, 0, 0)').drawRect(0, h - config.bottomLineHeight, w, config.bottomLineHeight);
-        footerBgUp.graphics.beginFill('rgba(0, 0, 0, 0.6)').drawRect(0, h - config.bottomLineHeight - config.topLineHeight, w, config.topLineHeight);
-
-        // Это нужно перенести в модуль кнопок либо отдельный модуль
-        const home = new c.Bitmap(loader.getResult('home')).set({
-            name: 'homeButton',
-            x: 15, // Magic Numbers
-            y: h - 63 // Magic Numbers
-        });
-        home.on('click', function () {
-            utils.request('_Logout/', storage.read('sessionID'))
-            .then((response) => {
-                console.log('Logout response:', response);
-            });
-            window.history.back();
-        });
-
-        bgContainer.addChild(mainBGSky, greyBGGradient, mainBG, gameBG, footerBgUp, footerBgDown, home);
-        fgContainer.addChild(gameMachine);
-        stage.addChildAt(bgContainer, fgContainer, 0);
+        bgContainer.addChild(mainBGSky, greyBGGradient, mainBG);
+        mainContainer.addChild(gameBG, gameMachine);
+        stage.addChildAt(bgContainer, mainContainer, 0);
 
         addCloud();
         addCloud();
@@ -120,8 +106,7 @@ export let bg = (function () {
 
     function changeSide(side) {
         const stage = storage.read('stage');
-        const fg = stage.getChildByName('fgContainer');
-
+        const mainContainer = stage.getChildByName('mainContainer');
     }
 
     return {

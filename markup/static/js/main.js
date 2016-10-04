@@ -19,12 +19,14 @@ import { roll } from 'components/roll/roll';
 import { win } from 'components/win/win';
 import { bonuses } from 'components/bonuses/bonuses';
 import { freeSpin } from 'components/freeSpin/freeSpin';
+import { controls } from 'components/controls/controls';
 
 // Init Module
 init.start({
-    userID: 1,
-    casinoID: 1,
-    mode: 'fsBonus'
+    device: 'desktop',
+    userID: 2,
+    casinoID: 2,
+    mode: 'normal'
 });
 
 init.login();
@@ -65,7 +67,9 @@ events.on('menu:changeSide', bg.changeSide);
 
 // Balance Module
 balance.start({
-    textDelta: 20
+    textDelta: 20,
+    bottomLineHeight: 30,
+    topLineHeight: 40
 });
 events.on('bg:main', balance.initBalance);
 events.on('menu:changeBet', balance.changeBet);
@@ -118,6 +122,15 @@ events.on('menu:changeSide', menu.hideMenu);
 events.on('buttons:showMenu', menu.showMenu);
 events.on('menu:changeSide', menu.changeSide);
 events.on('bg:changeSide', menu.changeSide);
+
+// Controls Module
+if (storage.read('device') === 'desktop') {
+    controls.start();
+    events.on('bg:main', controls.drawControlsPanel);
+    events.on('autoplay:started', controls.writeAutoplay);
+    events.on('autoplay:count', controls.updateAutoplay);
+    events.on('autoplay:ended', controls.removeAutoplay);
+}
 
 // Roll Module
 roll.start();

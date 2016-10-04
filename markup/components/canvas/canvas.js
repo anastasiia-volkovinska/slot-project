@@ -60,20 +60,13 @@ export let canvas = (function () {
 
     // TODO: Эту функцию нужно будет полностью продебажить
     function changeSide(side) {
-
         console.log('I must change side to:', side);
 
-        // TODO: Нужно будет сделать общий контейнер для автомата и всего с ним
         const stage = storage.read('stage');
-        const fg = stage.getChildByName('fgContainer');
+        const mainContainer = stage.getChildByName('mainContainer');
         const bg = stage.getChildByName('bgContainer');
-        const gameBG = bg.getChildByName('gameBG');
-        const game = stage.getChildByName('gameContainer');
-        const winLinesContainer = stage.getChildByName('winLinesContainer');
-        const winRectsContainer = stage.getChildByName('winRectsContainer');
-        const gameMask = game.mask;
         const balance = stage.getChildByName('balanceContainer');
-        const gameTopContainer = stage.getChildByName('gameTopContainer');
+        const balanceText = balance.getChildByName('balanceTextContainer');
 
         let delta;
         switch (side) {
@@ -97,8 +90,10 @@ export let canvas = (function () {
             default:
                 return;
         }
-
-        TweenMax.to([fg, game, gameMask, gameBG, balance, winRectsContainer, winLinesContainer, gameTopContainer], config.timeToSlide, {x: delta});
+        balance.uncache();
+        TweenMax.to([mainContainer, balanceText], config.timeToSlide, {x: delta, onComplete: function () {
+            balance.cache(0, 0, utils.width, utils.height);
+        }});
     }
 
     return {

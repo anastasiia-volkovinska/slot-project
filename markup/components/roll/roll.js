@@ -61,19 +61,23 @@ export let roll = (function () {
         const gameMask = new createjs.Shape();
         gameMask.graphics.drawRect(config.gameX, config.gameY, utils.gameWidth, utils.gameHeight);
         gameContainer.mask = gameMask;
-        const fg = stage.getChildByName('fgContainer');
-        stage.addChildAt(gameContainer, stage.getChildIndex(fg));
+        const mainContainer = stage.getChildByName('mainContainer');
+        const gameMachine = mainContainer.getChildByName('gameMachine');
+        mainContainer.addChildAt(gameContainer, mainContainer.getChildIndex(gameMachine));
     }
 
     function initTopGameContainer() {
+        console.log('initTopGameContainer');
         gameTopContainer.set({
             name: 'gameTopContainer',
             x: config.gameX,
             y: config.gameY
         });
         const stage = storage.read('stage');
-        const fg = stage.getChildByName('fgContainer');
-        stage.addChildAt(gameTopContainer, stage.getChildIndex(fg) + 1);
+        const mainContainer = stage.getChildByName('mainContainer');
+        const gameMachine = mainContainer.getChildByName('gameMachine');
+        // mainContainer.addChild(gameTopContainer);
+        mainContainer.addChildAt(gameTopContainer, mainContainer.getChildIndex(gameMachine) + 1);
     }
 
     function getScreenData(inds, wls) {
