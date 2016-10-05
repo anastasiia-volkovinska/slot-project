@@ -130,6 +130,8 @@ if (storage.read('device') === 'desktop') {
     events.on('autoplay:started', controls.writeAutoplay);
     events.on('autoplay:count', controls.updateAutoplay);
     events.on('autoplay:ended', controls.removeAutoplay);
+    // events.on('roll:started', controls.startRoll);
+    events.on('roll:ended', controls.endRoll);
 }
 
 // Roll Module

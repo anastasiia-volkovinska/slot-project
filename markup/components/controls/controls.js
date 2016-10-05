@@ -13,6 +13,7 @@ export let controls = (function () {
     let controlsAutoContainer;
     let auto;
     let spin;
+    let maxBet;
 
     let controlsContainer = new c.Container().set({
         name: 'controlsContainer',
@@ -260,7 +261,7 @@ export let controls = (function () {
             controlsAutoContainer.open = !controlsAutoContainer.open;
         });
 
-        const maxBet = new c.Sprite(controlsSS).set({
+        maxBet = new c.Sprite(controlsSS).set({
             name: 'maxBet',
             x: 600,
             y: 73,
@@ -308,7 +309,7 @@ export let controls = (function () {
         // auto.gotoAndStop('autoStop');
 
         const autoCount = storage.read('autoCount');
-        const autoText = new c.Text(autoCount, '38px Helvetica', '#231805').set({
+        const autoText = new c.Text(autoCount, 'bold 36px Helvetica', '#231805').set({
             name: 'autoText',
             textAlign: 'center',
             textBaseline: 'middle',
@@ -338,6 +339,20 @@ export let controls = (function () {
         }
     }
 
+    // function startRoll() {
+    //     if (storage.readState('autoplay') === 'started') return;
+    //     // menuButton.gotoAndStop('menuOff');
+    //     auto.gotoAndStop('autoOff');
+    //     betButton.gotoAndStop('betOff');
+    // }
+
+    function endRoll() {
+        if (storage.readState('autoplay') === 'started') return;
+        spin.gotoAndStop('spinOut');
+        // menuButton.gotoAndStop('menuOut');
+        auto.gotoAndStop('auto');
+        maxBet.gotoAndStop('maxBet');
+    }
 
     return {
         start,
