@@ -182,11 +182,9 @@ function handleFastSpinClick() {
 function handleHandModeClick() {
     if (storage.readState('side') === 'left') {
         events.trigger('menu:changeSide', 'right');
-        events.trigger('menu:changeSide');
         this.gotoAndStop('handMode_on');
     } else {
         events.trigger('menu:changeSide', 'left');
-        events.trigger('menu:changeSide');
         this.gotoAndStop('handMode_off');
     }
 }
@@ -194,7 +192,7 @@ function handleHandModeClick() {
 function handleInfoClick() {
     const loader = storage.read('loadResult');
     const stage = storage.read('stage');
-    const rules = new c.Bitmap(loader.getResult('rules'));
+    const rules = new c.Bitmap(loader.getResult('rules')).set({scaleX: 0.7, scaleY: 0.7});
     rules.on('click', function () {
         TweenMax.to(rules, 0.5, {alpha: 0, onComplete: function () {
             stage.removeChild(rules);

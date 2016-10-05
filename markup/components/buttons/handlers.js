@@ -25,10 +25,10 @@ export function handleSpinClick() {
             }
         }
         if (fastRoll) {
-            that.gotoAndStop('spinOff');
             storage.changeState('fastRoll', 'enabled');
             events.trigger('buttons:fastRoll', 'enabled');
             if (storage.read('device') === 'mobile') {
+                that.gotoAndStop('spinOff');
                 TweenMax.to(that, 0.5, {rotation: 0});
             }
         }

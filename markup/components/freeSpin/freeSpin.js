@@ -148,14 +148,16 @@ export let freeSpin = (function () {
         const buttonsContainer = stage.getChildByName('buttonsContainer');
         buttonsContainer.visible = false;
         fsTotalWin = 0;
-        events.trigger('menu:changeSide', 'center');
+        if (storage.read('device') === 'mobile') {
+            events.trigger('menu:changeSide', 'center');
+        }
         drawFreeSpinsBG();
 
     }
 
     function transitionFreeSpins(data) {
         createjs.Sound.stop('ambientSound');
-        createjs.Sound.play('bonusPerehodSound', {loop: -1});
+        createjs.Sound.play('startPerehodSound', {loop: -1});
         fsStartData = data;
         if (data) {
             config.currentLevel = data.level - 1;
@@ -239,7 +241,7 @@ export let freeSpin = (function () {
         TweenMax.to(line2, 30, {x: 1280, repeat: -1});
 
         transitionContainer.on('click', function () {
-            createjs.Sound.stop('bonusPerehodSound');
+            createjs.Sound.stop('startPerehodSound');
             createjs.Sound.play('fsAmbientSound', {loop: -1});
             setTimeout(function () {
                 events.trigger('startFreeSpin');
@@ -325,14 +327,14 @@ export let freeSpin = (function () {
     }
 
     function finishFreeSpins() {
-
+        const mainContainer = stage.getChildByName('mainContainer');
         const response = storage.read('freeRollResponse');
         storage.read('currentBalance').coinsCash = ((+storage.read('currentBalance').coinsCash * 100 + +storage.read('currentBalance').winCash * 100) / 100).toFixed(2);
         storage.read('currentBalance').coinsSum = +storage.read('currentBalance').coinsSum + response.CoinsWinCounter + response.TotalWinCoins;
         balance.updateBalance();
 
         createjs.Sound.stop('fsAmbientSound');
-        createjs.Sound.play('bonusPerehodSound', {loop: -1});
+        createjs.Sound.play('finishPerehodSound', {loop: -1});
         let loader = storage.read('loadResult');
         let finishContainer = new createjs.Container().set({
             name: 'finishContainer',
@@ -425,7 +427,11 @@ export let freeSpin = (function () {
                 events.trigger('stopFreeSpins');
             });
         finishButton.on('click', function () {
-            createjs.Sound.stop('bonusPerehodSound');
+            mainContainer.removeChild(mainContainer.getChildByName('controlsContainerFS'));
+            const controlsContainer = mainContainer.getChildByName('controlsContainer');
+            controlsContainer.visisble = true;
+
+            createjs.Sound.stop('finishPerehodSound');
             createjs.Sound.play('ambientSound', {loop: -1});
             createjs.Tween.get(finishContainer)
                 .to({alpha: 0}, 500)

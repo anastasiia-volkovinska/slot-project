@@ -60,6 +60,7 @@ export let preloader = (function () {
     }
 
     function drawInitScreen() {
+        createjs.Sound.play('preloadAmbientSound', {loop: -1});
         const loader = storage.read('loadResult');
         const ss = loader.getResult('new_elements');
         const clock = loader.getResult('preloaderSprite');
@@ -167,7 +168,7 @@ export let preloader = (function () {
 
     function moveLine(lines) {
         TweenMax.staggerTo(lines, 0.05, {x: '+= 3', repeat: 6, yoyo: true,
-            ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 1, points: 20, taper: "none", randomize: true, clamp: false}),
+            ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 1, points: 20, taper: 'none', randomize: true, clamp: false}),
 
             onComplete: function () {
                 lines.forEach((line) => {
@@ -230,6 +231,7 @@ export let preloader = (function () {
         storage.changeState('fastSpinSetting', false);
 
         // Это стоит вынести в модуль музыки
+        createjs.Sound.stop('preloadAmbientSound');
         const ambient = c.Sound.play('ambientSound', {loop: -1});
         storage.write('ambient', ambient);
         storage.changeState('music', true);

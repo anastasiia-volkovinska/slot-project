@@ -440,7 +440,9 @@ export let win = (function () {
         winData.winLines = parseWinResult(rollData.LinesResult);
         if (winData.winLines.length) {
             drawTotalWin(winData.winLines);
-            createjs.Sound.play('lineWinSound');
+            // createjs.Sound.play('lineWinSound');
+            createjs.Sound.play('vistrelSound');
+            createjs.Sound.play('pulyaSound', {delay: 300});
         }
     }
 

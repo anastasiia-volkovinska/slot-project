@@ -225,7 +225,7 @@ export let roll = (function () {
                         storage.changeState('mode', 'normal');
                     }
                     createjs.Sound.play('spinSound');
-                    createjs.Sound.play('barabanSound');
+                    createjs.Sound.play('barabanSound', {duration: 2000});
                     rollData.nextScreen = getScreenData(response.Indexes, storage.read('wheels'));
                     drawScreen(rollData.currentScreen, rollData.nextScreen);
                     rollAnimation = new TimelineMax();

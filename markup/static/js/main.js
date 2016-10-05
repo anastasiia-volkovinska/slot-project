@@ -26,7 +26,7 @@ init.start({
     device: 'desktop',
     userID: 2,
     casinoID: 2,
-    mode: 'normal'
+    mode: 'fsBonus'
 });
 
 init.login();
@@ -34,7 +34,7 @@ init.login();
 // Canvas Module
 canvas.start({
     canvas: '#game',
-    mouseOver: 0,
+    mouseOver: 20,
     leftToRight: 150,
     center: 75,
     timeToSlide: 0.5
@@ -132,6 +132,8 @@ if (storage.read('device') === 'desktop') {
     events.on('autoplay:ended', controls.removeAutoplay);
     // events.on('roll:started', controls.startRoll);
     events.on('roll:ended', controls.endRoll);
+    events.on('buttons:stopAutoplay', controls.removeAutoplay);
+
 }
 
 // Roll Module

@@ -12,7 +12,9 @@ export function drawFreeSpinsBG() {
     const loader = storage.read('loadResult');
 
     // Balance data invisible
-    hideBalance();
+    if (storage.read('device') === 'mobile') {
+        hideBalance();
+    }
     showFsBalance();
 
     const bgContainer = stage.getChildByName('bgContainer');
@@ -34,6 +36,27 @@ export function drawFreeSpinsBG() {
         name: 'fsBG'
     });
     bgContainer.addChildAt(fsBG, bgContainer.getChildIndex(mainBG) + 1);
+
+    if (storage.read('device') === 'desktop') {
+        const controlsContainer = mainContainer.getChildByName('controlsContainer');
+        controlsContainer.visible = false;
+
+        const controlsContainerFS = new c.Container().set({
+            name: 'controlsContainerFS',
+            x: 92,
+            y: 640
+        });
+
+        const controlsBGFS = new c.Bitmap(loader.getResult('controlsBGFS')).set({
+            name: 'controlsBGFS',
+            scaleX: 0.75,
+            scaleY: 0.75
+        });
+        controlsContainerFS.addChild(controlsBGFS);
+        mainContainer.addChild(controlsContainerFS);
+
+    }
+
 
     drawTableContainer();
     drawMultiContainer();

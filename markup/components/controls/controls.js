@@ -50,7 +50,8 @@ export let controls = (function () {
             x: 220,
             y: 101,
             scaleX: 0.75,
-            scaleY: 0.75
+            scaleY: 0.75,
+            cursor: 'pointer'
         });
         controlPlusBet.gotoAndStop(6);
         utils.getCenterPoint(controlPlusBet);
@@ -64,7 +65,8 @@ export let controls = (function () {
             x: 145,
             y: 100,
             scaleX: 0.75,
-            scaleY: 0.75
+            scaleY: 0.75,
+            cursor: 'pointer'
         });
         controlMinusBet.gotoAndStop(7);
         utils.getCenterPoint(controlMinusBet);
@@ -79,7 +81,8 @@ export let controls = (function () {
             x: 843,
             y: 101,
             scaleX: 0.75,
-            scaleY: 0.75
+            scaleY: 0.75,
+            cursor: 'pointer'
         });
         controlPlusCoin.gotoAndStop(6);
         utils.getCenterPoint(controlPlusCoin);
@@ -94,7 +97,8 @@ export let controls = (function () {
             x: 752,
             y: 100,
             scaleX: 0.75,
-            scaleY: 0.75
+            scaleY: 0.75,
+            cursor: 'pointer'
         });
         controlMinusCoin.gotoAndStop(7);
         utils.getCenterPoint(controlMinusCoin);
@@ -105,7 +109,7 @@ export let controls = (function () {
 
         controlsAutoContainer = new c.Container().set({
             name: 'controlsAutoContainer',
-            x: 480,
+            x: 475,
             y: 73,
             alpha: 0,
             open: false
@@ -121,10 +125,10 @@ export let controls = (function () {
         const menuAutoText = new c.Text('', 'normal 16px Helvetica', '#e8b075').set({
             textAlign: 'center',
             textBaseline: 'middle',
-            shadow: new c.Shadow('#e8b075', 0, 0, 15)
+            shadow: new c.Shadow('#e8b075', 0, 0, 10)
         });
 
-        const menuAutoShape = new c.Shape().set({name: 'menuAutoShape', regX: 40, regY: 20});
+        const menuAutoShape = new c.Shape().set({name: 'menuAutoShape', regX: 40, regY: 20, scaleX: 0.75, scaleY: 0.75});
         menuAutoShape.graphics.beginFill('rgba(255, 255, 255, 0.4)').drawRect(0, 0, 80, 40);
 
         const menuAutoCircle10 = menuAutoShape.clone().set({
@@ -139,9 +143,16 @@ export let controls = (function () {
             name: 'menuAutoButton10',
             amount: 10,
             x: -35,
-            y: -32
+            y: -32,
+            cursor: 'pointer'
         });
         menuAutoButton10.addChild(menuAutoCircle10, menuAutoText10);
+        menuAutoButton10.on('mouseover', function () {
+            menuAutoCircle10.alpha = 0.5;
+        });
+        menuAutoButton10.on('mouseout', function () {
+            menuAutoCircle10.alpha = 0.05;
+        });
 
         const menuAutoCircle25 = menuAutoShape.clone().set({
             name: 'menuAutoCircle25',
@@ -155,9 +166,16 @@ export let controls = (function () {
             amount: 25,
             name: 'menuAutoButton25',
             x: 25,
-            y: -32
+            y: -32,
+            cursor: 'pointer'
         });
         menuAutoButton25.addChild(menuAutoCircle25, menuAutoText25);
+        menuAutoButton25.on('mouseover', function () {
+            menuAutoCircle25.alpha = 0.5;
+        });
+        menuAutoButton25.on('mouseout', function () {
+            menuAutoCircle25.alpha = 0.05;
+        });
 
         const menuAutoCircle50 = menuAutoShape.clone().set({
             name: 'menuAutoCircle50',
@@ -171,9 +189,16 @@ export let controls = (function () {
             amount: 50,
             name: 'menuAutoButton50',
             x: -35,
-            y: -32 + 30
+            y: -32 + 30,
+            cursor: 'pointer'
         });
         menuAutoButton50.addChild(menuAutoCircle50, menuAutoText50);
+        menuAutoButton50.on('mouseover', function () {
+            menuAutoCircle50.alpha = 0.5;
+        });
+        menuAutoButton50.on('mouseout', function () {
+            menuAutoCircle50.alpha = 0.05;
+        });
 
         const menuAutoCircle100 = menuAutoShape.clone().set({
             name: 'menuAutoCircle100',
@@ -187,9 +212,16 @@ export let controls = (function () {
             amount: 100,
             name: 'menuAutoButton100',
             x: 25,
-            y: -32 + 30
+            y: -32 + 30,
+            cursor: 'pointer'
         });
         menuAutoButton100.addChild(menuAutoCircle100, menuAutoText100);
+        menuAutoButton100.on('mouseover', function () {
+            menuAutoCircle100.alpha = 0.5;
+        });
+        menuAutoButton100.on('mouseout', function () {
+            menuAutoCircle100.alpha = 0.05;
+        });
 
         const menuAutoCircle250 = menuAutoShape.clone().set({
             name: 'menuAutoCircle250',
@@ -203,9 +235,16 @@ export let controls = (function () {
             amount: 250,
             name: 'menuAutoButton250',
             x: -35,
-            y: -32 + 62
+            y: -32 + 62,
+            cursor: 'pointer'
         });
         menuAutoButton250.addChild(menuAutoCircle250, menuAutoText250);
+        menuAutoButton250.on('mouseover', function () {
+            menuAutoCircle250.alpha = 0.5;
+        });
+        menuAutoButton250.on('mouseout', function () {
+            menuAutoCircle250.alpha = 0.05;
+        });
 
         const menuAutoCircle500 = menuAutoShape.clone().set({
             name: 'menuAutoCircle500',
@@ -219,9 +258,16 @@ export let controls = (function () {
             amount: 500,
             name: 'menuAutoButton500',
             x: 25,
-            y: -32 + 62
+            y: -32 + 62,
+            cursor: 'pointer'
         });
         menuAutoButton500.addChild(menuAutoCircle500, menuAutoText500);
+        menuAutoButton500.on('mouseover', function () {
+            menuAutoCircle500.alpha = 0.5;
+        });
+        menuAutoButton500.on('mouseout', function () {
+            menuAutoCircle500.alpha = 0.05;
+        });
 
         controlsAutoContainer.addChild(
             autoSelect,
@@ -242,28 +288,30 @@ export let controls = (function () {
 
         auto = new c.Sprite(controlsSS).set({
             name: 'auto',
-            x: 400,
+            x: 395,
             y: 73,
             scaleX: 0.75,
-            scaleY: 0.75
+            scaleY: 0.75,
+            cursor: 'pointer'
         });
         auto.gotoAndStop('auto');
         utils.getCenterPoint(auto);
         auto.on('click', function () {
-            auto.gotoAndStop('autoOff');
+            createjs.Sound.play('buttonClickSound');
             TweenMax.to(auto, 0.4, {x: auto.x - 120});
             controlsAutoContainer.alpha = 1;
             TweenMax.to(controlsAutoContainer, 0.4, {x: controlsAutoContainer.x - 100});
             if (controlsAutoContainer.open === true) {
                 TweenMax.to(auto, 0.4, {x: auto.x + 120});
                 TweenMax.to(controlsAutoContainer, 0.4, {x: controlsAutoContainer.x + 100, alpha: 0});
+
             }
             controlsAutoContainer.open = !controlsAutoContainer.open;
         });
 
         maxBet = new c.Sprite(controlsSS).set({
             name: 'maxBet',
-            x: 600,
+            x: 595,
             y: 73,
             scaleX: 0.75,
             scaleY: 0.75,
@@ -273,25 +321,54 @@ export let controls = (function () {
         utils.getCenterPoint(maxBet);
         maxBet.on('click', function () {
             maxBet.gotoAndStop('maxBetOn');
+            setTimeout(function () {
+                maxBet.gotoAndStop('maxBet');
+            }, 200);
             createjs.Sound.play('buttonClickSound');
             events.trigger('menu:maxBet', true);
         });
 
         spin = new c.Sprite(controlsSS).set({
             name: 'spin',
-            x: 500,
+            x: 495,
             y: 73,
             scaleX: 0.75,
-            scaleY: 0.75
+            scaleY: 0.75,
+            cursor: 'pointer'
         });
         spin.gotoAndStop('spin');
         utils.getCenterPoint(spin);
         spin.on('click', function () {
-            spin.gotoAndStop('spinOn');
-            handleSpinClick();
+            createjs.Sound.play('buttonClickSound');
+            if (storage.readState('lockedMenu')) return;
+
+            if (storage.readState('roll') !== 'started' && spin.currentAnimation !== 'stop') {
+                spin.gotoAndStop('spinOn');
+                handleSpinClick();
+            }
+            if (spin.currentAnimation === 'stop') {
+                c.Sound.play('buttonClickSound');
+                storage.changeState('autoplay', 'ended');
+                events.trigger('buttons:stopAutoplay');
+            }
         });
 
-        controlsContainer.addChild(controlsBG, lines, controlPlusBet, controlMinusBet, controlMinusCoin, controlPlusCoin, controlsAutoContainer, spin, auto, maxBet);
+        const info = new c.Sprite(controlsSS).set({
+            name: 'info',
+            x: 900,
+            y: 100,
+            scaleX: 0.75,
+            scaleY: 0.75,
+            cursor: 'pointer'
+        });
+        info.gotoAndStop('info');
+        utils.getCenterPoint(info);
+        info.on('click', function () {
+            createjs.Sound.play('buttonClickSound');
+            handleInfoClick();
+        });
+
+        controlsContainer.addChild(controlsBG, lines, controlPlusBet, controlMinusBet, controlMinusCoin, controlPlusCoin, controlsAutoContainer, spin, auto, maxBet, info);
 
         mainContainer.addChild(controlsContainer);
     }
@@ -302,10 +379,24 @@ export let controls = (function () {
         storage.write('autoCount', that.amount);
         events.trigger('menu:startAutoplay', this.amount);
         storage.changeState('autoplay', 'started');
+
+    }
+
+    function handleInfoClick() {
+        const loader = storage.read('loadResult');
+        const stage = storage.read('stage');
+        const rules = new c.Bitmap(loader.getResult('rules')).set({scaleX: 0.7, scaleY: 0.7});
+        rules.on('click', function () {
+            TweenMax.to(rules, 0.5, {alpha: 0, onComplete: function () {
+                stage.removeChild(rules);
+            }});
+        });
+        stage.addChild(rules);
     }
 
     function writeAutoplay() {
         spin.gotoAndStop('stop');
+        auto.gotoAndStop('autoOff');
         // auto.gotoAndStop('autoStop');
 
         const autoCount = storage.read('autoCount');
@@ -313,8 +404,8 @@ export let controls = (function () {
             name: 'autoText',
             textAlign: 'center',
             textBaseline: 'middle',
-            x: 400,
-            y: auto.y,
+            x: 403,
+            y: auto.y - 3,
             shadow: new c.Shadow('#e8b075', 0, 0, 15)
         });
         TweenMax.to(auto, 0.4, {x: auto.x + 120});
@@ -326,7 +417,8 @@ export let controls = (function () {
 
     function removeAutoplay() {
         // spin.gotoAndStop('spinOut');
-        // auto.gotoAndStop('autoOut');
+        auto.gotoAndStop('auto');
+        controlsAutoContainer.open = false;
         const autoText = controlsContainer.getChildByName('autoText');
         controlsContainer.removeChild(autoText);
     }
@@ -348,7 +440,8 @@ export let controls = (function () {
 
     function endRoll() {
         if (storage.readState('autoplay') === 'started') return;
-        spin.gotoAndStop('spinOut');
+        spin.gotoAndStop('spin');
+        controlsAutoContainer.open = false;
         // menuButton.gotoAndStop('menuOut');
         auto.gotoAndStop('auto');
         maxBet.gotoAndStop('maxBet');
@@ -359,6 +452,7 @@ export let controls = (function () {
         drawControlsPanel,
         writeAutoplay,
         removeAutoplay,
-        updateAutoplay
+        updateAutoplay,
+        endRoll
     };
 })();
