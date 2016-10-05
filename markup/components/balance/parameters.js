@@ -95,5 +95,39 @@ export const parameters = {
             name: 'coinsValue',
             shadow: new c.Shadow('#e8b075', 0, 0, 15)
         }
+    },
+    desktopFS: {
+        betSum: {
+            x: 345,
+            y: 573,
+            textAlign: 'center',
+            font: 'normal 14px Helvetica',
+            name: 'betSum',
+            shadow: new c.Shadow('#e8b075', 0, 0, 15)
+        },
+        coinsSum: {
+            x: 990,
+            y: 613,
+            textAlign: 'center',
+            font: 'normal 14px Helvetica',
+            name: 'coinsSum',
+            shadow: new c.Shadow('#e8b075', 0, 0, 15)
+        },
+        betValue: {
+            x: 265,
+            y: 626,
+            textAlign: 'center',
+            font: 'normal 14px Helvetica',
+            name: 'betValue',
+            shadow: new c.Shadow('#e8b075', 0, 0, 15)
+        },
+        coinsValue: {
+            x: 300,
+            y: 626,
+            textAlign: 'center',
+            font: 'normal 14px Helvetica',
+            name: 'coinsValue',
+            shadow: new c.Shadow('#e8b075', 0, 0, 15)
+        }
     }
 };
