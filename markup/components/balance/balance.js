@@ -12,9 +12,9 @@ export let balance = (function () {
 
     let config;
     const defaultConfig = {
-        textDelta: 20,
         bottomLineHeight: 30,
-        topLineHeight: 40
+        topLineHeight: 40,
+        textDelta: 20
     };
 
     let stage;
@@ -23,16 +23,21 @@ export let balance = (function () {
     const h = utils.height;
     const balanceContainer = new c.Container().set({ name: 'balanceContainer' });
     const balanceTextContainer = new c.Container().set({ name: 'balanceTextContainer' });
+    const balanceButtons = new c.Container().set({ name: 'balanceButtons' });
+    const balanceCache = new c.Container().set({ name: 'balanceCache' });
 
     const balanceText = {};
     const balanceData = {};
     let currencySymbol;
 
     function start(configObj) {
+
         config = configObj || defaultConfig;
+
     }
 
     function initBalance() {
+
         stage = storage.read('stage');
         const data = storage.read('initState');
         balanceData.linesLength = storage.read('lines').length;
@@ -56,49 +61,186 @@ export let balance = (function () {
         currencySymbol = checkCurrency(balanceData.currency);
 
         drawBalanceBG();
-        drawPanelButtons();
+        drawBalanceButtons();
         writeBalance();
+
+        storage.read('device') === 'desktop' && drawBalanceTime();
+
     }
 
-    function drawBalanceBG() {
-        const footerBgDown = new c.Shape().set({name: 'footerBgDown'});
-        footerBgDown.graphics.beginFill('#000').drawRect(0, utils.height - config.bottomLineHeight, utils.width, config.bottomLineHeight);
+    function checkCurrency(currency) {
 
-        if (storage.read('device') === 'mobile') {
-            const footerBgUp = new c.Shape().set({name: 'footerBgUp'});
-            footerBgUp.graphics.beginFill('rgba(0, 0, 0, 0.6)').drawRect(0, utils.height - config.bottomLineHeight - config.topLineHeight, utils.width, config.topLineHeight);
-            balanceContainer.addChild(footerBgDown, footerBgUp);
-        } else if (storage.read('device') === 'desktop') {
-            balanceContainer.addChild(footerBgDown);
+        if (currency === 'USD') {
+            return '$ ';
+        } else if (currency === 'EUR') {
+            return '€ ';
+        } else if (currency === 'UAH') {
+            return '₴ ';
+        } else if (currency === 'RUB') {
+            return '₽ ';
         }
+
     }
 
-    function drawPanelButtons() {
+    function makeTextDelta(text1, text2, delta) {
+
+        text1.x = text2.x - text2.getMeasuredWidth() / 2 - delta - text1.getMeasuredWidth();
+
+    }
+
+    function drawBalanceTime() {
+
+        let currentHour = new Date().getHours();
+        let currentMinutes = new Date().getMinutes();
+
+        if (currentHour < 10) {
+            currentHour = '0' + currentHour;
+        }
+        if (currentMinutes < 10) {
+            currentMinutes = '0' + currentMinutes;
+        }
+
+        let balanceTime = new c.Text(`${currentHour} : ${currentMinutes}`, parameters.font, parameters.orangeColor);
+        balanceTime.set({
+            x: utils.width - balanceTime.getMeasuredWidth(),
+            y: utils.height - config.bottomLineHeight / 2,
+            textAlign: 'center',
+            textBaseline: 'middle'
+        });
+
+        c.Ticker.on('tick', (event) => {
+
+            let hours = new Date().getHours();
+            let minutes = new Date().getMinutes();
+
+            if (hours < 10) {
+                hours = '0' + hours;
+            }
+            if (minutes < 10) {
+                minutes = '0' + minutes;
+            }
+
+            if (currentHour != hours) {
+
+                currentHour = hours;
+                balanceTime.text = `${currentHour} : ${currentMinutes}`;
+                balanceContainer.updateCache();
+
+            }
+
+            if (currentMinutes != minutes) {
+
+                currentMinutes = minutes;
+                balanceTime.text = `${currentHour} : ${currentMinutes}`;
+                balanceContainer.updateCache();
+
+            }
+
+        });
+
+        balanceContainer.addChild(balanceTime);
+
+    }
+
+    function drawBalanceButtons() {
 
         const loader = storage.read('loadResult');
-        const balanceButtons = new c.Container().set({ name: 'balanceButtons' });
         let homeButton;
+        let soundButton;
+        let menuButton;
+        let fastButton;
 
         if (storage.read('device') === 'mobile') {
 
-            homeButton = new c.Bitmap(loader.getResult('home')).set({
+            homeButton = new c.Sprite(loader.getResult('balance'), 'homeOn').set({
                 name: 'homeButton',
-                x: 15, // Magic Numbers
+                x: 25, // Magic Numbers
                 y: utils.height - config.topLineHeight / 2 - config.bottomLineHeight
             });
             utils.getCenterPoint(homeButton);
 
-        } else if (storage.read('device') === 'desktop') {
+        } else {
 
-            homeButton = new c.Bitmap(loader.getResult('home')).set({
+            homeButton = new c.Sprite(loader.getResult('balance'), 'homeOn').set({
                 name: 'homeButton',
-                x: 10, // Magic Numbers
+                x: 15, // Magic Numbers
                 y: utils.height - config.bottomLineHeight / 2,
                 scaleX: 0.6,
                 scaleY: 0.6,
                 cursor: 'pointer'
             });
             utils.getCenterPoint(homeButton);
+
+            menuButton = new c.Sprite(loader.getResult('balance'), 'menuOn').set({
+                name: 'menuButton',
+                x: 40, // Magic Numbers
+                y: utils.height - config.bottomLineHeight / 2,
+                scaleX: 0.6,
+                scaleY: 0.6,
+                cursor: 'pointer'
+            });
+            utils.getCenterPoint(menuButton);
+
+            soundButton = new c.Sprite(loader.getResult('balance'), 'soundOn').set({
+                name: 'soundButton',
+                x: 67, // Magic Numbers
+                y: utils.height - config.bottomLineHeight / 2,
+                scaleX: 0.6,
+                scaleY: 0.6,
+                cursor: 'pointer'
+            });
+            utils.getCenterPoint(soundButton);
+
+            fastButton = new c.Sprite(loader.getResult('balance'), 'fastOff').set({
+                name: 'fastButton',
+                x: 90, // Magic Numbers
+                y: utils.height - config.bottomLineHeight / 2,
+                scaleX: 0.6,
+                scaleY: 0.6,
+                cursor: 'pointer'
+            });
+            utils.getCenterPoint(fastButton);
+
+            menuButton.on('click', (event) => {
+                if (storage.readState('lockedMenu')) return;
+
+                c.Sound.play('buttonClickSound');
+                storage.changeState('menu', 'settings');
+                events.trigger('buttons:showMenu', 'settings');
+            });
+
+            soundButton.on('click', (event) => {
+                // if (storage.readState('lockedMenu')) return;
+
+                c.Sound.play('buttonClickSound');
+                c.Sound.muted = !c.Sound.muted;
+                storage.changeState('sound', !storage.readState('sound'));
+
+                if (storage.readState('sound')) {
+                    soundButton.gotoAndStop('soundOn');
+                } else {
+                    soundButton.gotoAndStop('soundOff');
+                }
+
+                balanceContainer.updateCache();
+            });
+
+            fastButton.on('click', (event) => {
+                // if (storage.readState('lockedMenu')) return;
+
+                c.Sound.play('buttonClickSound');
+                storage.changeState('fastSpinSetting', !storage.readState('fastSpinSetting'));
+
+                if (storage.readState('fastSpinSetting')) {
+                    fastButton.gotoAndStop('fastOn');
+                } else {
+                    fastButton.gotoAndStop('fastOff');
+                }
+
+                balanceContainer.updateCache();
+            });
+
+            balanceButtons.addChild(menuButton, soundButton, fastButton);
 
         }
 
@@ -114,57 +256,29 @@ export let balance = (function () {
         balanceContainer.addChild(balanceButtons);
     }
 
-    function checkCurrency(currency) {
-        if (currency === 'USD') {
-            return '$ ';
-        } else if (currency === 'EUR') {
-            return '€ ';
-        } else if (currency === 'UAH') {
-            return '₴ ';
-        } else if (currency === 'RUB') {
-            return '₽ ';
-        }
-    }
+    function drawBalanceBG() {
 
-    function makeTextDelta(text1, text2, delta) {
-        text1.x = text2.x - text2.getMeasuredWidth() / 2 - delta - text1.getMeasuredWidth();
+        const footerBgDown = new c.Shape().set({name: 'footerBgDown'});
+        footerBgDown.graphics.beginFill('#000').drawRect(0, utils.height - config.bottomLineHeight, utils.width, config.bottomLineHeight);
+
+        if (storage.read('device') === 'mobile') {
+            const footerBgUp = new c.Shape().set({name: 'footerBgUp'});
+            footerBgUp.graphics.beginFill('rgba(0, 0, 0, 0.6)').drawRect(0, utils.height - config.bottomLineHeight - config.topLineHeight, utils.width, config.topLineHeight);
+            balanceContainer.addChild(footerBgDown, footerBgUp);
+        } else {
+            balanceContainer.addChild(footerBgDown);
+        }
     }
 
     function writeBalance() {
 
-        if (storage.read('device') === 'mobile') {
-
-            balanceText.coinsSum = new c.Text(balanceData.coinsSum, parameters.font, parameters.orangeColor).set(parameters.coinsSum);
-            balanceText.betSum = new c.Text(balanceData.betSum, parameters.font, parameters.orangeColor).set(parameters.betSum);
-            balanceText.coinsSumText = new c.Text('Coins:', parameters.bigFont, parameters.color).set(parameters.coinsSumText);
-            balanceText.betSumText = new c.Text('Bet:', parameters.bigFont, parameters.color).set(parameters.betSumText);
-            makeTextDelta(balanceText.coinsSumText, balanceText.coinsSum, config.textDelta);
-
-        } else if (storage.read('device') === 'desktop') {
-
-            balanceText.coinsSum = new c.Text(balanceData.coinsSum, parameters.font, parameters.orangeColor).set(parameters.desktop.coinsSum);
-            balanceText.betSum = new c.Text(balanceData.betSum, parameters.font, parameters.orangeColor).set(parameters.desktop.betSum);
-            balanceText.coinsValue = new c.Text(balanceData.coinsValue, parameters.font, parameters.orangeColor).set(parameters.desktop.coinsValue);
-            balanceText.betValue = new c.Text(balanceData.betValue, parameters.font, parameters.orangeColor).set(parameters.desktop.betValue);
-
-            balanceTextContainer.addChild(balanceText.coinsValue, balanceText.betValue);
-
-        }
-
-        balanceText.coinsCash = new c.Text(currencySymbol + balanceData.coinsCash, parameters.font, parameters.color).set(parameters.coinsCash);
-        balanceText.betCash = new c.Text(currencySymbol + balanceData.betCash, parameters.font, parameters.color).set(parameters.betCash);
-        balanceText.winCash = new c.Text(currencySymbol + balanceData.winCash, parameters.font, parameters.color).set(parameters.winCash);
-
         balanceText.coinsCashText = new c.Text('Cash:', parameters.font, parameters.greyColor).set(parameters.coinsCashText);
+        balanceText.coinsCash = new c.Text(currencySymbol + balanceData.coinsCash, parameters.font, parameters.color).set(parameters.coinsCash);
         balanceText.betCashText = new c.Text('Bet:', parameters.font, parameters.greyColor).set(parameters.betCashText);
+        balanceText.betCash = new c.Text(currencySymbol + balanceData.betCash, parameters.font, parameters.color).set(parameters.betCash);
         balanceText.winCashText = new c.Text('Win:', parameters.font, parameters.greyColor).set(parameters.winCashText);
-        makeTextDelta(balanceText.coinsCashText, balanceText.coinsCash, config.textDelta);
-
-        balanceTextContainer.addChild(
-            balanceText.coinsSum,
-            balanceText.coinsSumText,
-            balanceText.betSum,
-            balanceText.betSumText,
+        balanceText.winCash = new c.Text(currencySymbol + balanceData.winCash, parameters.font, parameters.color).set(parameters.winCash);
+        balanceCache.addChild(
             balanceText.coinsCash,
             balanceText.coinsCashText,
             balanceText.betCash,
@@ -172,14 +286,44 @@ export let balance = (function () {
             balanceText.winCash,
             balanceText.winCashText
         );
+        makeTextDelta(balanceText.coinsCashText, balanceText.coinsCash, config.textDelta);
+
+        if (storage.read('device') === 'mobile') {
+
+            balanceText.coinsSumText = new c.Text('Coins:', parameters.bigFont, parameters.color).set(parameters.coinsSumText);
+            balanceText.coinsSum = new c.Text(balanceData.coinsSum, parameters.font, parameters.orangeColor).set(parameters.coinsSum);
+            balanceText.betSumText = new c.Text('Bet:', parameters.bigFont, parameters.color).set(parameters.betSumText);
+            balanceText.betSum = new c.Text(balanceData.betSum, parameters.font, parameters.orangeColor).set(parameters.betSum);
+            makeTextDelta(balanceText.coinsSumText, balanceText.coinsSum, config.textDelta);
+
+        } else {
+
+            balanceText.coinsSum = new c.Text(balanceData.coinsSum, parameters.font, parameters.orangeColor).set(parameters.desktop.coinsSum);
+            balanceText.coinsValue = new c.Text(balanceData.coinsValue, parameters.font, parameters.orangeColor).set(parameters.desktop.coinsValue);
+            balanceText.betSum = new c.Text(balanceData.betSum, parameters.font, parameters.orangeColor).set(parameters.desktop.betSum);
+            balanceText.betValue = new c.Text(balanceData.betValue, parameters.font, parameters.orangeColor).set(parameters.desktop.betValue);
+            balanceTextContainer.addChild(balanceText.betValue, balanceText.coinsValue);
+
+            balanceCache.x = 65;
+
+        }
+
+
+        balanceTextContainer.addChild(
+            balanceText.coinsSum,
+            balanceText.coinsSumText,
+            balanceText.betSum,
+            balanceText.betSumText
+        );
 
         // Добавим баланс на сцену
-        balanceContainer.addChild(balanceTextContainer);
+        balanceContainer.addChild(balanceCache, balanceTextContainer);
+        stage.addChildAt(balanceContainer, stage.getChildIndex(stage.getChildByName('mainContainer')) + 1);
         balanceContainer.cache(0, 0, utils.width, utils.height);
-        stage.addChildAt(balanceContainer, stage.getChildIndex(stage.getChildByName('preloaderContainer')));
 
         storage.write('currentBalance', balanceData);
         setTimeout(updateBalance, 500); // Для того чтобы подгрузились шрифты и отобразить нужным шрифтом.
+
     }
 
     // function writeCashBalance(container) {
@@ -225,18 +369,32 @@ export let balance = (function () {
         }
 
         if (storage.read('device') === 'mobile') {
+
             makeTextDelta(balanceText.coinsSumText, balanceText.coinsSum, config.textDelta);
+
+        } else {
+
+            if (balanceText.coinsValue.text !== balanceData.coinsValue) {
+                balanceText.coinsValue.text = balanceData.coinsValue;
+            }
+            if (balanceText.betValue.text !== balanceData.betValue) {
+                balanceText.betValue.text = balanceData.betValue;
+            }
+
         }
         makeTextDelta(balanceText.coinsCashText, balanceText.coinsCash, config.textDelta);
 
         balanceContainer.updateCache();
         storage.write('currentBalance', balanceData);
+
     }
 
     function changeBet(moreOrLess, maxBetFlag) {
         if (maxBetFlag) {
             balanceData.betValue = balanceData.betSteps[balanceData.betSteps.length - 1];
+
         } else if (moreOrLess === true && balanceData.betValue !== balanceData.betSteps[balanceData.betSteps.length - 1]) {
+
             let i = balanceData.betSteps.length;
             while (i >= 0) {
                 if (balanceData.betSteps[i] === balanceData.betValue) {
@@ -245,7 +403,9 @@ export let balance = (function () {
                 }
                 i--;
             }
+
         } else if (moreOrLess === false && balanceData.betValue !== balanceData.betSteps[0]) {
+
             let i = balanceData.betSteps.length;
             while (i >= 0) {
                 if (balanceData.betSteps[i] === balanceData.betValue) {
@@ -254,24 +414,26 @@ export let balance = (function () {
                 }
                 i--;
             }
+
         } else {
+
             console.warn('Bet change is failed!');
+
         }
+
         balanceData.betSum = +(balanceData.betValue * balanceData.linesLength).toFixed(0);
         balanceData.betCash = +(balanceData.betSum * balanceData.coinsValue).toFixed(2);
+
         updateBalance();
-        console.log('Bet is changed:', balanceData.betValue);
-        if (balanceData.betValue === balanceData.betSteps[balanceData.betSteps.length - 1]) {
-            console.warn('This bet value is maximum!');
-        } else if (balanceData.betValue === balanceData.betSteps[0]) {
-            console.warn('This bet value is minimum!');
-        }
+
     }
 
     function changeCoins(moreOrLess, maxBetFlag) {
         if (maxBetFlag) {
             balanceData.coinsValue = balanceData.coinsSteps[balanceData.coinsSteps.length - 1];
+
         } else if (moreOrLess === true && balanceData.coinsValue !== balanceData.coinsSteps[balanceData.coinsSteps.length - 1]) {
+
             let i = balanceData.coinsSteps.length;
             while (i >= 0) {
                 if (balanceData.coinsSteps[i] === balanceData.coinsValue) {
@@ -280,7 +442,9 @@ export let balance = (function () {
                 }
                 i--;
             }
+
         } else if (moreOrLess === false && balanceData.coinsValue !== balanceData.coinsSteps[0]) {
+
             let i = balanceData.coinsSteps.length;
             while (i >= 0) {
                 if (balanceData.coinsSteps[i] === balanceData.coinsValue) {
@@ -288,50 +452,60 @@ export let balance = (function () {
                     i = -1;
                 }
                 i--;
+
             }
         } else {
+
             console.warn('Coins change is failed!');
+
         }
+
         balanceData.coinsSum = +Math.floor(balanceData.coinsCash / balanceData.coinsValue).toFixed(0);
         balanceData.betCash = +(balanceData.coinsValue * balanceData.betSum).toFixed(2);
+
         updateBalance();
-        console.log('Coins value is changed:', balanceData.coinsValue);
-        if (balanceData.coinsValue === balanceData.coinsSteps[balanceData.coinsSteps.length - 1]) {
-            console.warn('This coins value is maximum!');
-        } else if (balanceData.coinsValue === balanceData.coinsSteps[0]) {
-            console.warn('This coins value is minimum!');
-        }
+
     }
 
     function maxBet() {
         changeBet(true, true);
+
     }
 
-    // Изменение баланса при начале крутки
     function startRoll() {
+
         if (storage.readState('mode') === 'normal') {
             if (balanceData.coinsSum >= balanceData.betSum) {
+
                 balanceData.coinsSum = (balanceData.coinsSum - balanceData.betSum).toFixed(0);
                 balanceData.coinsCash = ((balanceData.coinsCash * 100 - balanceData.betCash * 100) / 100).toFixed(2);
                 balanceData.winCash = (0).toFixed(2);
                 updateBalance();
+
             } else {
+
                 storage.changeState('lowBalance', true);
-                console.warn('Too low cash for spin!');
                 utils.showPopup('Low money!');
+                console.warn('Too low cash for spin!');
+
             }
+
         }
+
     }
 
-    // Изменение баланса в конце крутки
     function endRoll() {
+
         if (storage.readState('mode') === 'normal') {
+
             const data = storage.read('rollResponse');
             balanceData.winCash = (+data.TotalWinCents / 100).toFixed(2);
             balanceData.coinsCash = (+data.ScoreCents / 100).toFixed(2);
             balanceData.coinsSum = (+data.ScoreCoins).toFixed(0);
             updateBalance();
+
         }
+
     }
 
     function lowBalance() {

@@ -23,7 +23,7 @@ import { controls } from 'components/controls/controls';
 
 // Init Module
 init.start({
-    device: 'desktop',
+    device: 'mobile',
     userID: 2,
     casinoID: 2,
     mode: 'fsBonus'

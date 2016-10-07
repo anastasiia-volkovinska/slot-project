@@ -67,8 +67,13 @@ export let bg = (function () {
 
         storage.changeState('bgDraw', 'main');
         events.trigger('bg:main');
-        storage.changeState('side', 'left');
-        events.trigger('bg:changeSide', 'left');
+        if (storage.read('device') === 'desktop') {
+            storage.changeState('side', 'right');
+            events.trigger('bg:changeSide', 'right');
+        } else {
+            storage.changeState('side', 'left');
+            events.trigger('bg:changeSide', 'left');
+        }
     }
 
     function addCloud() {
