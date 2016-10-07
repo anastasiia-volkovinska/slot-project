@@ -12,6 +12,7 @@ export const mainManifest = [
     {id: 'luchi', src: 'static/img/content/bg/luchi.png'},
     {id: 'cloud', src: 'static/img/content/bg/cloud.png'},
     {id: 'gameMachine', src: 'static/img/content/bg/gameMachine.png'},
+    {id: 'balance', src: 'static/img/content/balance/balance.json', type: 'spritesheet'},
     {id: 'rules', src: 'static/img/content/bg/firstRules.png'},
     {id: 'home', src: 'static/img/content/new/home.png'},
     {id: 'fonLine', src: 'static/img/content/bg/fonLine.png'},
