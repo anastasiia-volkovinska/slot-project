@@ -24,6 +24,7 @@ export let balance = (function () {
     const balanceContainer = new c.Container().set({ name: 'balanceContainer' });
     const balanceTextContainer = new c.Container().set({ name: 'balanceTextContainer' });
     const balanceButtons = new c.Container().set({ name: 'balanceButtons' });
+    const balanceCache = new c.Container().set({ name: 'balanceCache' });
 
     const balanceText = {};
     const balanceData = {};
@@ -63,7 +64,7 @@ export let balance = (function () {
         drawBalanceButtons();
         writeBalance();
 
-        storage.read('device') === 'desktop' || drawBalanceTime();
+        storage.read('device') === 'desktop' && drawBalanceTime();
 
     }
 
@@ -209,7 +210,7 @@ export let balance = (function () {
             });
 
             soundButton.on('click', (event) => {
-                if (storage.readState('lockedMenu')) return;
+                // if (storage.readState('lockedMenu')) return;
 
                 c.Sound.play('buttonClickSound');
                 c.Sound.muted = !c.Sound.muted;
@@ -225,7 +226,7 @@ export let balance = (function () {
             });
 
             fastButton.on('click', (event) => {
-                if (storage.readState('lockedMenu')) return;
+                // if (storage.readState('lockedMenu')) return;
 
                 c.Sound.play('buttonClickSound');
                 storage.changeState('fastSpinSetting', !storage.readState('fastSpinSetting'));
@@ -277,6 +278,14 @@ export let balance = (function () {
         balanceText.betCash = new c.Text(currencySymbol + balanceData.betCash, parameters.font, parameters.color).set(parameters.betCash);
         balanceText.winCashText = new c.Text('Win:', parameters.font, parameters.greyColor).set(parameters.winCashText);
         balanceText.winCash = new c.Text(currencySymbol + balanceData.winCash, parameters.font, parameters.color).set(parameters.winCash);
+        balanceCache.addChild(
+            balanceText.coinsCash,
+            balanceText.coinsCashText,
+            balanceText.betCash,
+            balanceText.betCashText,
+            balanceText.winCash,
+            balanceText.winCashText
+        );
         makeTextDelta(balanceText.coinsCashText, balanceText.coinsCash, config.textDelta);
 
         if (storage.read('device') === 'mobile') {
@@ -295,6 +304,8 @@ export let balance = (function () {
             balanceText.betValue = new c.Text(balanceData.betValue, parameters.font, parameters.orangeColor).set(parameters.desktop.betValue);
             balanceTextContainer.addChild(balanceText.betValue, balanceText.coinsValue);
 
+            balanceCache.x = 65;
+
         }
 
 
@@ -302,17 +313,11 @@ export let balance = (function () {
             balanceText.coinsSum,
             balanceText.coinsSumText,
             balanceText.betSum,
-            balanceText.betSumText,
-            balanceText.coinsCash,
-            balanceText.coinsCashText,
-            balanceText.betCash,
-            balanceText.betCashText,
-            balanceText.winCash,
-            balanceText.winCashText
+            balanceText.betSumText
         );
 
         // Добавим баланс на сцену
-        balanceContainer.addChild(balanceTextContainer);
+        balanceContainer.addChild(balanceCache, balanceTextContainer);
         stage.addChildAt(balanceContainer, stage.getChildIndex(stage.getChildByName('mainContainer')) + 1);
         balanceContainer.cache(0, 0, utils.width, utils.height);
 
