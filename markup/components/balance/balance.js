@@ -63,7 +63,7 @@ export let balance = (function () {
         drawBalanceButtons();
         writeBalance();
 
-        storage.read('isMobile') || drawBalanceTime();
+        storage.read('device') === 'desktop' || drawBalanceTime();
 
     }
 
@@ -149,7 +149,7 @@ export let balance = (function () {
         let menuButton;
         let autoButton;
 
-        if (storage.read('isMobile')) {
+        if (storage.read('device') === 'mobile') {
 
             homeButton = new c.Sprite(loader.getResult('balance'), 'home').set({
                 name: 'homeButton',
@@ -221,7 +221,7 @@ export let balance = (function () {
         const footerBgDown = new c.Shape().set({name: 'footerBgDown'});
         footerBgDown.graphics.beginFill('#000').drawRect(0, utils.height - config.bottomLineHeight, utils.width, config.bottomLineHeight);
 
-        if (storage.read('isMobile')) {
+        if (storage.read('device') === 'mobile') {
             const footerBgUp = new c.Shape().set({name: 'footerBgUp'});
             footerBgUp.graphics.beginFill('rgba(0, 0, 0, 0.6)').drawRect(0, utils.height - config.bottomLineHeight - config.topLineHeight, utils.width, config.topLineHeight);
             balanceContainer.addChild(footerBgDown, footerBgUp);
@@ -240,7 +240,7 @@ export let balance = (function () {
         balanceText.winCash = new c.Text(currencySymbol + balanceData.winCash, parameters.font, parameters.color).set(parameters.winCash);
         makeTextDelta(balanceText.coinsCashText, balanceText.coinsCash, config.textDelta);
 
-        if (storage.read('isMobile')) {
+        if (storage.read('device') === 'mobile') {
 
             balanceText.coinsSumText = new c.Text('Coins:', parameters.bigFont, parameters.color).set(parameters.coinsSumText);
             balanceText.coinsSum = new c.Text(balanceData.coinsSum, parameters.font, parameters.orangeColor).set(parameters.coinsSum);
@@ -274,7 +274,7 @@ export let balance = (function () {
 
         // Добавим баланс на сцену
         balanceContainer.addChild(balanceTextContainer);
-        stage.addChildAt(balanceContainer, stage.getChildIndex(stage.getChildByName('initContainer')) - 1);
+        stage.addChildAt(balanceContainer, stage.getChildIndex(stage.getChildByName('mainContainer')) + 1);
         balanceContainer.cache(0, 0, utils.width, utils.height);
 
         storage.write('currentBalance', balanceData);
@@ -324,7 +324,7 @@ export let balance = (function () {
             balanceText.winCash.text = currencySymbol + balanceData.winCash;
         }
 
-        if (storage.read('isMobile')) {
+        if (storage.read('device') === 'mobile') {
 
             makeTextDelta(balanceText.coinsSumText, balanceText.coinsSum, config.textDelta);
 
