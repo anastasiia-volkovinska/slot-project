@@ -104,9 +104,11 @@ events.on('autoplay:ended', buttons.removeAutoplay);
 events.on('roll:started', buttons.startRoll);
 events.on('roll:fastRoll', buttons.fastRoll);
 events.on('roll:ended', buttons.endRoll);
-events.on('initFreeSpins', buttons.changeVisibility);
-events.on('finishFreeSpins', buttons.changeVisibility);
 events.on('finishFreeSpins', buttons.removeAutoplay);
+if (storage.read('device') === 'mobile') {
+    events.on('initFreeSpins', buttons.changeVisibility);
+    events.on('finishFreeSpins', buttons.changeVisibility);
+}
 
 // Menu Module
 menu.start({

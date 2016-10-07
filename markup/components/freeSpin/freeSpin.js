@@ -2,6 +2,7 @@ import { utils } from 'components/utils/utils';
 import { storage } from 'components/storage/storage';
 import { events } from 'components/events/events';
 import { balance } from 'components/balance/balance';
+import { parameters } from 'components/balance/parameters';
 import { roll } from 'components/roll/roll';
 import { drawFreeSpinsBG,
         drawTableContainer,
@@ -29,13 +30,24 @@ export let freeSpin = (function () {
         currentWinCents: 0
     };
 
+    let mainContainer;
+
     function start(configObj) {
         config = configObj || defaultConfig;
     }
 
     function changeMultiplier(multi) {
 
-        const fsMultiContainer = stage.getChildByName('fsMultiContainer');
+        let fsMultiContainer;
+        if (storage.read('device') === 'mobile') {
+            fsMultiContainer = stage.getChildByName('fsMultiContainer');
+        }
+
+        if (storage.read('device') === 'desktop') {
+            mainContainer = stage.getChildByName('mainContainer');
+            const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
+            fsMultiContainer = controlsContainerFS.getChildByName('fsMultiContainer');
+        }
         const fsMulti4 = fsMultiContainer.getChildByName('fsMulti4');
         const fsMulti6 = fsMultiContainer.getChildByName('fsMulti6');
         const fsMulti8 = fsMultiContainer.getChildByName('fsMulti8');
@@ -67,7 +79,16 @@ export let freeSpin = (function () {
 
     function addSomeBangs(bottle) {
         const loader = storage.read('loadResult');
-        const fsMultiContainer = stage.getChildByName('fsMultiContainer');
+        let fsMultiContainer;
+        if (storage.read('device') === 'mobile') {
+            fsMultiContainer = stage.getChildByName('fsMultiContainer');
+        }
+
+        if (storage.read('device') === 'desktop') {
+            mainContainer = stage.getChildByName('mainContainer');
+            const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
+            fsMultiContainer = controlsContainerFS.getChildByName('fsMultiContainer');
+        }
         let x = bottle.x;
         let y = bottle.y;
         const bang = new c.Sprite(loader.getResult('addedElements'), 'bangBottle').set({
@@ -96,7 +117,15 @@ export let freeSpin = (function () {
         counter++;
         console.warn('counter', counter);
 
-        const fsTableContainer = stage.getChildByName('fsTableContainer');
+        let fsTableContainer;
+        if (storage.read('device') === 'mobile') {
+            fsTableContainer = stage.getChildByName('fsTableContainer');
+        }
+
+        if (storage.read('device') === 'desktop') {
+            const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
+            fsTableContainer = controlsContainerFS.getChildByName('fsTableContainer');
+        }
         const baraban = fsTableContainer.getChildByName('baraban');
         const bullet = fsTableContainer.getChildByName('bullet');
         bullet.gotoAndPlay('11-w');
@@ -106,9 +135,20 @@ export let freeSpin = (function () {
             utils.getCenterPoint(baraban);
             setTimeout( function () {
                 baraban.gotoAndStop(1 + counter);
-                if (counter > 6) {
-                    // showPritsel();
-                    TweenMax.fromTo(baraban, 0.4, {scaleX: 0.6, scaleY: 0.6}, { scaleX: 0.3, scaleY: 0.3, ease: Bounce.easeOut});
+                if (counter === 6) {
+                    baraban.gotoAndStop(7);
+                    let scaleX;
+                    let scaleY;
+                    if (storage.read('device') === 'mobile') {
+                        scaleX = 0.3;
+                        scaleY = 0.3;
+                    }
+                    if (storage.read('device') === 'desktop') {
+                        scaleX = 0.25;
+                        scaleY = 0.25;
+                    }
+                    TweenMax.fromTo(baraban, 0.4, {scaleX: 0.6, scaleY: 0.6}, { scaleX: scaleX, scaleY: scaleY, ease: Bounce.easeOut});
+
                     baraban.gotoAndStop(1);
                     counter = 0;
                 }
@@ -129,16 +169,36 @@ export let freeSpin = (function () {
         let tl = new TimelineMax();
         let x0 = pritsel.x;
         let y0 = pritsel.y;
+        let x1;
+        let y1;
+        let x2;
+        let y2;
+        if (storage.read('device') === 'mobile') {
+            x1 = 600;
+            y1 = 100;
+            x2 = bottle.x;
+            y2 = bottle.y;
+        }
+
+        if (storage.read('device') === 'desktop') {
+            x1 = 600;
+            y1 = 500;
+            x2 = bottle.x + 30;
+            y2 = bottle.y + 500;
+        }
 
         tl.fromTo(pritsel, 0.4, {scaleX: 0.6, scaleY: 0.6}, { scaleX: 1.1, scaleY: 1.1, ease: Bounce.easeOut});
         tl.to(pritsel, 0.4, {scaleX: 0.2, scaleY: 0.2,
-            bezier: {type: 'soft', values: [ {x: x0, y: y0}, {x: 600, y: 100}, {x: bottle.x, y: bottle.y} ], autoRotate: false},
+            bezier: {type: 'soft', values: [ {x: x0, y: y0}, {x: 600, y: 100}, {x: x2, y: y2} ], autoRotate: false},
             ease: Power1.easeOut,
             onComplete: function () {
                 pritsel.x = x0;
                 pritsel.y = y0;
                 stage.removeChild(pritsel);
+                createjs.Sound.play('vistrelAllSound', {duration: 1000});
                 addSomeBangs(bottle);
+                createjs.Sound.play('stekloSound');
+                createjs.Sound.play('stekloSound');
                 bottle.gotoAndPlay('bottle');
             }
         });
@@ -214,7 +274,8 @@ export let freeSpin = (function () {
             name: 'transitionButton',
             y: 575,
             scaleX: 0.7,
-            scaleY: 0.7
+            scaleY: 0.7,
+            cursor: 'pointer'
         });
         utils.getCenterPoint(transitionButton);
         utils.setInCenterOf(transitionButton, utils.width);
@@ -266,7 +327,16 @@ export let freeSpin = (function () {
     }
 
     function countFreeSpins(number) {
-        const fsTableContainer = stage.getChildByName('fsTableContainer');
+        let fsTableContainer;
+        if (storage.read('device') === 'mobile') {
+            fsTableContainer = stage.getChildByName('fsTableContainer');
+        }
+
+        if (storage.read('device') === 'desktop') {
+            mainContainer = stage.getChildByName('mainContainer');
+            const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
+            fsTableContainer = controlsContainerFS.getChildByName('fsTableContainer');
+        }
         const fsTotalCountText = fsTableContainer.getChildByName('fsTotalCountText');
         fsTotalCountText.text = number + '';
         const countBounds = fsTotalCountText.getBounds();
@@ -280,9 +350,11 @@ export let freeSpin = (function () {
     function stopFreeSpins() {
         storage.changeState('lockedMenu', false);
         const bgContainer = stage.getChildByName('bgContainer');
-        const mainContainer = stage.getChildByName('mainContainer');
-        const buttonsContainer = stage.getChildByName('buttonsContainer');
-        buttonsContainer.visible = true;
+        mainContainer = stage.getChildByName('mainContainer');
+        if (storage.read('device') === 'mobile') {
+            const buttonsContainer = stage.getChildByName('buttonsContainer');
+            buttonsContainer.visible = true;
+        }
         config.currentMulti = defaultConfig.currentMulti;
         config.currentCount = defaultConfig.currentCount;
         counter = 0;
@@ -294,23 +366,41 @@ export let freeSpin = (function () {
         const balanceTextContainer = balanceContainer.getChildByName('balanceTextContainer');
         const coinsSum = balanceTextContainer.getChildByName('coinsSum');
         const betSum = balanceTextContainer.getChildByName('betSum');
+        const betValue = balanceTextContainer.getChildByName('betValue');
+        const coinsValue = balanceTextContainer.getChildByName('coinsValue');
         const coinsSumText = balanceTextContainer.getChildByName('coinsSumText');
         const betSumText = balanceTextContainer.getChildByName('betSumText');
         const totalWinText = balanceTextContainer.getChildByName('totalWinText');
         const totalWinSum = balanceTextContainer.getChildByName('totalWinSum');
-        betSum.visible = coinsSum.visible = betSumText.visible = coinsSumText.visible = true;
         balanceTextContainer.removeChild(totalWinText, totalWinSum);
+        if (storage.read('device') === 'mobile') {
+            betSum.visible = coinsSum.visible = betSumText.visible = coinsSumText.visible = true;
+            stage.removeChild(stage.getChildByName('fsTableContainer'));
+            stage.removeChild(stage.getChildByName('fsMultiContainer'));
+        }
+        if (storage.read('device') === 'desktop') {
+            coinsSum.set(parameters.desktop.coinsSum);
+            betSum.set(parameters.desktop.betSum);
+            betValue.set(parameters.desktop.betValue);
+            coinsValue.set(parameters.desktop.coinsValue);
+            mainContainer = stage.getChildByName('mainContainer');
+            const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
+            // controlsContainerFS.removeChild(controlsContainerFS.getChildByName('fsTableContainer'));
+            // controlsContainerFS.removeChild(controlsContainerFS.getChildByName('fsMultiContainer'));
+            mainContainer.removeChild(controlsContainerFS);
+            const controlsContainer = mainContainer.getChildByName('controlsContainer');
+            controlsContainer.visible = true;
+        }
         balanceContainer.updateCache();
-        stage.removeChild(stage.getChildByName('fsTableContainer'));
-        stage.removeChild(stage.getChildByName('fsMultiContainer'));
 
         bgContainer.removeChild(fsBG);
         mainContainer.removeChild(fsMachineBG);
         bgContainer.uncache();
         mainContainer.uncache();
-        storage.changeState('side', 'left');
-        events.trigger('menu:changeSide', 'left');
-
+        if (storage.read('device') === 'mobile') {
+            storage.changeState('side', 'left');
+            events.trigger('menu:changeSide', 'left');
+        }
     }
 
     function countTotalWin(data) {
@@ -321,13 +411,24 @@ export let freeSpin = (function () {
             const totalWinText = balanceTextContainer.getChildByName('totalWinText');
             totalWinSum.text = +totalWinSum.text + data.TotalWinCoins;
             fsTotalWin = totalWinSum.text;
-            totalWinSum.x = totalWinText.x + 20 + totalWinText.getMeasuredWidth() / 2 + totalWinSum.getMeasuredWidth() / 2;
+            if (storage.read('device') == 'mobile') {
+                totalWinSum.x = totalWinText.x + 20 + totalWinText.getMeasuredWidth() / 2 + totalWinSum.getMeasuredWidth() / 2;
+            }
             balanceContainer.updateCache();
+
+            // count win
+            if (storage.read('device') === 'desktop') {
+                const win = storage.read('rollResponse').TotalWinCoins;
+                mainContainer = stage.getChildByName('mainContainer');
+                const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
+                const winText = controlsContainerFS.getChildByName('winText');
+                winText.text = +win;
+            }
         }
     }
 
     function finishFreeSpins() {
-        const mainContainer = stage.getChildByName('mainContainer');
+        mainContainer = stage.getChildByName('mainContainer');
         const response = storage.read('freeRollResponse');
         storage.read('currentBalance').coinsCash = ((+storage.read('currentBalance').coinsCash * 100 + +storage.read('currentBalance').winCash * 100) / 100).toFixed(2);
         storage.read('currentBalance').coinsSum = +storage.read('currentBalance').coinsSum + response.CoinsWinCounter + response.TotalWinCoins;
@@ -390,7 +491,8 @@ export let freeSpin = (function () {
             name: 'finishButton',
             y: 580,
             scaleX: 0.7,
-            scaleY: 0.7
+            scaleY: 0.7,
+            cursor: 'pointer'
         });
         utils.getCenterPoint(finishButton);
         utils.setInCenterOf(finishButton, utils.width);
@@ -427,9 +529,6 @@ export let freeSpin = (function () {
                 events.trigger('stopFreeSpins');
             });
         finishButton.on('click', function () {
-            mainContainer.removeChild(mainContainer.getChildByName('controlsContainerFS'));
-            const controlsContainer = mainContainer.getChildByName('controlsContainer');
-            controlsContainer.visisble = true;
 
             createjs.Sound.stop('finishPerehodSound');
             createjs.Sound.play('ambientSound', {loop: -1});
@@ -438,10 +537,10 @@ export let freeSpin = (function () {
                 .call(function () {
                     stage.removeChild(finishContainer);
                     const bgContainer = stage.getChildByName('bgContainer');
-                    const mainBG = bgContainer.getChildByName('mainBG');
-                    mainBG.alpha = 1;
                     const fsBG = bgContainer.getChildByName('fsBG');
                     stage.removeChild(fsBG);
+                    const mainBG = bgContainer.getChildByName('mainBG');
+                    mainBG.alpha = 1;
                 });
         });
         stage.addChild(finishContainer);
@@ -450,9 +549,19 @@ export let freeSpin = (function () {
     function showTotalFreeSpins(num) {
         console.warn('plus 3 added!');
         const loader = storage.read('loadResult');
+        let fsTableContainer;
+        let fsTotalCountBG;
+        if (storage.read('device') === 'mobile') {
+            fsTableContainer = stage.getChildByName('fsTableContainer');
+            fsTotalCountBG = fsTableContainer.getChildByName('fsTotalCountBG');
+        }
 
-        const fsTableContainer = stage.getChildByName('fsTableContainer');
-        const fsTotalCountBG = fsTableContainer.getChildByName('fsTotalCountBG');
+        if (storage.read('device') === 'desktop') {
+            mainContainer = stage.getChildByName('mainContainer');
+            const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
+            fsTableContainer = controlsContainerFS.getChildByName('fsTableContainer');
+            fsTotalCountBG = fsTableContainer.getChildByName('fsTotalCountBG');
+        }
 
         const fsPlusContainer = new createjs.Container().set({
             name: 'fsPlusContainer'
@@ -468,9 +577,26 @@ export let freeSpin = (function () {
         let tl = new TimelineMax();
         let x0 = fsPlusText.x;
         let y0 = fsPlusText.y;
+        let x1;
+        let y1;
+        let x2;
+        let y2;
+        if (storage.read('device') === 'mobile') {
+            x1 = 300;
+            y1 = 100;
+            x2 = 85;
+            y2 = 515;
+        }
+
+        if (storage.read('device') === 'desktop') {
+            x1 = x0 + 100;
+            y1 = y0;
+            x2 = 620;
+            y2 = 615;
+        }
         tl.fromTo(fsPlusText, 0.6, {scaleX: 0.6, scaleY: 0.6}, { scaleX: 1.1, scaleY: 1.1, ease: Bounce.easeOut});
         tl.to(fsPlusText, 1, {scaleX: 0.2, scaleY: 0.2,
-            bezier: {type: 'soft', values: [ {x: x0, y: y0}, {x: 300, y: 100}, {x: 85, y: 515} ], autoRotate: false},
+            bezier: {type: 'soft', values: [ {x: x0, y: y0}, {x: x1, y: y1}, {x: x2, y: y2} ], autoRotate: false},
             ease: Power1.easeOut,
             onComplete: function () {
                 fsPlusText.x = x0;

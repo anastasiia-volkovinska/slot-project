@@ -129,7 +129,8 @@ export let preloader = (function () {
             y: 290,
             scaleX: 0.7,
             scaleY: 0.7,
-            visible: false
+            visible: false,
+            cursor: 'pointer'
         });
         utils.getCenterPoint(preloaderPlay);
 

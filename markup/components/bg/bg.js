@@ -33,6 +33,7 @@ export let bg = (function () {
             mainContainer.x = mainContainer.x + 130;
         }
         const mainBG = new c.Bitmap(loader.getResult('mainBG')).set({name: 'mainBG'});
+        const zaglushka = new c.Bitmap(loader.getResult('zaglushka')).set({name: 'zaglushka', y: 600, scaleX: 0.7, scaleY: 0.7});
         const mainBGSky = new c.Bitmap(loader.getResult('mainBGSky')).set({name: 'mainBGSky'});
         const greyBGGradient = new c.Shape().set({
             name: 'greyBGGradient',
@@ -52,13 +53,14 @@ export let bg = (function () {
             y: 5 // Magic Numbers
         });
 
-        bgContainer.addChild(mainBGSky, greyBGGradient, mainBG);
+        bgContainer.addChild(mainBGSky, greyBGGradient, mainBG, zaglushka);
         mainContainer.addChild(gameBG, gameMachine);
         stage.addChildAt(bgContainer, mainContainer, 0);
 
         addCloud();
         addCloud();
         addCloud();
+        addPole();
 
         // TODO: Разобраться с кешированием бекграундов
         // TODO: Перенасти отрисовку нижних полосок меню в модуль balance
@@ -100,6 +102,39 @@ export let bg = (function () {
             onComplete: function () {
                 bgContainer.removeChild(newCloud);
                 addCloud();
+            }
+        });
+    }
+
+    function addPole() {
+        const loader = storage.read('loadResult');
+        const pole = new c.Sprite(loader.getResult('pole')).set({
+            name: 'pole',
+            y: 580
+        });
+        utils.getCenterPoint(pole);
+        pole.play();
+
+        let side = Math.round(Math.random()) ? 'left' : 'right';
+        let time = 15 + Math.random() * 15 - 7.5;
+        let delta;
+
+        if (side === 'left') {
+            pole.x = -420;
+            delta = 1280 + 420;
+        } else {
+            pole.x = 1280 + 420;
+            delta = -420;
+        }
+
+        const stage = storage.read('stage');
+        const bgContainer = stage.getChildByName('bgContainer');
+        bgContainer.addChild(pole);
+
+        TweenMax.to(pole, time, {x: delta,
+            onComplete: function () {
+                bgContainer.removeChild(pole);
+                addPole();
             }
         });
     }

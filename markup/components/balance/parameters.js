@@ -98,7 +98,7 @@ export const parameters = {
     },
     desktopFS: {
         betSum: {
-            x: 345,
+            x: 355,
             y: 573,
             textAlign: 'center',
             font: 'normal 14px Helvetica',
@@ -107,14 +107,14 @@ export const parameters = {
         },
         coinsSum: {
             x: 990,
-            y: 613,
+            y: 633,
             textAlign: 'center',
             font: 'normal 14px Helvetica',
             name: 'coinsSum',
             shadow: new c.Shadow('#e8b075', 0, 0, 15)
         },
         betValue: {
-            x: 265,
+            x: 305,
             y: 626,
             textAlign: 'center',
             font: 'normal 14px Helvetica',
@@ -122,7 +122,7 @@ export const parameters = {
             shadow: new c.Shadow('#e8b075', 0, 0, 15)
         },
         coinsValue: {
-            x: 300,
+            x: 367,
             y: 626,
             textAlign: 'center',
             font: 'normal 14px Helvetica',

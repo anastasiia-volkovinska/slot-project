@@ -1,0 +1,50 @@
+{
+
+"images": [
+    "static/img/content/bg/pole.png"
+],
+
+"framerate": 12,
+
+"frames": [
+    [1, 1, 44, 43, 0, -21, -29],
+    [47, 1, 44, 43, 0, -21, -30],
+    [93, 1, 44, 42, 0, -21, -28],
+    [139, 1, 45, 45, 0, -20, -19],
+    [186, 1, 48, 50, 0, -19, -14],
+    [236, 1, 50, 52, 0, -16, -13],
+    [288, 1, 52, 54, 0, -16, -12],
+    [342, 1, 54, 53, 0, -16, -15],
+    [398, 1, 55, 52, 0, -15, -18],
+    [455, 1, 52, 52, 0, -17, -20],
+    [509, 1, 51, 42, 0, -18, -29],
+    [562, 1, 48, 47, 0, -18, -23],
+    [612, 1, 48, 50, 0, -18, -20],
+    [662, 1, 46, 47, 0, -20, -24],
+    [710, 1, 45, 46, 0, -20, -26]
+],
+
+"animations": {
+    "p-pole-animation0": { "frames": [0] },
+    "p-pole-animation1": { "frames": [1] },
+    "p-pole-animation2": { "frames": [2] },
+    "p-pole-animation3": { "frames": [3] },
+    "p-pole-animation4": { "frames": [4] },
+    "p-pole-animation5": { "frames": [5] },
+    "p-pole-animation6": { "frames": [6] },
+    "p-pole-animation7": { "frames": [7] },
+    "p-pole-animation8": { "frames": [8] },
+    "p-pole-animation9": { "frames": [9] },
+    "p-pole-animation10": { "frames": [10] },
+    "p-pole-animation11": { "frames": [11] },
+    "p-pole-animation12": { "frames": [12] },
+    "p-pole-animation13": { "frames": [13] },
+    "p-pole-animation14": { "frames": [14] }
+},
+
+"texturepacker": [
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:3a08ab09707059fe703d502a30ecbd94:9548e5cb80029437f7f069dbe2bfa0ff:0de5abdc1d31bc6ab7578535d7670802$",
+        "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
+]
+
+}

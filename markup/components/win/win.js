@@ -331,8 +331,25 @@ export let win = (function () {
     function bulletFSToGun(element) {
         let x0 = element.x;
         let y0 = element.y;
+        let x1;
+        let y1;
+        let x2;
+        let y2;
+        if (storage.read('device') === 'mobile') {
+            x1 = 300;
+            y1 = 100;
+            x2 = 85 - 150;
+            y2 = 215 - 89;
+        }
+
+        if (storage.read('device') === 'desktop') {
+            x1 = 200;
+            y1 = 100;
+            x2 = 270;
+            y2 = 630;
+        }
         TweenMax.to(element, 1, {scaleX: 0.3, scaleY: 0.3,
-            bezier: {type: 'soft', values: [ {x: x0, y: y0}, {x: 300, y: 100}, {x: 85 - 150, y: 215 - 89} ], autoRotate: false},
+            bezier: {type: 'soft', values: [ {x: x0, y: y0}, {x: x1, y: y1}, {x: x2, y: y2} ], autoRotate: false},
             ease: Power1.easeOut,
             onComplete: function () {
                 element.visible = false;
@@ -442,7 +459,7 @@ export let win = (function () {
             drawTotalWin(winData.winLines);
             // createjs.Sound.play('lineWinSound');
             createjs.Sound.play('vistrelSound');
-            createjs.Sound.play('pulyaSound', {delay: 300});
+            createjs.Sound.play('pulyaSound', {delay: 200});
         }
     }
 

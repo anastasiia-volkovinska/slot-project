@@ -29,6 +29,7 @@ export let buttons = (function () {
     const buttonsContainer = new c.Container().set({
         name: 'buttonsContainer'
     });
+
     const buttonsCache = new c.Container().set({
         name: 'buttonsCache'
     });
@@ -89,6 +90,9 @@ export let buttons = (function () {
         buttonsCache.addChild(autoButton, betButton, menuButton, soundButton);
         buttonsCache.cache(0, 0, utils.width, utils.height);
         buttonsContainer.addChild(spinButton, buttonsCache);
+        if (storage.read('device') === 'desktop') {
+            buttonsContainer.visible = false;
+        }
         stage.addChildAt(buttonsContainer, 1);
     }
 
