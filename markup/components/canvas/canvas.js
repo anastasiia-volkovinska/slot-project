@@ -67,6 +67,7 @@ export let canvas = (function () {
         const bg = stage.getChildByName('bgContainer');
         const balance = stage.getChildByName('balanceContainer');
         const balanceText = balance.getChildByName('balanceTextContainer');
+        const balanceCache = balance.getChildByName('balanceCache');
 
         let delta;
         switch (side) {
@@ -84,14 +85,18 @@ export let canvas = (function () {
                 }
                 break;
             case 'center':
-                delta = `+=${config.center}`;
+                if (storage.readState('side') === 'left') {
+                    delta = `+=${config.center}`;
+                } else {
+                    delta = `-=${config.center}`;
+                }
                 storage.changeState('side', 'center');
                 break;
             default:
                 return;
         }
         balance.uncache();
-        TweenMax.to([mainContainer, balanceText], config.timeToSlide, {x: delta, onComplete: function () {
+        TweenMax.to([mainContainer, balanceText, balanceCache], config.timeToSlide, {x: delta, onComplete: function () {
             balance.cache(0, 0, utils.width, utils.height);
         }});
     }

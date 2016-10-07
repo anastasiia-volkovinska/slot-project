@@ -1,6 +1,6 @@
 export const preloaderManifest = [
-    {id: 'preloaderCoin', src: 'static/img/content/preloader/new/coin.json', type: 'spritesheet'},
-    {id: 'preloaderLine', src: 'static/img/content/preloader/new/line.json', type: 'spritesheet'}
+    {id: 'preloaderCoin', src: 'static/img/content/preloader/coin.json', type: 'spritesheet'},
+    {id: 'preloaderLine', src: 'static/img/content/preloader/line.json', type: 'spritesheet'}
 ];
 
 export const mainManifest = [
@@ -91,8 +91,8 @@ export const mainManifest = [
     {id: 'continue', src: 'static/img/content/fs/continue.png'},
     {id: 'plus3', src: 'static/img/content/fs/plus3.png'},
     {id: 'multiBG', src: 'static/img/content/bg/mainBG.png'},
-    {id: 'multiTitle', src: 'static/img/content/bg/multiTitle.png'},
-    {id: 'multiCoins', src: 'static/img/content/bg/multiCoins.png'},
+    // {id: 'multiTitle', src: 'static/img/content/bg/multiTitle.png'},
+    // {id: 'multiCoins', src: 'static/img/content/bg/multiCoins.png'},
     {id: 'x4', src: 'static/img/content/fs/x4.png'},
     {id: 'x6', src: 'static/img/content/fs/x6.png'},
     {id: 'x8', src: 'static/img/content/fs/x8.png'},

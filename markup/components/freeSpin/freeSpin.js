@@ -150,6 +150,7 @@ export let freeSpin = (function () {
                     TweenMax.fromTo(baraban, 0.4, {scaleX: 0.6, scaleY: 0.6}, { scaleX: scaleX, scaleY: scaleY, ease: Bounce.easeOut});
 
                     baraban.gotoAndStop(1);
+                    console.log('barabanFrame', baraban.currentAnimation);
                     counter = 0;
                 }
             }, 500);
