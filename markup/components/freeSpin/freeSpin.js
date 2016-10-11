@@ -139,15 +139,15 @@ export let freeSpin = (function () {
         }
         console.warn('counter', counter);
 
-
         const bullet = fsTableContainer.getChildByName('bullet');
         bullet.gotoAndPlay('11-w');
         bullet.on('animationend', function () {
             bullet.gotoAndStop(199);
-            baraban.gotoAndStop(16);
+            baraban.gotoAndStop('barRoll');
             utils.getCenterPoint(baraban);
             setTimeout( function () {
                 baraban.gotoAndStop('b' + counter);
+                console.warn('baraban', baraban.currentFrame);
                 if (counter === 6) {
                     baraban.gotoAndStop('b6');
                     let scaleX;
@@ -160,8 +160,7 @@ export let freeSpin = (function () {
                         scaleX = 0.25;
                         scaleY = 0.25;
                     }
-                    console.warn('baraban', baraban.currentFrame);
-                    TweenMax.fromTo(baraban, 0.4, {scaleX: 0.6, scaleY: 0.6}, { scaleX: scaleX, scaleY: scaleY, ease: Bounce.easeOut});
+                    TweenMax.fromTo(baraban, 0.6, {scaleX: 0.6, scaleY: 0.6}, { scaleX: scaleX, scaleY: scaleY, ease: Bounce.easeOut});
 
                     baraban.gotoAndStop('b0');
                     // console.warn('barabanFrame', baraban.currentFrame);

@@ -83,6 +83,7 @@
     "b4": [5],
     "b5": [6],
     "b6": [7],
+    "barRoll": [16],
     "B-back": { "frames": [8] },
     "Bang!!!-animation1": { "frames": [9] },
     "Bang!!!-animation2": { "frames": [10] },
