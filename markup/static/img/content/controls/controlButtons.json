@@ -4,38 +4,54 @@
     "static/img/content/controls/controlButtons.png"
 ],
 
+"framerate": 12,
+
 "frames": [
     [1, 1, 100, 150, 0, 0, 0],
     [103, 1, 100, 150, 0, 0, 0],
-    [205, 1, 100, 150, 0, 0, 0],
-    [307, 1, 50, 50, 0, 0, 0],
-    [359, 1, 100, 150, 0, 0, 0],
-    [461, 1, 100, 150, 0, 0, 0],
-    [563, 1, 40, 50, 0, 0, 0],
-    [605, 1, 40, 50, 0, 0, 0],
-    [647, 1, 190, 150, 0, 0, 0],
-    [839, 1, 190, 150, 0, 0, 0],
-    [1031, 1, 190, 150, 0, 0, 0],
-    [1223, 1, 190, 150, 0, 0, 0]
+    [1, 153, 100, 150, 0, 0, 0],
+    [103, 153, 100, 150, 0, 0, 0],
+    [205, 153, 50, 50, 0, 0, 0],
+    [1, 305, 50, 50, 0, 0, 0],
+    [53, 305, 100, 150, 0, 0, 0],
+    [155, 305, 100, 150, 0, 0, 0],
+    [1, 457, 100, 150, 0, 0, 0],
+    [103, 457, 40, 50, 0, 0, 0],
+    [145, 457, 40, 50, 0, 0, 0],
+    [187, 457, 40, 50, 0, 0, 0],
+    [1, 609, 40, 50, 0, 0, 0],
+    [43, 609, 190, 150, 0, 0, 0],
+    [1, 761, 190, 150, 0, 0, 0],
+    [1, 913, 190, 150, 0, 0, 0],
+    [1, 1065, 190, 150, 0, 0, 0],
+    [1, 1217, 190, 150, 0, 0, 0],
+    [1, 1369, 190, 150, 0, 0, 0]
 ],
 
 "animations": {
     "auto": { "frames": [0] },
-    "autoOff": { "frames": [1] },
-    "autoOn": { "frames": [2] },
-    "info": { "frames": [3] },
-    "maxBet": { "frames": [4] },
-    "maxBetOn": { "frames": [5] },
-    "plus": { "frames": [6] },
-    "minus": { "frames": [7] },
-    "spin": { "frames": [8] },
-    "spinOn": { "frames": [9] },
-    "stop": { "frames": [10] },
-    "stopOn": { "frames": [11] }
+    "autoHover": { "frames": [1] },
+    "autoOff": { "frames": [2] },
+    "autoOn": { "frames": [3] },
+    "info": { "frames": [4] },
+    "infoHover": { "frames": [5] },
+    "maxBet": { "frames": [6] },
+    "maxBetHover": { "frames": [7] },
+    "maxBetOn": { "frames": [8] },
+    "minus": { "frames": [9] },
+    "minusHover": { "frames": [10] },
+    "plus": { "frames": [11] },
+    "plusHover": { "frames": [12] },
+    "spin": { "frames": [13] },
+    "spinHover": { "frames": [14] },
+    "spinOn": { "frames": [15] },
+    "stop": { "frames": [16] },
+    "stopHover": { "frames": [17] },
+    "stopOn": { "frames": [18] }
 },
 
 "texturepacker": [
-        "SmartUpdateHash: $TexturePacker:SmartUpdate:926354c170fa121814d5cb87f6dec937:ab424cd904a7ce3becfe659d6570b7b9:ab291d37f6de374712adaa84a9fae5c9$",
+        "SmartUpdateHash: $TexturePacker:SmartUpdate:d5e1d539f5cf96a9870ca2fe3f218c34:ad445fa995a3467275379731822f80cd:bfec0fa638796872e4471cb232e1316d$",
         "Created with TexturePacker (https://www.codeandweb.com/texturepacker) for EaselJS"
 ]
 
