@@ -87,6 +87,7 @@ events.on('menu:startAutoplay', autoplay.initAutoplay);
 events.on('initBonusLevel', autoplay.stopAutoplay);
 events.on('initFreeSpins', autoplay.stopAutoplay);
 events.on('buttons:stopAutoplay', autoplay.stopAutoplay);
+events.on('win:stopAutoplay', autoplay.stopAutoplay);
 
 // Buttons Module
 buttons.start({
@@ -164,3 +165,4 @@ export { storage };
 export { events };
 export { win };
 export { freeSpin };
+export { autoplay };

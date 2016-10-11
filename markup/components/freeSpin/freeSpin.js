@@ -217,6 +217,7 @@ export let freeSpin = (function () {
     }
 
     function initFreeSpins(data) {
+        console.warn('i init freeSpin');
         const buttonsContainer = stage.getChildByName('buttonsContainer');
         buttonsContainer.visible = false;
         fsTotalWin = 0;
@@ -671,6 +672,10 @@ export let freeSpin = (function () {
         }
     }
 
+
+    events.on('initFreeSpins', function () {
+        console.warn('I am inited!');
+    });
     events.on('initFreeSpins', transitionFreeSpins);
     events.on('drawFreeSpins', initFreeSpins);
     events.on('stopFreeSpins', stopFreeSpins);

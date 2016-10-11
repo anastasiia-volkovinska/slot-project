@@ -326,7 +326,8 @@ export let win = (function () {
         if (storage.read('rollResponse').BonusResults[0] === 'FreeSpinBonus') {
             setTimeout(function () {
                 events.trigger('initFreeSpins');
-            }, 1500);
+                storage.changeState('autoplay', 'ended');
+            }, 1000);
         }
     }
 

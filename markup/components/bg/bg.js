@@ -129,6 +129,7 @@ export let bg = (function () {
             delta = 1280 + 420;
         } else {
             pole.x = 1280 + 420;
+            pole.skewY = 180;
             delta = -420;
         }
 
