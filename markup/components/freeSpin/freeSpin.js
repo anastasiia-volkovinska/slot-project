@@ -115,21 +115,31 @@ export let freeSpin = (function () {
         }
     }
 
-    function rotateFSGun() {
-        console.log('i am in rotateFSGun');
-        counter++;
-        console.warn('counter', counter);
-
+    function rotateFSGun(count) {
+        // console.log('i am in rotateFSGun');
+        let main = storage.read('stage').getChildByName('mainContainer');
+        console.log('mainContainer', main);
         let fsTableContainer;
         if (storage.read('device') === 'mobile') {
             fsTableContainer = stage.getChildByName('fsTableContainer');
         }
-
         if (storage.read('device') === 'desktop') {
-            const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
+            const controlsContainerFS = main.getChildByName('controlsContainerFS');
             fsTableContainer = controlsContainerFS.getChildByName('fsTableContainer');
         }
         const baraban = fsTableContainer.getChildByName('baraban');
+
+
+        if (count) {
+            console.error('count is:', count);
+            counter = count % 6;
+            baraban.gotoAndStop('b' + counter);
+        } else {
+            counter++;
+        }
+        console.warn('counter', counter);
+
+
         const bullet = fsTableContainer.getChildByName('bullet');
         bullet.gotoAndPlay('11-w');
         bullet.on('animationend', function () {
@@ -137,9 +147,9 @@ export let freeSpin = (function () {
             baraban.gotoAndStop(16);
             utils.getCenterPoint(baraban);
             setTimeout( function () {
-                baraban.gotoAndStop(1 + counter);
+                baraban.gotoAndStop('b' + counter);
                 if (counter === 6) {
-                    baraban.gotoAndStop(7);
+                    baraban.gotoAndStop('b6');
                     let scaleX;
                     let scaleY;
                     if (storage.read('device') === 'mobile') {
@@ -150,10 +160,11 @@ export let freeSpin = (function () {
                         scaleX = 0.25;
                         scaleY = 0.25;
                     }
+                    console.warn('baraban', baraban.currentFrame);
                     TweenMax.fromTo(baraban, 0.4, {scaleX: 0.6, scaleY: 0.6}, { scaleX: scaleX, scaleY: scaleY, ease: Bounce.easeOut});
 
-                    baraban.gotoAndStop(1);
-                    console.warn('barabanFrame', baraban.currentFrame);
+                    baraban.gotoAndStop('b0');
+                    // console.warn('barabanFrame', baraban.currentFrame);
                     counter = 0;
                 }
             }, 500);
@@ -168,11 +179,12 @@ export let freeSpin = (function () {
             y: utils.height / 2
         });
         utils.getCenterPoint(pritsel);
-        stage.addChild(pritsel);
+        if (stage.getChildByName('transitionContainer')) {
+            stage.addChildAt(pritsel, stage.getChildIndex(stage.getChildByName('transitionContainer')));
+        } else {
+            stage.addChild(pritsel);
+        }
 
-        mainContainer = stage.getChildByName('mainContainer');
-        const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
-        const fsMultiContainer = controlsContainerFS.getChildByName('fsMultiContainer');
 
         let tl = new TimelineMax();
         let x0 = pritsel.x;
@@ -181,6 +193,7 @@ export let freeSpin = (function () {
         let y1;
         let x2;
         let y2;
+        let fsMultiContainer;
         if (storage.read('device') === 'mobile') {
             x1 = 600;
             y1 = 100;
@@ -193,6 +206,9 @@ export let freeSpin = (function () {
             y1 = 500;
             x2 = bottle.x + 30;
             y2 = bottle.y + 500;
+            mainContainer = stage.getChildByName('mainContainer');
+            const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
+            fsMultiContainer = controlsContainerFS.getChildByName('fsMultiContainer');
         }
 
         tl.fromTo(pritsel, 0.4, {scaleX: 0.6, scaleY: 0.6}, { scaleX: 1.1, scaleY: 1.1, ease: Bounce.easeOut});
@@ -211,7 +227,9 @@ export let freeSpin = (function () {
                 // console.warn('mainContainer', mainContainer);
                 // console.warn('fsMultiContainer', fsMultiContainer);
                 // console.warn('shadow', shadow);
-                fsMultiContainer.removeChild(shadow);
+                if (storage.read('device') === 'desktop') {
+                    fsMultiContainer.removeChild(shadow);
+                }
             }
         });
     }
@@ -233,11 +251,17 @@ export let freeSpin = (function () {
         createjs.Sound.play('startPerehodSound', {loop: -1});
         fsStartData = data;
         if (data) {
-            config.currentLevel = data.level - 1;
+            config.currentLevel = data.level;
             config.currentMulti = data.multi;
             config.currentCount = data.count;
             config.currentWinCoins = data.currentWinCoins;
             config.currentWinCents = data.currentWinCents;
+        } else {
+            config.currentLevel = 0;
+            config.currentMulti = 2;
+            config.currentCount = 15;
+            config.currentWinCoins = 0;
+            config.currentWinCents = 0;
         }
         const loader = storage.read('loadResult');
         stage = storage.read('stage');
@@ -673,9 +697,8 @@ export let freeSpin = (function () {
     }
 
 
-    events.on('initFreeSpins', function () {
-        console.warn('I am inited!');
-    });
+    events.on('fs:rotateGun', rotateFSGun);
+    events.on('fs:changeMultiplier', changeMultiplier);
     events.on('initFreeSpins', transitionFreeSpins);
     events.on('drawFreeSpins', initFreeSpins);
     events.on('stopFreeSpins', stopFreeSpins);

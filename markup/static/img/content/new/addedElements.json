@@ -76,6 +76,13 @@
 
 "animations": {
     "baraban": { "frames": [1, 2, 3, 4, 5, 6, 7] },
+    "b0": [1],
+    "b1": [2],
+    "b2": [3],
+    "b3": [4],
+    "b4": [5],
+    "b5": [6],
+    "b6": [7],
     "B-back": { "frames": [8] },
     "Bang!!!-animation1": { "frames": [9] },
     "Bang!!!-animation2": { "frames": [10] },

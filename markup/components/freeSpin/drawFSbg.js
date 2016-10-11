@@ -67,7 +67,7 @@ export function drawFreeSpinsBG() {
         });
 
         const win = storage.read('rollResponse').TotalWinCoins;
-        console.log('TotalWinCoins', win);
+        // console.log('TotalWinCoins', win);
 
         const winText = new c.Text(win, 'normal 16px Helvetica', '#e8b075').set({
             name: 'winText',
@@ -81,11 +81,18 @@ export function drawFreeSpinsBG() {
 
         drawTableContainerDesktop();
         drawMultiContainerDesktop();
+
     }
 
     if (storage.read('device') === 'mobile') {
         drawTableContainer();
         drawMultiContainer();
+    }
+    if (config.currentLevel) {
+        events.trigger('fs:rotateGun', config.currentLevel);
+    }
+    if (config.currentMulti) {
+        events.trigger('fs:changeMultiplier', config.currentMulti);
     }
 
 }
@@ -255,7 +262,7 @@ function hideBalance() {
 }
 
 function showFsBalance() {
-    console.log('config', config);
+    // console.log('config', config);
     const balanceContainer = stage.getChildByName('balanceContainer');
     const balanceTextContainer = balanceContainer.getChildByName('balanceTextContainer');
 

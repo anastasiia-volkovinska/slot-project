@@ -50,6 +50,7 @@ preloader.start({
 events.on('canvas:stage', preloader.startPreloader);
 events.on('preloader:done', () => {
     if (storage.read('savedFS')) {
+        console.log('savedData', storage.read('savedFS'));
         events.trigger('initFreeSpins', storage.read('savedFS'));
     }
     if (storage.read('savedBonus')) {
