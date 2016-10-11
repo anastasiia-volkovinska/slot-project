@@ -67,7 +67,7 @@ export let roll = (function () {
     }
 
     function initTopGameContainer() {
-        console.log('initTopGameContainer');
+        // console.log('initTopGameContainer');
         gameTopContainer.set({
             name: 'gameTopContainer',
             x: config.gameX,
@@ -271,7 +271,7 @@ export let roll = (function () {
     }
 
     function playIdleState() {
-        console.log('result', resultColumns);
+        // console.log('result', resultColumns);
         resultColumns.forEach((column) => {
             column.forEach((element) => {
                 element.play();
@@ -280,6 +280,7 @@ export let roll = (function () {
     }
 
     function fastRoll() {
+        // debugger;
         if (storage.readState('fastRoll')) {
             rollAnimation.timeScale(2.5);
             storage.changeState('lockedRoll', true);

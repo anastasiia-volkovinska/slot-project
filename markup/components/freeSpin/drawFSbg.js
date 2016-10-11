@@ -331,6 +331,7 @@ function drawTableContainerDesktop() {
         textBaseline: 'middle',
         shadow: new c.Shadow('#C19433', 0, 0, 8)
     });
+    // console.warn('fsTotalCountText', fsTotalCountText);
 
     // freeSpin drum
     const bullet = new c.Sprite(loader.getResult('new_elements')).set({
@@ -422,7 +423,28 @@ function drawMultiContainerDesktop() {
     utils.getCenterPoint(bottle8);
     bottle8.gotoAndStop(0);
 
-    fsMultiContainer.addChild(fsMulti8, fsMulti6, fsMulti4, bottle4, bottle6, bottle8);
+    const shadow4 = new c.Bitmap(loader.getResult('shadow1')).set({
+        name: 'shadow4',
+        x: 625, // Magic Numbers
+        y: 105 // Magic Numbers
+    });
+    utils.getCenterPoint(shadow4);
+
+    const shadow6 = new c.Bitmap(loader.getResult('shadow1')).set({
+        name: 'shadow6',
+        x: 680, // Magic Numbers
+        y: 105 // Magic Numbers
+    });
+    utils.getCenterPoint(shadow6);
+
+    const shadow8 = new c.Bitmap(loader.getResult('shadow1')).set({
+        name: 'shadow8',
+        x: 735, // Magic Numbers
+        y: 105 // Magic Numbers
+    });
+    utils.getCenterPoint(shadow8);
+
+    fsMultiContainer.addChild(fsMulti8, fsMulti6, fsMulti4, shadow4, bottle4, shadow6, bottle6, shadow8, bottle8);
     controlsContainerFS.addChild(fsMultiContainer);
 
     events.trigger('changeMultiplier', 2);

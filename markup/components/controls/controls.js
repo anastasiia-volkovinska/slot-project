@@ -53,8 +53,14 @@ export let controls = (function () {
             scaleY: 0.75,
             cursor: 'pointer'
         });
-        controlPlusBet.gotoAndStop(6);
+        controlPlusBet.gotoAndStop('plus');
         utils.getCenterPoint(controlPlusBet);
+        controlPlusBet.on('mouseover', function () {
+            controlPlusBet.gotoAndStop('plusHover');
+        });
+        controlPlusBet.on('mouseout', function () {
+            controlPlusBet.gotoAndStop('plus');
+        });
         controlPlusBet.on('click', function () {
             createjs.Sound.play('buttonClickSound');
             events.trigger('menu:changeBet', true);
@@ -68,8 +74,15 @@ export let controls = (function () {
             scaleY: 0.75,
             cursor: 'pointer'
         });
-        controlMinusBet.gotoAndStop(7);
+        controlMinusBet.gotoAndStop('minus');
         utils.getCenterPoint(controlMinusBet);
+        controlMinusBet.on('mouseover', function () {
+            controlMinusBet.gotoAndStop('minusHover');
+        });
+        controlMinusBet.on('mouseout', function () {
+            controlMinusBet.gotoAndStop('minus');
+        });
+
         controlMinusBet.on('click', function () {
             createjs.Sound.play('buttonClickSound');
             events.trigger('menu:changeBet', false);
@@ -84,8 +97,15 @@ export let controls = (function () {
             scaleY: 0.75,
             cursor: 'pointer'
         });
-        controlPlusCoin.gotoAndStop(6);
+        controlPlusCoin.gotoAndStop('plus');
         utils.getCenterPoint(controlPlusCoin);
+        controlPlusCoin.on('mouseover', function () {
+            controlPlusCoin.gotoAndStop('plusHover');
+        });
+        controlPlusCoin.on('mouseout', function () {
+            controlPlusCoin.gotoAndStop('plus');
+        });
+
         controlPlusCoin.on('click', function () {
             createjs.Sound.play('buttonClickSound');
             events.trigger('menu:changeCoins', true);
@@ -100,8 +120,15 @@ export let controls = (function () {
             scaleY: 0.75,
             cursor: 'pointer'
         });
-        controlMinusCoin.gotoAndStop(7);
+        controlMinusCoin.gotoAndStop('minus');
         utils.getCenterPoint(controlMinusCoin);
+        controlMinusCoin.on('mouseover', function () {
+            controlMinusCoin.gotoAndStop('minusHover');
+        });
+        controlMinusCoin.on('mouseout', function () {
+            controlMinusCoin.gotoAndStop('minus');
+        });
+
         controlMinusCoin.on('click', function () {
             createjs.Sound.play('buttonClickSound');
             events.trigger('menu:changeCoins', false);
@@ -296,6 +323,13 @@ export let controls = (function () {
         });
         auto.gotoAndStop('auto');
         utils.getCenterPoint(auto);
+        auto.on('mouseover', function () {
+            auto.gotoAndStop('autoHover');
+        });
+        auto.on('mouseout', function () {
+            auto.gotoAndStop('auto');
+        });
+
         auto.on('click', function () {
             createjs.Sound.play('buttonClickSound');
             TweenMax.to(auto, 0.4, {x: auto.x - 120});
@@ -319,6 +353,13 @@ export let controls = (function () {
         });
         maxBet.gotoAndStop('maxBet');
         utils.getCenterPoint(maxBet);
+        maxBet.on('mouseover', function () {
+            maxBet.gotoAndStop('maxBetHover');
+        });
+        maxBet.on('mouseout', function () {
+            maxBet.gotoAndStop('maxBet');
+        });
+
         maxBet.on('click', function () {
             maxBet.gotoAndStop('maxBetOn');
             setTimeout(function () {
@@ -338,14 +379,21 @@ export let controls = (function () {
         });
         spin.gotoAndStop('spin');
         utils.getCenterPoint(spin);
+        spin.on('mouseover', function () {
+            spin.gotoAndStop('spinHover');
+        });
+        spin.on('mouseout', function () {
+            spin.gotoAndStop('spin');
+        });
+
         spin.on('click', function () {
             createjs.Sound.play('buttonClickSound');
-            if (storage.readState('lockedMenu')) return;
+            // if (storage.readState('lockedMenu')) return;
 
-            if (storage.readState('roll') !== 'started' && spin.currentAnimation !== 'stop') {
-                spin.gotoAndStop('spinOn');
-                handleSpinClick();
-            }
+            // if (storage.readState('roll') !== 'started' && spin.currentAnimation !== 'stop') {
+            spin.gotoAndStop('spinOn');
+            handleSpinClick();
+            // }
             if (spin.currentAnimation === 'stop') {
                 c.Sound.play('buttonClickSound');
                 storage.changeState('autoplay', 'ended');
@@ -363,6 +411,13 @@ export let controls = (function () {
         });
         info.gotoAndStop('info');
         utils.getCenterPoint(info);
+        info.on('mouseover', function () {
+            info.gotoAndStop('infoHover');
+        });
+        info.on('mouseout', function () {
+            info.gotoAndStop('info');
+        });
+
         info.on('click', function () {
             createjs.Sound.play('buttonClickSound');
             handleInfoClick();
@@ -447,12 +502,18 @@ export let controls = (function () {
         maxBet.gotoAndStop('maxBet');
     }
 
+    function fastRoll() {
+        if (storage.readState('autoplay') === 'started') return;
+        spin.gotoAndStop('spin');
+    }
+
     return {
         start,
         drawControlsPanel,
         writeAutoplay,
         removeAutoplay,
         updateAutoplay,
-        endRoll
+        endRoll,
+        fastRoll
     };
 })();

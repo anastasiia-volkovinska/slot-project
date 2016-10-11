@@ -54,22 +54,25 @@ export let freeSpin = (function () {
         const bottle4 = fsMultiContainer.getChildByName('bottle4');
         const bottle6 = fsMultiContainer.getChildByName('bottle6');
         const bottle8 = fsMultiContainer.getChildByName('bottle8');
+        const shadow4 = fsMultiContainer.getChildByName('shadow4');
+        const shadow6 = fsMultiContainer.getChildByName('shadow6');
+        const shadow8 = fsMultiContainer.getChildByName('shadow8');
 
         console.log('multi', multi);
         if (multi == 4) {
-            showPritsel(bottle4);
+            showPritsel(bottle4, shadow4);
             bottle4.on('animationend', function () {
                 fsMulti4.visible = true;
                 bottle4.gotoAndStop(14);
             });
         } else if (multi == 6) {
-            showPritsel(bottle6);
+            showPritsel(bottle6, shadow6);
             bottle6.on('animationend', function () {
                 fsMulti6.visible = true;
                 bottle6.gotoAndStop(14);
             });
         } else if (multi == 8) {
-            showPritsel(bottle8);
+            showPritsel(bottle8, shadow8);
             bottle8.on('animationend', function () {
                 fsMulti8.visible = true;
                 bottle8.gotoAndStop(14);
@@ -104,8 +107,8 @@ export let freeSpin = (function () {
             newBang.skewY = Math.random() * 180;
             fsMultiContainer.addChild(newBang);
             newBang.play();
-            console.log('newBang', newBang);
-            console.log('fsMultiContainer', fsMultiContainer);
+            // console.log('newBang', newBang);
+            // console.log('fsMultiContainer', fsMultiContainer);
             newBang.on('animationend', function () {
                 fsMultiContainer.removeChild(newBang);
             });
@@ -150,14 +153,14 @@ export let freeSpin = (function () {
                     TweenMax.fromTo(baraban, 0.4, {scaleX: 0.6, scaleY: 0.6}, { scaleX: scaleX, scaleY: scaleY, ease: Bounce.easeOut});
 
                     baraban.gotoAndStop(1);
-                    console.log('barabanFrame', baraban.currentAnimation);
+                    console.warn('barabanFrame', baraban.currentFrame);
                     counter = 0;
                 }
             }, 500);
         });
     }
 
-    function showPritsel(bottle) {
+    function showPritsel(bottle, shadow) {
         console.log('pritsel added!');
         const loader = storage.read('loadResult');
         const pritsel = new createjs.Bitmap(loader.getResult('pritsel')).set({
@@ -166,6 +169,10 @@ export let freeSpin = (function () {
         });
         utils.getCenterPoint(pritsel);
         stage.addChild(pritsel);
+
+        mainContainer = stage.getChildByName('mainContainer');
+        const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
+        const fsMultiContainer = controlsContainerFS.getChildByName('fsMultiContainer');
 
         let tl = new TimelineMax();
         let x0 = pritsel.x;
@@ -201,6 +208,10 @@ export let freeSpin = (function () {
                 createjs.Sound.play('stekloSound');
                 createjs.Sound.play('stekloSound');
                 bottle.gotoAndPlay('bottle');
+                // console.warn('mainContainer', mainContainer);
+                // console.warn('fsMultiContainer', fsMultiContainer);
+                // console.warn('shadow', shadow);
+                fsMultiContainer.removeChild(shadow);
             }
         });
     }
@@ -328,6 +339,7 @@ export let freeSpin = (function () {
     }
 
     function countFreeSpins(number) {
+        if (!number) return;
         let fsTableContainer;
         if (storage.read('device') === 'mobile') {
             fsTableContainer = stage.getChildByName('fsTableContainer');
@@ -340,8 +352,100 @@ export let freeSpin = (function () {
         }
         const fsTotalCountText = fsTableContainer.getChildByName('fsTotalCountText');
         fsTotalCountText.text = number + '';
+
         const countBounds = fsTotalCountText.getBounds();
         console.log('I must change fsCount', number);
+    }
+
+    function showTotalFreeSpins(num) {
+        console.warn('plus 3 added!');
+        const loader = storage.read('loadResult');
+        let fsTableContainer;
+        let fsTotalCountBG;
+        if (storage.read('device') === 'mobile') {
+            fsTableContainer = stage.getChildByName('fsTableContainer');
+            fsTotalCountBG = fsTableContainer.getChildByName('fsTotalCountBG');
+        }
+
+        if (storage.read('device') === 'desktop') {
+            mainContainer = stage.getChildByName('mainContainer');
+            const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
+            fsTableContainer = controlsContainerFS.getChildByName('fsTableContainer');
+            fsTotalCountBG = fsTableContainer.getChildByName('fsTotalCountBG');
+        }
+
+        const fsPlusContainer = new createjs.Container().set({
+            name: 'fsPlusContainer'
+        });
+        const ss = loader.getResult('addedElements');
+        const fsPlusText = new createjs.BitmapText('+3', loader.getResult('addedElements')).set({
+            x: utils.width / 2,
+            y: utils.height / 2 - 150
+        });
+        utils.getCenterPoint(fsPlusText);
+        fsPlusContainer.addChild(fsPlusText);
+        stage.addChild(fsPlusContainer);
+        let tl = new TimelineMax();
+        let x0 = fsPlusText.x;
+        let y0 = fsPlusText.y;
+        let x1;
+        let y1;
+        let x2;
+        let y2;
+        if (storage.read('device') === 'mobile') {
+            x1 = 300;
+            y1 = 100;
+            x2 = 85;
+            y2 = 515;
+        }
+
+        if (storage.read('device') === 'desktop') {
+            x1 = x0 + 100;
+            y1 = y0;
+            x2 = 620;
+            y2 = 615;
+        }
+        tl.fromTo(fsPlusText, 0.4, {scaleX: 0.6, scaleY: 0.6}, { scaleX: 1.1, scaleY: 1.1, ease: Bounce.easeOut});
+        tl.to(fsPlusText, 0.6, {scaleX: 0.2, scaleY: 0.2,
+            bezier: {type: 'soft', values: [ {x: x0, y: y0}, {x: x1, y: y1}, {x: x2, y: y2} ], autoRotate: false},
+            ease: Power1.easeOut,
+            onComplete: function () {
+                fsPlusText.x = x0;
+                fsPlusText.y = y0;
+                stage.removeChild(fsPlusContainer);
+                fsTotalCountBG.gotoAndPlay('bang');
+                fsTotalCountBG.on('animationend', function () {
+                    // debugger;
+                    fsTotalCountBG.gotoAndStop(15);
+                    // console.warn('I add +3:', num);
+                    // countFreeSpins(num);
+                });
+            }
+        });
+    }
+
+    function countTotalWin(data) {
+        if (data.Mode === 'fsBonus') {
+            const balanceContainer = stage.getChildByName('balanceContainer');
+            const balanceTextContainer = balanceContainer.getChildByName('balanceTextContainer');
+            const totalWinSum = balanceTextContainer.getChildByName('totalWinSum');
+            const totalWinText = balanceTextContainer.getChildByName('totalWinText');
+            totalWinSum.text = +totalWinSum.text + data.TotalWinCoins;
+            fsTotalWin = totalWinSum.text;
+            if (storage.read('device') == 'mobile') {
+                totalWinSum.x = totalWinText.x + 20 + totalWinText.getMeasuredWidth() / 2 + totalWinSum.getMeasuredWidth() / 2;
+            }
+            balanceContainer.updateCache();
+
+            // count win
+            if (storage.read('device') === 'desktop') {
+                const win = storage.read('rollResponse').TotalWinCoins;
+                mainContainer = stage.getChildByName('mainContainer');
+                const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
+                const winText = controlsContainerFS.getChildByName('winText');
+                winText.text = +win;
+            }
+        }
     }
 
     function startFreeSpin() {
@@ -401,30 +505,6 @@ export let freeSpin = (function () {
         if (storage.read('device') === 'mobile') {
             storage.changeState('side', 'left');
             events.trigger('menu:changeSide', 'left');
-        }
-    }
-
-    function countTotalWin(data) {
-        if (data.Mode === 'fsBonus') {
-            const balanceContainer = stage.getChildByName('balanceContainer');
-            const balanceTextContainer = balanceContainer.getChildByName('balanceTextContainer');
-            const totalWinSum = balanceTextContainer.getChildByName('totalWinSum');
-            const totalWinText = balanceTextContainer.getChildByName('totalWinText');
-            totalWinSum.text = +totalWinSum.text + data.TotalWinCoins;
-            fsTotalWin = totalWinSum.text;
-            if (storage.read('device') == 'mobile') {
-                totalWinSum.x = totalWinText.x + 20 + totalWinText.getMeasuredWidth() / 2 + totalWinSum.getMeasuredWidth() / 2;
-            }
-            balanceContainer.updateCache();
-
-            // count win
-            if (storage.read('device') === 'desktop') {
-                const win = storage.read('rollResponse').TotalWinCoins;
-                mainContainer = stage.getChildByName('mainContainer');
-                const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
-                const winText = controlsContainerFS.getChildByName('winText');
-                winText.text = +win;
-            }
         }
     }
 
@@ -547,70 +627,6 @@ export let freeSpin = (function () {
         stage.addChild(finishContainer);
     }
 
-    function showTotalFreeSpins(num) {
-        console.warn('plus 3 added!');
-        const loader = storage.read('loadResult');
-        let fsTableContainer;
-        let fsTotalCountBG;
-        if (storage.read('device') === 'mobile') {
-            fsTableContainer = stage.getChildByName('fsTableContainer');
-            fsTotalCountBG = fsTableContainer.getChildByName('fsTotalCountBG');
-        }
-
-        if (storage.read('device') === 'desktop') {
-            mainContainer = stage.getChildByName('mainContainer');
-            const controlsContainerFS = mainContainer.getChildByName('controlsContainerFS');
-            fsTableContainer = controlsContainerFS.getChildByName('fsTableContainer');
-            fsTotalCountBG = fsTableContainer.getChildByName('fsTotalCountBG');
-        }
-
-        const fsPlusContainer = new createjs.Container().set({
-            name: 'fsPlusContainer'
-        });
-        const ss = loader.getResult('addedElements');
-        const fsPlusText = new createjs.BitmapText('+3', loader.getResult('addedElements')).set({
-            x: utils.width / 2,
-            y: utils.height / 2 - 150
-        });
-        utils.getCenterPoint(fsPlusText);
-        fsPlusContainer.addChild(fsPlusText);
-        stage.addChild(fsPlusContainer);
-        let tl = new TimelineMax();
-        let x0 = fsPlusText.x;
-        let y0 = fsPlusText.y;
-        let x1;
-        let y1;
-        let x2;
-        let y2;
-        if (storage.read('device') === 'mobile') {
-            x1 = 300;
-            y1 = 100;
-            x2 = 85;
-            y2 = 515;
-        }
-
-        if (storage.read('device') === 'desktop') {
-            x1 = x0 + 100;
-            y1 = y0;
-            x2 = 620;
-            y2 = 615;
-        }
-        tl.fromTo(fsPlusText, 0.6, {scaleX: 0.6, scaleY: 0.6}, { scaleX: 1.1, scaleY: 1.1, ease: Bounce.easeOut});
-        tl.to(fsPlusText, 1, {scaleX: 0.2, scaleY: 0.2,
-            bezier: {type: 'soft', values: [ {x: x0, y: y0}, {x: x1, y: y1}, {x: x2, y: y2} ], autoRotate: false},
-            ease: Power1.easeOut,
-            onComplete: function () {
-                fsPlusText.x = x0;
-                fsPlusText.y = y0;
-                stage.removeChild(fsPlusContainer);
-                fsTotalCountBG.gotoAndPlay('bang');
-                fsTotalCountBG.on('animationend', function () {
-                    fsTotalCountBG.gotoAndStop(15);
-                });
-            }
-        });
-    }
-
     function moveLine(lines) {
         TweenMax.staggerTo(lines, 0.05, {x: '+= 3', repeat: 6, yoyo: true,
             ease: RoughEase.ease.config({ template: Power0.easeNone, strength: 1, points: 20, taper: 'none', randomize: true, clamp: false}),
@@ -634,13 +650,14 @@ export let freeSpin = (function () {
         if (state === 'roll' && storage.readState(state) === 'ended') {
             if (storage.readState('mode') === 'fsBonus') {
                 countTotalWin(storage.read('rollResponse'));
-                countFreeSpins(storage.read('freeRollResponse').TotalFreeSpins);
+                // countFreeSpins(storage.read('freeRollResponse').TotalFreeSpins);
                 countMoney(storage.read('freeRollResponse'));
             }
         }
         if (state === 'roll' && storage.readState(state) === 'started') {
             if (storage.readState('mode') === 'fsBonus') {
-                countTotalWin(storage.read('rollResponse').TotalFreeSpins - 1);
+                countFreeSpins(+storage.read('rollResponse').TotalFreeSpins - 1);
+                console.warn('TotalFreeSpins', storage.read('rollResponse').TotalFreeSpins);
             }
         }
         if (state === 'fsMulti') {

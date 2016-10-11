@@ -5,7 +5,10 @@ import { events } from 'components/events/events';
 const c = createjs;
 
 export function handleSpinClick() {
-    const buttonsCache = storage.read('stage').getChildByName('buttonsContainer').getChildByName('buttonsCache');
+
+    if (storage.read('device') === 'mobile') {
+        const buttonsCache = storage.read('stage').getChildByName('buttonsContainer').getChildByName('buttonsCache');
+    }
     let that = this;
     if (storage.readState('lockedMenu')) return;
     if (utils.lowBalance()) {

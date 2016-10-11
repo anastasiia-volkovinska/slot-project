@@ -22,7 +22,7 @@ export const mainManifest = [
     // preloader module
     {id: 'preloaderBG', src: 'static/img/content/preloader/preloaderBG.png'},
     {id: 'logo', src: 'static/img/content/preloader/logo.png'},
-    {id: 'baraban', src: 'static/img/content/preloader/baraban.json', type: 'spritesheet'},
+    // {id: 'baraban', src: 'static/img/content/preloader/baraban.json', type: 'spritesheet'},
 
     // buttons module
     {id: 'buttons', src: 'static/img/content/buttons/buttons.json', type: 'spritesheet'},
@@ -90,7 +90,9 @@ export const mainManifest = [
     {id: 'play', src: 'static/img/content/fs/play.png'},
     {id: 'continue', src: 'static/img/content/fs/continue.png'},
     {id: 'plus3', src: 'static/img/content/fs/plus3.png'},
-    {id: 'multiBG', src: 'static/img/content/bg/mainBG.png'},
+    {id: 'shadow1', src: 'static/img/content/fs/shadow1.png'},
+    {id: 'shadow2', src: 'static/img/content/fs/shadow2.png'},
+    // {id: 'multiBG', src: 'static/img/content/bg/mainBG.png'},
     // {id: 'multiTitle', src: 'static/img/content/bg/multiTitle.png'},
     // {id: 'multiCoins', src: 'static/img/content/bg/multiCoins.png'},
     {id: 'x4', src: 'static/img/content/fs/x4.png'},

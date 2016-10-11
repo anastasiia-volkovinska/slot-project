@@ -23,10 +23,10 @@ import { controls } from 'components/controls/controls';
 
 // Init Module
 init.start({
-    device: 'mobile',
+    device: 'desktop',
     userID: 2,
     casinoID: 2,
-    mode: 'fsBonus'
+    mode: 'normal'
 });
 
 init.login();
@@ -135,6 +135,7 @@ if (storage.read('device') === 'desktop') {
     // events.on('roll:started', controls.startRoll);
     events.on('roll:ended', controls.endRoll);
     events.on('buttons:stopAutoplay', controls.removeAutoplay);
+    events.on('roll:fastRoll', controls.fastRoll);
 
 }
 
@@ -157,6 +158,7 @@ events.on('roll:fsMultiplier', win.showMulti);
 freeSpin.start();
 events.on('fs:rotateFSGun', freeSpin.rotateFSGun);
 events.on('fs:changeMultiplier', freeSpin.changeMultiplier);
+events.on('fs:showTotalFreeSpins', freeSpin.showTotalFreeSpins);
 
 export { storage };
 export { events };

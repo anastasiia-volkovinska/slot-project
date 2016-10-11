@@ -305,12 +305,14 @@ export let win = (function () {
                             topElement.visible = true;
                             topElement.gotoAndPlay(`${elementIndex}-w`);
                             let totalFreeSpins = storage.read('rollResponse').TotalFreeSpins;
-                            freeSpin.showTotalFreeSpins(totalFreeSpins);
+                            // freeSpin.showTotalFreeSpins(totalFreeSpins);
+                            events.trigger('fs:showTotalFreeSpins', totalFreeSpins);
                             bulletFSToGun(topElement);
                         } else {
                             element.gotoAndPlay(`${elementIndex}-w`);
                             let totalFreeSpins = storage.read('rollResponse').TotalFreeSpins;
-                            freeSpin.showTotalFreeSpins(totalFreeSpins);
+                            // freeSpin.showTotalFreeSpins(totalFreeSpins);
+                            events.trigger('fs:showTotalFreeSpins', totalFreeSpins);
                         }
 
                         currWinScatters.push({
