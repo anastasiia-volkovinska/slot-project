@@ -46,6 +46,7 @@ export let autoplay = (function () {
     function stopAutoplay() {
         autoEnd = true;
         clearTimeout(storage.read('autoTimeout'));
+        console.log('i am stopping autoplay', storage.read('autoTimeout'));
         if (storage.readState('autoplay') !== 'ended') {
             events.trigger('autoplay:ended');
             storage.changeState('autoplay', 'ended');

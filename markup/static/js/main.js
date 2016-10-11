@@ -26,7 +26,7 @@ init.start({
     device: 'desktop',
     userID: 2,
     casinoID: 2,
-    mode: 'normal'
+    mode: 'fsBonus'
 });
 
 init.login();

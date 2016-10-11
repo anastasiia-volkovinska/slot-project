@@ -324,23 +324,28 @@ export let controls = (function () {
         auto.gotoAndStop('auto');
         utils.getCenterPoint(auto);
         auto.on('mouseover', function () {
-            auto.gotoAndStop('autoHover');
+            if (storage.readState('autoplay') !== 'started') {
+                auto.gotoAndStop('autoHover');
+            }
         });
         auto.on('mouseout', function () {
-            auto.gotoAndStop('auto');
+            if (storage.readState('autoplay') !== 'started') {
+                auto.gotoAndStop('auto');
+            }
         });
-
         auto.on('click', function () {
             createjs.Sound.play('buttonClickSound');
-            TweenMax.to(auto, 0.4, {x: auto.x - 120});
-            controlsAutoContainer.alpha = 1;
-            TweenMax.to(controlsAutoContainer, 0.4, {x: controlsAutoContainer.x - 100});
-            if (controlsAutoContainer.open === true) {
-                TweenMax.to(auto, 0.4, {x: auto.x + 120});
-                TweenMax.to(controlsAutoContainer, 0.4, {x: controlsAutoContainer.x + 100, alpha: 0});
+            if (storage.readState('autoplay') !== 'started') {
+                TweenMax.to(auto, 0.4, {x: auto.x - 120});
+                controlsAutoContainer.alpha = 1;
+                TweenMax.to(controlsAutoContainer, 0.4, {x: controlsAutoContainer.x - 100});
+                if (controlsAutoContainer.open === true) {
+                    TweenMax.to(auto, 0.4, {x: auto.x + 120});
+                    TweenMax.to(controlsAutoContainer, 0.4, {x: controlsAutoContainer.x + 100, alpha: 0});
 
+                }
+                controlsAutoContainer.open = !controlsAutoContainer.open;
             }
-            controlsAutoContainer.open = !controlsAutoContainer.open;
         });
 
         maxBet = new c.Sprite(controlsSS).set({
@@ -380,21 +385,26 @@ export let controls = (function () {
         spin.gotoAndStop('spin');
         utils.getCenterPoint(spin);
         spin.on('mouseover', function () {
-            spin.gotoAndStop('spinHover');
+            if (storage.readState('autoplay') !== 'started') {
+                spin.gotoAndStop('spinHover');
+            }
         });
         spin.on('mouseout', function () {
-            spin.gotoAndStop('spin');
+            if (storage.readState('autoplay') !== 'started') {
+                spin.gotoAndStop('spin');
+            }
         });
 
         spin.on('click', function () {
             createjs.Sound.play('buttonClickSound');
             // if (storage.readState('lockedMenu')) return;
 
-            // if (storage.readState('roll') !== 'started' && spin.currentAnimation !== 'stop') {
-            spin.gotoAndStop('spinOn');
-            handleSpinClick();
-            // }
+            if (spin.currentAnimation !== 'stop') {
+                spin.gotoAndStop('spinOn');
+                handleSpinClick();
+            }
             if (spin.currentAnimation === 'stop') {
+                spin.gotoAndStop('stopOn');
                 c.Sound.play('buttonClickSound');
                 storage.changeState('autoplay', 'ended');
                 events.trigger('buttons:stopAutoplay');
@@ -450,6 +460,7 @@ export let controls = (function () {
     }
 
     function writeAutoplay() {
+        console.log('i am starting autoplay');
         spin.gotoAndStop('stop');
         auto.gotoAndStop('autoOff');
         // auto.gotoAndStop('autoStop');
