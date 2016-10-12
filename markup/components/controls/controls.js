@@ -35,6 +35,7 @@ export let controls = (function () {
             scaleY: 0.75
         });
 
+
         const lines = new c.Text('10', 'normal 16px Helvetica', '#e8b075').set({
             name: 'lines',
             x: 75,
@@ -438,15 +439,6 @@ export let controls = (function () {
         mainContainer.addChild(controlsContainer);
     }
 
-    function handleAutoClick(e) {
-        createjs.Sound.play('buttonClickSound');
-        const that = this;
-        storage.write('autoCount', that.amount);
-        events.trigger('menu:startAutoplay', this.amount);
-        storage.changeState('autoplay', 'started');
-
-    }
-
     function handleInfoClick() {
         const loader = storage.read('loadResult');
         const stage = storage.read('stage');
@@ -458,6 +450,16 @@ export let controls = (function () {
         });
         stage.addChild(rules);
     }
+
+    function handleAutoClick(e) {
+        createjs.Sound.play('buttonClickSound');
+        const that = this;
+        storage.write('autoCount', that.amount);
+        events.trigger('menu:startAutoplay', this.amount);
+        storage.changeState('autoplay', 'started');
+
+    }
+
 
     function writeAutoplay() {
         console.log('i am starting autoplay');

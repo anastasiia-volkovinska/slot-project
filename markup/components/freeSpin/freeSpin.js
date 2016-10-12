@@ -118,7 +118,7 @@ export let freeSpin = (function () {
     function rotateFSGun(count) {
         // console.log('i am in rotateFSGun');
         let main = storage.read('stage').getChildByName('mainContainer');
-        console.log('mainContainer', main);
+        // console.log('mainContainer', main);
         let fsTableContainer;
         if (storage.read('device') === 'mobile') {
             fsTableContainer = stage.getChildByName('fsTableContainer');

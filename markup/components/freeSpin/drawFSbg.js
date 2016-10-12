@@ -66,6 +66,28 @@ export function drawFreeSpinsBG() {
             shadow: new c.Shadow('#e8b075', 0, 0, 15)
         });
 
+        const info = new c.Sprite(loader.getResult('controlButtons')).set({
+            name: 'info',
+            x: 45,
+            y: 40,
+            scaleX: 0.75,
+            scaleY: 0.75,
+            cursor: 'pointer'
+        });
+        info.gotoAndStop('info');
+        utils.getCenterPoint(info);
+        info.on('mouseover', function () {
+            info.gotoAndStop('infoHover');
+        });
+        info.on('mouseout', function () {
+            info.gotoAndStop('info');
+        });
+
+        info.on('click', function () {
+            createjs.Sound.play('buttonClickSound');
+            handleInfoClick();
+        });
+
         const win = storage.read('rollResponse').TotalWinCoins;
         // console.log('TotalWinCoins', win);
 
@@ -76,7 +98,7 @@ export function drawFreeSpinsBG() {
             textAlign: 'center',
             shadow: new c.Shadow('#e8b075', 0, 0, 15)
         });
-        controlsContainerFS.addChild(controlsBGFS, lines, winText);
+        controlsContainerFS.addChild(controlsBGFS, lines, winText, info);
         mainContainer.addChildAt(controlsContainerFS, mainContainer.getChildIndex(mainContainer.getChildByName('gameTopContainer')));
 
         drawTableContainerDesktop();
@@ -458,4 +480,16 @@ function drawMultiContainerDesktop() {
     if (config.currentMulti !== 2) {
         events.trigger('changeMultiplier', config.currentMulti);
     }
+}
+
+function handleInfoClick() {
+    const loader = storage.read('loadResult');
+    // const stage = storage.read('stage');
+    const rules = new c.Bitmap(loader.getResult('rules')).set({scaleX: 0.7, scaleY: 0.7});
+    rules.on('click', function () {
+        TweenMax.to(rules, 0.5, {alpha: 0, onComplete: function () {
+            stage.removeChild(rules);
+        }});
+    });
+    stage.addChild(rules);
 }
